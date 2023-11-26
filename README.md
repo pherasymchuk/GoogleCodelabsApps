@@ -22,5 +22,5 @@ The Unscramble app is a single player word scrambler game. The app displays one 
 
 | Screenshot | Gif |
 |--|--|
-| ![Unscramble](https://github.com/pherasymchuk/GoogleCodelabsApps/assets/74320524/b02475ea-815e-4f62-83d2-e2933316f81e) | ![Unscramble_compressed](https://github.com/pherasymchuk/GoogleCodelabsApps/assets/74320524/2b4131bb-77aa-47ae-aef1-66154b847c85) |
+| <p align="center"><img src="https://github.com/pherasymchuk/GoogleCodelabsApps/assets/74320524/b02475ea-815e-4f62-83d2-e2933316f81e" alt="Unscramble" width="75%" height="auto"></p> | <p align="center"><img src="https://github.com/pherasymchuk/GoogleCodelabsApps/assets/74320524/2b4131bb-77aa-47ae-aef1-66154b847c85" alt="Unscramble" width="75%" height="auto"></p> |
 
