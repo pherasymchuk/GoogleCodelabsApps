@@ -13,9 +13,9 @@ abstract class OrderViewModel : ViewModel() {
     abstract val date: LiveData<String>
     abstract val price: LiveData<Double>
 
-    abstract fun setQuantity(numberCupcakes: Int)
-    abstract fun setFlavor(desiredFlavor: String)
-    abstract fun setDate(pickupDate: String)
+    abstract infix fun setQuantity(numberCupcakes: Int)
+    abstract infix fun setFlavor(desiredFlavor: String)
+    abstract infix fun setDate(pickupDate: String)
 
     class Base : OrderViewModel() {
         override var quantity = MutableLiveData(0)

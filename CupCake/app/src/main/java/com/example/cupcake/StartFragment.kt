@@ -61,7 +61,7 @@ class StartFragment : Fragment() {
      * Start an order with the desired quantity of cupcakes and navigate to the next screen.
      */
     fun orderCupcake(quantity: Int) {
-        Toast.makeText(activity, "Ordered $quantity cupcake(s)", Toast.LENGTH_SHORT).show()
+        sharedViewModel.setQuantity(quantity)
         this.findNavController().navigate(StartFragmentDirections.actionStartFragmentToFlavorFragment2())
     }
 
