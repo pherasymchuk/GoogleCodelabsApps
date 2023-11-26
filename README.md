@@ -4,7 +4,7 @@ A collection of Android projects from Google Codelabs
 
 # DiceRoller🎲
 
-**Createon on: 2022.10.29**
+**Created on: 2022.10.29**
 
 One of the first apps I created when I was just starting to learn Android development. The app is
 really simple, just consists of one Activity.
