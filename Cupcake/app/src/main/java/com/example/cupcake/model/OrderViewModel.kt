@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
+/**
+ * Never instantiate this class directly, use [OrderViewModel.Base] implementation
+ */
 abstract class OrderViewModel : ViewModel() {
     abstract val quantity: LiveData<Int>
     abstract val flavor: LiveData<String>
