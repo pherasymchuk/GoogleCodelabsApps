@@ -20,7 +20,7 @@ App that lets users roll a virtual dice with the click of a button.
 
 The Unscramble app is a single player word scrambler game. The app displays one scrambled word at a time, and the player has to guess the word using all the letters from the scrambled word. The player scores points if the word is correct, otherwise the player can try any number of times. The app also has an option to skip the current word. In the left top corner, the app displays the word count, which is the number of words played in this current game. There are 10 words per game.
 
-| Screenshot | Gif |
+| <div style="width:50%">Screenshot</div> | <div style="width:50%">Gif</div> |
 |--|--|
 | <p align="center"><img src="https://github.com/pherasymchuk/GoogleCodelabsApps/assets/74320524/b02475ea-815e-4f62-83d2-e2933316f81e" alt="Unscramble" width="75%" height="auto"></p> | <p align="center"><img src="https://github.com/pherasymchuk/GoogleCodelabsApps/assets/74320524/2b4131bb-77aa-47ae-aef1-66154b847c85" alt="Unscramble" width="75%" height="auto"></p> |
 
