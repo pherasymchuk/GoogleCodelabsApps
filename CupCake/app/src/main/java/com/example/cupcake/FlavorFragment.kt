@@ -53,8 +53,11 @@ class FlavorFragment : Fragment() {
 
         binding?.apply {
             nextButton.setOnClickListener { goToNextScreen() }
+            viewModel = sharedViewModel
         }
-        sharedViewModel.setFlavor(getFlavor(binding!!.flavorOptions))
+        
+        sharedViewModel.setFlavor(getString(R.string.vanilla))
+
     }
 
     /**
@@ -74,8 +77,9 @@ class FlavorFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
     private fun getFlavor(radioGroup: RadioGroup): String {
-        return when(radioGroup.checkedRadioButtonId) {
+        return when (radioGroup.checkedRadioButtonId) {
             R.id.vanilla -> getString(R.string.vanilla)
             R.id.chocolate -> getString(R.string.chocolate)
             R.id.red_velvet -> getString(R.string.red_velvet)
@@ -84,4 +88,5 @@ class FlavorFragment : Fragment() {
             else -> throw IllegalAccessException("The RadioGroup doesn't contain correct flavor")
         }
     }
+
 }

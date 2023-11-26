@@ -19,7 +19,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -39,7 +38,7 @@ class StartFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val fragmentBinding = FragmentStartBinding.inflate(inflater, container, false)
         binding = fragmentBinding
@@ -62,7 +61,8 @@ class StartFragment : Fragment() {
      */
     fun orderCupcake(quantity: Int) {
         sharedViewModel.setQuantity(quantity)
-        this.findNavController().navigate(StartFragmentDirections.actionStartFragmentToFlavorFragment2())
+        this.findNavController()
+            .navigate(StartFragmentDirections.actionStartFragmentToFlavorFragment2())
     }
 
     /**

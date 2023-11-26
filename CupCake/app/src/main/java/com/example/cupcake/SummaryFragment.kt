@@ -39,7 +39,7 @@ class SummaryFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val fragmentBinding = FragmentSummaryBinding.inflate(inflater, container, false)
         binding = fragmentBinding
@@ -51,6 +51,7 @@ class SummaryFragment : Fragment() {
 
         binding?.apply {
             sendButton.setOnClickListener { sendOrder() }
+            viewModel = sharedViewModel
         }
     }
 
