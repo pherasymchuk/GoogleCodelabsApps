@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -54,7 +55,9 @@ class FlavorFragment : Fragment() {
             nextButton.setOnClickListener { goToNextScreen() }
             viewModel = sharedViewModel
         }
+        
         sharedViewModel.setFlavor(getString(R.string.vanilla))
+
     }
 
     /**
@@ -85,4 +88,5 @@ class FlavorFragment : Fragment() {
             else -> throw IllegalAccessException("The RadioGroup doesn't contain correct flavor")
         }
     }
+
 }
