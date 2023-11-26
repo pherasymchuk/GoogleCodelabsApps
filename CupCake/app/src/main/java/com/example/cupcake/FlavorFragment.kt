@@ -19,10 +19,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cupcake.databinding.FragmentFlavorBinding
+import com.example.cupcake.model.OrderViewModel
 
 /**
  * [FlavorFragment] allows a user to choose a cupcake flavor for the order.
@@ -33,10 +37,11 @@ class FlavorFragment : Fragment() {
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
     // when the view hierarchy is attached to the fragment.
     private var binding: FragmentFlavorBinding? = null
+    private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val fragmentBinding = FragmentFlavorBinding.inflate(inflater, container, false)
         binding = fragmentBinding
@@ -49,6 +54,7 @@ class FlavorFragment : Fragment() {
         binding?.apply {
             nextButton.setOnClickListener { goToNextScreen() }
         }
+        sharedViewModel.setFlavor(getFlavor(binding!!.flavorOptions))
     }
 
     /**
@@ -56,7 +62,8 @@ class FlavorFragment : Fragment() {
      */
     fun goToNextScreen() {
         Toast.makeText(activity, "Next", Toast.LENGTH_SHORT).show()
-        this.findNavController().navigate(FlavorFragmentDirections.actionFlavorFragmentToPickupFragment())
+        this.findNavController()
+            .navigate(FlavorFragmentDirections.actionFlavorFragmentToPickupFragment())
     }
 
     /**
@@ -66,5 +73,15 @@ class FlavorFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+    }
+    private fun getFlavor(radioGroup: RadioGroup): String {
+        return when(radioGroup.checkedRadioButtonId) {
+            R.id.vanilla -> getString(R.string.vanilla)
+            R.id.chocolate -> getString(R.string.chocolate)
+            R.id.red_velvet -> getString(R.string.red_velvet)
+            R.id.salted_caramel -> getString(R.string.salted_caramel)
+            R.id.coffee -> getString(R.string.coffee)
+            else -> throw IllegalAccessException("The RadioGroup doesn't contain correct flavor")
+        }
     }
 }
