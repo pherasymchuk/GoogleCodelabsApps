@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Розшифруй</string>
+    <string name="instructions">Розшифруйте слово, використовуючи всі літери.</string>
+    <string name="skip">Пропустити</string>
+    <string name="submit">Надіслати</string>
+    <string name="score">Рахунок: %d</string>
+    <string name="word_count">%d з %d слів</string>
+    <string name="enter_your_word">Введіть ваше слово</string>
+    <string name="congratulations">Вітаємо!</string>
+    <string name="you_scored">"Ви набрали: %d"</string>
+    <string name="exit">Вийти</string>
+    <string name="play_again">Грати знову</string>
+    <string name="try_again">Спробуйте ще раз!</string>
+</resources>
