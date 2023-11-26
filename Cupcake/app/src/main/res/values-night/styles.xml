@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.Cupcake.ActionBar.Solid" parent="Widget.Material3.ActionBar.Solid">
+        <item name="titleTextStyle">@style/Widget.Cupcake.ActionBar.Solid.Text</item>
+        <item name="background">?colorPrimaryVariant</item>
+    </style>
+
+    <style name="Widget.Cupcake.ActionBar.Solid.Text" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+</resources>

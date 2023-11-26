@@ -44,8 +44,7 @@
     </style>
 
     <!-- Radio Button style -->
-    <style name="Widget.Cupcake.CompoundButton.RadioButton"
-        parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+    <style name="Widget.Cupcake.CompoundButton.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
         <item name="android:paddingEnd">@dimen/radio_button_padding</item>
         <item name="android:paddingStart">@dimen/radio_button_padding</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
@@ -54,5 +53,14 @@
     <!-- Divider style -->
     <style name="Widget.Cupcake.Divider" parent="">
         <item name="android:background">?attr/dividerHorizontal</item>
+    </style>
+
+    <style name="Widget.Cupcake.Light.ActionBar.Solid" parent="Widget.Material3.Light.ActionBar.Solid">
+        <item name="titleTextStyle">@style/Widget.Cupcake.Light.ActionBar.Solid.Text</item>
+        <item name="background">?colorPrimaryVariant</item>
+    </style>
+
+    <style name="Widget.Cupcake.Light.ActionBar.Solid.Text" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 </resources>
