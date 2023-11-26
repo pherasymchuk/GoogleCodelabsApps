@@ -19,7 +19,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -53,8 +52,9 @@ class FlavorFragment : Fragment() {
 
         binding?.apply {
             nextButton.setOnClickListener { goToNextScreen() }
+            viewModel = sharedViewModel
         }
-        sharedViewModel.setFlavor(getFlavor(binding!!.flavorOptions))
+        sharedViewModel.setFlavor(getString(R.string.vanilla))
     }
 
     /**
@@ -74,8 +74,9 @@ class FlavorFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
     private fun getFlavor(radioGroup: RadioGroup): String {
-        return when(radioGroup.checkedRadioButtonId) {
+        return when (radioGroup.checkedRadioButtonId) {
             R.id.vanilla -> getString(R.string.vanilla)
             R.id.chocolate -> getString(R.string.chocolate)
             R.id.red_velvet -> getString(R.string.red_velvet)

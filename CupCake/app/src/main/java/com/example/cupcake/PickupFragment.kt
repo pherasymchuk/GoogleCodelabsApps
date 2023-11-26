@@ -39,7 +39,7 @@ class PickupFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val fragmentBinding = FragmentPickupBinding.inflate(inflater, container, false)
         binding = fragmentBinding
@@ -51,15 +51,17 @@ class PickupFragment : Fragment() {
 
         binding?.apply {
             nextButton.setOnClickListener { goToNextScreen() }
+            viewModel = sharedViewModel
         }
+        sharedViewModel.setFlavor(getString(R.string.vanilla))
     }
 
     /**
      * Navigate to the next screen to see the order summary.
      */
     fun goToNextScreen() {
-        Toast.makeText(activity, "Next", Toast.LENGTH_SHORT).show()
-        this.findNavController().navigate(PickupFragmentDirections.actionPickupFragmentToSummaryFragment())
+        this.findNavController()
+            .navigate(PickupFragmentDirections.actionPickupFragmentToSummaryFragment())
     }
 
     /**
