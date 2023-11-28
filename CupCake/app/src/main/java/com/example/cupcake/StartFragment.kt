@@ -39,7 +39,7 @@ class StartFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         val fragmentBinding = FragmentStartBinding.inflate(inflater, container, false)
         binding = fragmentBinding
         return fragmentBinding.root
@@ -61,8 +61,7 @@ class StartFragment : Fragment() {
      */
     fun orderCupcake(quantity: Int) {
         sharedViewModel.setQuantity(quantity)
-        this.findNavController()
-            .navigate(StartFragmentDirections.actionStartFragmentToFlavorFragment2())
+        findNavController().navigate(StartFragmentDirections.actionStartFragmentToFlavorFragment2())
     }
 
     /**

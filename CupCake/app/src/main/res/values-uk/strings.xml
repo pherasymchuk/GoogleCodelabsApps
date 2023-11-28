@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Кекс</string>
+    <string name="order_cupcakes">Замовити кекси</string>
+    <string name="one_cupcake">Один кекс</string>
+    <string name="six_cupcakes">Шість кексів</string>
+    <string name="twelve_cupcakes">Дванадцять кексів</string>
+    <string name="choose_flavor">Оберіть смак</string>
+    <string name="vanilla">Ванільний</string>
+    <string name="chocolate">Шоколадний</string>
+    <string name="red_velvet">Червоний бархат</string>
+    <string name="salted_caramel">Солодке карамельне</string>
+    <string name="coffee">Кавовий</string>
+    <string name="special_flavor">Спеціальний смак</string>
+    <string name="cancel">Скасувати</string>
+    <string name="next">Далі</string>
+    <string name="choose_pickup_date">Оберіть дату забору</string>
+    <string name="order_summary">Сума замовлення</string>
+    <string name="send">Надіслати замовлення в інший додаток</string>
+    <string name="quantity">Кількість</string>
+    <string name="flavor">Смак</string>
+    <string name="pickup_date">Дата забору</string>
+    <string name="subtotal_price">Проміжна сума %s</string>
+    <string name="total_price">Всього %s</string>
+    <string name="new_cupcake_order">Нове замовлення кексів</string>
+    <string name="order_details">Кількість: %1$s кексів \n Смак: %2$s \nДата забору: %3$s \n
+        Всього: %4$s \n\n Дякуємо!</string>
+</resources>
