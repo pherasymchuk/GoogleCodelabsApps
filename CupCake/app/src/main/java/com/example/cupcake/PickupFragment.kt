@@ -19,7 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -41,19 +41,19 @@ class PickupFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val fragmentBinding = FragmentPickupBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+//        val fragmentBinding = FragmentPickupBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_pickup, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding?.apply {
+            lifecycleOwner = viewLifecycleOwner
             nextButton.setOnClickListener { goToNextScreen() }
             viewModel = sharedViewModel
         }
-        sharedViewModel.setFlavor(getString(R.string.vanilla))
     }
 
     /**

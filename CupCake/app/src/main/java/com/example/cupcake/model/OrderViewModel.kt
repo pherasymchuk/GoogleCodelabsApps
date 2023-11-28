@@ -1,9 +1,11 @@
 package com.example.cupcake.model
 
+import android.icu.text.NumberFormat
 import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import java.util.Calendar
 import java.util.Locale
 
@@ -18,6 +20,7 @@ abstract class OrderViewModel : ViewModel() {
     abstract val flavor: LiveData<String>
     abstract val date: LiveData<String>
     abstract val price: LiveData<Double>
+    abstract val priceFormatted: LiveData<String>
     abstract val dateOptions: List<String>
 
     abstract fun setQuantity(numberCupcakes: Int)
@@ -31,6 +34,9 @@ abstract class OrderViewModel : ViewModel() {
         override var flavor = MutableLiveData<String>()
         override var date = MutableLiveData<String>()
         override var price = MutableLiveData<Double>()
+        override val priceFormatted: LiveData<String> = price.map {
+            NumberFormat.getCurrencyInstance().format(it)
+        }
         override val dateOptions: List<String> = getPickupOptions()
 
         init {
@@ -44,6 +50,7 @@ abstract class OrderViewModel : ViewModel() {
 
         override fun setFlavor(desiredFlavor: String) {
             flavor.value = desiredFlavor
+            updatePrice()
         }
 
         override fun setDate(pickupDate: String) {

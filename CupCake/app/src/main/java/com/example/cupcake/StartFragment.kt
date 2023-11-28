@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -39,21 +40,22 @@ class StartFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        val fragmentBinding = FragmentStartBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_start, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding?.apply {
+            lifecycleOwner = requireActivity()
             // Set up the button click listeners
             orderOneCupcake.setOnClickListener { orderCupcake(1) }
             orderSixCupcakes.setOnClickListener { orderCupcake(6) }
             orderTwelveCupcakes.setOnClickListener { orderCupcake(12) }
         }
+        sharedViewModel.setFlavor(getString(R.string.vanilla))
     }
 
     /**

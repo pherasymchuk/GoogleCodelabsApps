@@ -19,9 +19,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -39,25 +38,26 @@ class FlavorFragment : Fragment() {
     private var binding: FragmentFlavorBinding? = null
     private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val fragmentBinding = FragmentFlavorBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_flavor, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding?.apply {
+            lifecycleOwner = viewLifecycleOwner
             nextButton.setOnClickListener { goToNextScreen() }
             viewModel = sharedViewModel
         }
-        
-        sharedViewModel.setFlavor(getString(R.string.vanilla))
-
     }
 
     /**
@@ -77,16 +77,4 @@ class FlavorFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
-    private fun getFlavor(radioGroup: RadioGroup): String {
-        return when (radioGroup.checkedRadioButtonId) {
-            R.id.vanilla -> getString(R.string.vanilla)
-            R.id.chocolate -> getString(R.string.chocolate)
-            R.id.red_velvet -> getString(R.string.red_velvet)
-            R.id.salted_caramel -> getString(R.string.salted_caramel)
-            R.id.coffee -> getString(R.string.coffee)
-            else -> throw IllegalAccessException("The RadioGroup doesn't contain correct flavor")
-        }
-    }
-
 }
