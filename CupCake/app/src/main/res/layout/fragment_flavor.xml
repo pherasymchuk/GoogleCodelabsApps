@@ -41,7 +41,6 @@
                 android:layout_height="wrap_content"
                 android:checkedButton="@id/vanilla"
                 android:orientation="vertical"
-                android:checkedButton="@id/vanilla"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
