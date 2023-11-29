@@ -58,30 +58,30 @@
                 android:id="@+id/order_one_cupcake"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> startFragment.orderCupcake(1)}"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_between_elements"
                 android:minWidth="@dimen/order_cupcake_button_width"
+                android:onClick="@{() -> startFragment.orderCupcake(1)}"
                 android:text="@string/one_cupcake" />
 
             <Button
                 android:id="@+id/order_six_cupcakes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> startFragment.orderCupcake(6)}"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_between_elements"
                 android:minWidth="@dimen/order_cupcake_button_width"
+                android:onClick="@{() -> startFragment.orderCupcake(6)}"
                 android:text="@string/six_cupcakes" />
 
             <Button
                 android:id="@+id/order_twelve_cupcakes"
                 android:layout_width="wrap_content"
-                android:onClick="@{() -> startFragment.orderCupcake(12)}"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_between_elements"
                 android:minWidth="@dimen/order_cupcake_button_width"
+                android:onClick="@{() -> startFragment.orderCupcake(12)}"
                 android:text="@string/twelve_cupcakes" />
         </LinearLayout>
     </ScrollView>
