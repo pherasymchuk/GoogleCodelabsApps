@@ -23,6 +23,12 @@
     <string name="subtotal_price">Проміжна сума %s</string>
     <string name="total_price">Всього %s</string>
     <string name="new_cupcake_order">Нове замовлення кексів</string>
-    <string name="order_details">Кількість: %1$s кексів \n Смак: %2$s \nДата забору: %3$s \n
-        Всього: %4$s \n\n Дякуємо!</string>
+    <string name="order_details">Кількість: %1$s \nСмак: %2$s \nДата доставки: %3$s
+        \nВсього: %4$s \n\n Дякуємо!</string>
+
+    <plurals name="cupcakes">
+        <item quantity="one">%d кекс</item>
+        <item quantity="few">%d кекси</item>
+        <item quantity="many">%d кексів</item>
+    </plurals>
 </resources>

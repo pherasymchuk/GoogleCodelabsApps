@@ -73,4 +73,9 @@ class FlavorFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
+    fun cancelOrder() {
+        sharedViewModel.resetOrder()
+        findNavController().navigate(FlavorFragmentDirections.actionFlavorFragmentToStartFragment2())
+    }
 }

@@ -72,4 +72,9 @@ class PickupFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
+    fun cancelOrder() {
+        sharedViewModel.resetOrder()
+        findNavController().navigate(PickupFragmentDirections.actionPickupFragmentToStartFragment2())
+    }
 }

@@ -111,6 +111,7 @@
                 android:id="@+id/cancel_button"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
+                android:onClick="@{() -> pickupFragment.cancelOrder()}"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/side_margin"
                 android:text="@string/cancel"
