@@ -19,7 +19,7 @@ abstract class OrderViewModel : ViewModel() {
     abstract val quantity: LiveData<Int>
     abstract val flavor: LiveData<String>
     abstract val date: LiveData<String>
-    abstract val price: LiveData<Double>
+    protected abstract val price: LiveData<Double>
     abstract val priceFormatted: LiveData<String>
     abstract val dateOptions: List<String>
 

@@ -56,7 +56,6 @@
 
     <style name="Widget.Cupcake.Light.ActionBar.Solid" parent="Widget.Material3.Light.ActionBar.Solid">
         <item name="titleTextStyle">@style/Widget.Cupcake.Light.ActionBar.Solid.Text</item>
-        <item name="colorControlNormal">@android:color/white</item>
         <item name="background">?colorPrimaryVariant</item>
     </style>
 
