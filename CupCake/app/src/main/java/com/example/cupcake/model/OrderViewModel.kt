@@ -34,9 +34,8 @@ abstract class OrderViewModel : ViewModel() {
         override var flavor = MutableLiveData<String>()
         override var date = MutableLiveData<String>()
         override var price = MutableLiveData<Double>()
-        override val priceFormatted: LiveData<String> = price.map {
-            NumberFormat.getCurrencyInstance().format(it)
-        }
+        override val priceFormatted: LiveData<String> =
+            price.map { NumberFormat.getCurrencyInstance().format(it) }
         override val dateOptions: List<String> = getPickupOptions()
 
         init {
