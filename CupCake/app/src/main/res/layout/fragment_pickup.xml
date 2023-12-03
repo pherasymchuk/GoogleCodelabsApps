@@ -44,6 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:checkedButton="@id/option0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -51,36 +52,24 @@
                     android:id="@+id/option0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.date.equals(viewModel.dateOptions[0])}"
-                    android:onClick="@{() -> viewModel.setDate(viewModel.dateOptions[0])}"
-                    android:text="@{viewModel.dateOptions[0]}"
                     tools:text="Thursday" />
 
                 <RadioButton
                     android:id="@+id/option1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.date.equals(viewModel.dateOptions[1])}"
-                    android:onClick="@{() -> viewModel.setDate(viewModel.dateOptions[1])}"
-                    android:text="@{viewModel.dateOptions[1]}"
                     tools:text="Friday" />
 
                 <RadioButton
                     android:id="@+id/option2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.date.equals(viewModel.dateOptions[2])}"
-                    android:onClick="@{() -> viewModel.setDate(viewModel.dateOptions[2])}"
-                    android:text="@{viewModel.dateOptions[2]}"
                     tools:text="Saturday" />
 
                 <RadioButton
-                    android:id="@+id/option4"
+                    android:id="@+id/option3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.date.equals(viewModel.dateOptions[3])}"
-                    android:onClick="@{() -> viewModel.setDate(viewModel.dateOptions[3])}"
-                    android:text="@{viewModel.dateOptions[3]}"
                     tools:text="Sunday" />
 
             </RadioGroup>

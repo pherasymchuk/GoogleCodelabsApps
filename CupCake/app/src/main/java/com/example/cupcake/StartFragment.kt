@@ -67,7 +67,7 @@ class StartFragment : Fragment() {
             startFragment = this@StartFragment
             // Set up the button click listeners
         }
-        sharedViewModel.setFlavor(getString(R.string.vanilla))
+        sharedViewModel.setFlavor(getString(R.string.flavor_vanilla))
     }
 
     /**

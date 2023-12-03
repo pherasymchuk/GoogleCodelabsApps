@@ -26,7 +26,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <item name="android:navigationBarColor">?attr/color</item>
+        <item name="android:navigationBarColor">?android:colorBackground</item>
         <!-- Radio buttons. -->
         <item name="radioButtonStyle">@style/Widget.Cupcake.CompoundButton.RadioButton</item>
         <!-- Text appearance style. -->

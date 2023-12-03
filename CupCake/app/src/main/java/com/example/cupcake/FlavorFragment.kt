@@ -54,6 +54,31 @@ class FlavorFragment : Fragment() {
             flavorFragment = this@FlavorFragment
             viewModel = sharedViewModel
         }
+        setupFlavorOptions()
+    }
+
+    private fun setupFlavorOptions() {
+        binding?.apply {
+            vanilla.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_vanilla))
+            }
+            chocolate.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_chocolate))
+            }
+            redVelvet.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_red_velvet))
+            }
+            saltedCaramel.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_salted_caramel))
+            }
+            coffee.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_coffee))
+            }
+            secret.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_secret))
+                sharedViewModel.setDate(sharedViewModel.dateOptions[1])
+            }
+        }
     }
 
     /**

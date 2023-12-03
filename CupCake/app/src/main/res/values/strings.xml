@@ -20,11 +20,11 @@
     <string name="six_cupcakes">Six Cupcakes</string>
     <string name="twelve_cupcakes">Twelve Cupcakes</string>
     <string name="choose_flavor">Choose Flavor</string>
-    <string name="vanilla">Vanilla</string>
-    <string name="chocolate">Chocolate</string>
-    <string name="red_velvet">Red Velvet</string>
-    <string name="salted_caramel">Salted Caramel</string>
-    <string name="coffee">Coffee</string>
+    <string name="flavor_vanilla">Vanilla</string>
+    <string name="flavor_chocolate">Chocolate</string>
+    <string name="flavor_red_velvet">Red Velvet</string>
+    <string name="flavor_salted_caramel">Salted Caramel</string>
+    <string name="flavor_coffee">Coffee</string>
     <string name="special_flavor">Special Flavor</string>
     <string name="cancel">Cancel</string>
     <string name="next">Next</string>
@@ -39,6 +39,7 @@
     <string name="new_cupcake_order">New Cupcake Order</string>
     <string name="order_details">Quantity: %1$s \nFlavor: %2$s \nPickup date: %3$s
         \nTotal: %4$s \n\n Thank you!</string>
+    <string name="flavor_secret">SECRET✴️</string>
 
     <plurals name="cupcakes">
         <item quantity="one">%d cupcake</item>

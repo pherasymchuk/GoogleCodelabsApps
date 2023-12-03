@@ -42,6 +42,7 @@
             <RadioGroup
                 android:id="@+id/flavor_options"
                 android:layout_width="wrap_content"
+                android:checkedButton="@id/vanilla"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
@@ -51,41 +52,37 @@
                     android:id="@+id/vanilla"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.flavor.equals(@string/vanilla)}"
-                    android:onClick="@{() -> viewModel.setFlavor(@string/vanilla)}"
-                    android:text="@string/vanilla" />
+                    android:text="@string/flavor_vanilla" />
 
                 <RadioButton
                     android:id="@+id/chocolate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.flavor.equals(@string/chocolate)}"
-                    android:onClick="@{() -> viewModel.setFlavor(@string/chocolate)}"
-                    android:text="@string/chocolate" />
+                    android:text="@string/flavor_chocolate" />
 
                 <RadioButton
                     android:id="@+id/red_velvet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.flavor.equals(@string/red_velvet)}"
-                    android:onClick="@{() -> viewModel.setFlavor(@string/red_velvet)}"
-                    android:text="@string/red_velvet" />
+                    android:text="@string/flavor_red_velvet" />
 
                 <RadioButton
                     android:id="@+id/salted_caramel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.flavor.equals(@string/salted_caramel)}"
-                    android:onClick="@{() -> viewModel.setFlavor(@string/salted_caramel)}"
-                    android:text="@string/salted_caramel" />
+                    android:text="@string/flavor_salted_caramel" />
 
                 <RadioButton
                     android:id="@+id/coffee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="@{viewModel.flavor.equals(@string/coffee)}"
-                    android:onClick="@{() -> viewModel.setFlavor(@string/coffee)}"
-                    android:text="@string/coffee" />
+                    android:text="@string/flavor_coffee" />
+
+                <RadioButton
+                    android:id="@+id/secret"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flavor_secret" />
             </RadioGroup>
 
             <View
@@ -113,9 +110,9 @@
                 android:id="@+id/cancel_button"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:onClick="@{() -> flavorFragment.cancelOrder()}"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/side_margin"
+                android:onClick="@{() -> flavorFragment.cancelOrder()}"
                 android:text="@string/cancel"
                 app:layout_constraintEnd_toStartOf="@id/next_button"
                 app:layout_constraintStart_toStartOf="parent"

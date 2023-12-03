@@ -6,11 +6,11 @@
     <string name="six_cupcakes">Шість кексів</string>
     <string name="twelve_cupcakes">Дванадцять кексів</string>
     <string name="choose_flavor">Оберіть смак</string>
-    <string name="vanilla">Ванільний</string>
-    <string name="chocolate">Шоколадний</string>
-    <string name="red_velvet">Червоний бархат</string>
-    <string name="salted_caramel">Солодке карамельне</string>
-    <string name="coffee">Кавовий</string>
+    <string name="flavor_vanilla">Ванільний</string>
+    <string name="flavor_chocolate">Шоколадний</string>
+    <string name="flavor_red_velvet">Червоний бархат</string>
+    <string name="flavor_salted_caramel">Солодке карамельне</string>
+    <string name="flavor_coffee">Кавовий</string>
     <string name="special_flavor">Спеціальний смак</string>
     <string name="cancel">Скасувати</string>
     <string name="next">Далі</string>

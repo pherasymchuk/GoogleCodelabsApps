@@ -41,7 +41,6 @@ class PickupFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-//        val fragmentBinding = FragmentPickupBinding.inflate(inflater, container, false)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_pickup, container, false)
         return binding?.root
     }
@@ -53,6 +52,44 @@ class PickupFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             pickupFragment = this@PickupFragment
             viewModel = sharedViewModel
+
+            /*            if (dateOptions.checkedRadioButtonId == R.id.option0 || sharedViewModel.flavor.value == getString(R.string.flavor_secret)) {
+                            dateOptions.clearCheck()
+                            option0.isEnabled = false
+                            dateOptions.check(R.id.option1)
+                        } else {
+                            dateOptions.check(R.id.option0)
+                        }*/
+
+            setupDayOptions()
+        }
+    }
+
+    private fun setupDayOptions() {
+        binding?.apply {
+            option0.text = sharedViewModel.dateOptions[0]
+            option0.setOnClickListener {
+                sharedViewModel.setDate(sharedViewModel.dateOptions[0])
+            }
+            if (sharedViewModel.flavor.value == getString(R.string.flavor_secret)) {
+                option0.isEnabled = false
+                dateOptions.check(R.id.option1)
+            }
+
+            option1.text = sharedViewModel.dateOptions[1]
+            option1.setOnClickListener {
+                sharedViewModel.setDate(sharedViewModel.dateOptions[1])
+            }
+
+            option2.text = sharedViewModel.dateOptions[2]
+            option2.setOnClickListener {
+                sharedViewModel.setDate(sharedViewModel.dateOptions[2])
+            }
+
+            option3.text = sharedViewModel.dateOptions[3]
+            option3.setOnClickListener {
+                sharedViewModel.setDate(sharedViewModel.dateOptions[3])
+            }
         }
     }
 
