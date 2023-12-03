@@ -61,18 +61,23 @@ class FlavorFragment : Fragment() {
         binding?.apply {
             vanilla.setOnClickListener {
                 sharedViewModel.setFlavor(getString(R.string.flavor_vanilla))
+                sharedViewModel.resetDate()
             }
             chocolate.setOnClickListener {
                 sharedViewModel.setFlavor(getString(R.string.flavor_chocolate))
+                sharedViewModel.resetDate()
             }
             redVelvet.setOnClickListener {
                 sharedViewModel.setFlavor(getString(R.string.flavor_red_velvet))
+                sharedViewModel.resetDate()
             }
             saltedCaramel.setOnClickListener {
                 sharedViewModel.setFlavor(getString(R.string.flavor_salted_caramel))
+                sharedViewModel.resetDate()
             }
             coffee.setOnClickListener {
                 sharedViewModel.setFlavor(getString(R.string.flavor_coffee))
+                sharedViewModel.resetDate()
             }
             secret.setOnClickListener {
                 sharedViewModel.setFlavor(getString(R.string.flavor_secret))

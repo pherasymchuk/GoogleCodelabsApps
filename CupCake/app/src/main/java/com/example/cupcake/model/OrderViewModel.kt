@@ -28,6 +28,7 @@ abstract class OrderViewModel : ViewModel() {
     abstract fun setDate(pickupDate: String)
     abstract fun getPickupOptions(): List<String>
     abstract fun resetOrder()
+    abstract fun resetDate()
 
     class Base : OrderViewModel() {
         override var quantity = MutableLiveData<Int>()
@@ -75,6 +76,11 @@ abstract class OrderViewModel : ViewModel() {
             flavor.value = ""
             date.value = dateOptions[0]
             price.value = 0.0
+        }
+
+        override fun resetDate() {
+            date.value = dateOptions[0]
+            updatePrice()
         }
 
         private fun updatePrice() {
