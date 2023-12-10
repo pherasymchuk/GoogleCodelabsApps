@@ -32,18 +32,14 @@ import com.example.android.sports.databinding.FragmentSportsListBinding
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-
 class SportsListFragment : Fragment() {
 
     private val sportsViewModel: SportsViewModel by activityViewModels<SportsViewModel.Base>()
-    private var isPaneLayoutOpened = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return FragmentSportsListBinding.inflate(inflater, container, false).root
-    }
+    ): View = FragmentSportsListBinding.inflate(inflater, container, false).root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,7 +49,7 @@ class SportsListFragment : Fragment() {
             SportsListOnBackPressedCallback(binding.slidingPaneLayout)
         )
         binding.slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { v, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             val bottomPadding = insets.bottom
             binding.recyclerView.updatePadding(bottom = bottomPadding)
@@ -69,17 +65,12 @@ class SportsListFragment : Fragment() {
             binding.slidingPaneLayout.openPane()
         }
         binding.recyclerView.adapter = adapter
-        binding.slidingPaneLayout
         adapter.submitList(sportsViewModel.sportsData)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
     }
 }
 
 class SportsListOnBackPressedCallback(private val slidingPaneLayout: SlidingPaneLayout) :
-    OnBackPressedCallback(slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen),
+    OnBackPressedCallback(enabled = slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen),
     SlidingPaneLayout.PanelSlideListener {
 
     init {

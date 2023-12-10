@@ -22,13 +22,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupWithNavController
 import com.example.android.sports.databinding.ActivityMainBinding
-import com.example.android.sports.databinding.ContentMainBinding
 
 class MainActivity : AppCompatActivity() {
 

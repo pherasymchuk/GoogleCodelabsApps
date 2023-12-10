@@ -24,7 +24,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_width="400dp"
+        android:layout_width="600dp"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:clipToPadding="false"
