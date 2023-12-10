@@ -35,7 +35,8 @@ import com.example.android.sports.databinding.FragmentSportsListBinding
 
 class SportsListFragment : Fragment() {
 
-    private val sportsViewModel: SportsViewModel by activityViewModels()
+    private val sportsViewModel: SportsViewModel by activityViewModels<SportsViewModel.Base>()
+    private var isPaneLayoutOpened = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,13 +66,15 @@ class SportsListFragment : Fragment() {
             // This will automatically update the dual pane content
             sportsViewModel.updateCurrentSport(it)
             // Navigate to the details screen
-//            val action = SportsListFragmentDirections.actionSportsListFragmentToNewsFragment()
-//            this.findNavController().navigate(action)
             binding.slidingPaneLayout.openPane()
         }
         binding.recyclerView.adapter = adapter
         binding.slidingPaneLayout
         adapter.submitList(sportsViewModel.sportsData)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 }
 

@@ -33,7 +33,7 @@ import com.example.android.sports.databinding.FragmentSportsNewsBinding
  */
 class NewsDetailsFragment : Fragment() {
 
-    private val sportsViewModel: SportsViewModel by activityViewModels()
+    private val sportsViewModel: SportsViewModel by activityViewModels<SportsViewModel.Base>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +47,7 @@ class NewsDetailsFragment : Fragment() {
         val binding = FragmentSportsNewsBinding.bind(view)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
             v.updatePadding(bottom = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom)
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
         // Attach an observer on the currentSport to update the UI automatically when the data
         // changes.

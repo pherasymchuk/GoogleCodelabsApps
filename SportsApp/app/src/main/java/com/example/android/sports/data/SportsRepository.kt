@@ -20,9 +20,9 @@ import com.example.android.sports.R
 import com.example.android.sports.model.Sport
 
 /**
- * Sports data
+ * Sports repository
  */
-object SportsData{
+object SportsRepository{
     fun getSportsData(): ArrayList<Sport> {
         return arrayListOf(
             Sport(
