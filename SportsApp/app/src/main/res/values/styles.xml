@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.Sports.ActionBar.Solid" parent="Widget.Material3.ActionBar.Solid">
+        <item name="background">?colorPrimaryVariant</item>
+        <item name="titleTextStyle">@style/Widget.Sports.ActionBar.Solid.TitleTextStyle</item>
+    </style>
+
+    <style name="Widget.Sports.ActionBar.Solid.TitleTextStyle" parent="@style/TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+</resources>
