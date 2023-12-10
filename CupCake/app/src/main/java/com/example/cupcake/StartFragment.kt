@@ -19,15 +19,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cupcake.databinding.FragmentStartBinding
 import com.example.cupcake.model.OrderViewModel
 
+
 /**
- * This is the first screen of the Cupcake app. The user can choose how many cupcakes to order.
+ * `StartFragment` is a type of Fragment wherein the initial steps of the Cupcake ordering process occur.
+ * It utilizes data binding for managing UI components and interacting with shared `OrderViewModel`.
+ *
+ * Class Properties:
+ * @property binding An instance of FragmentStartBinding. Corresponds to the fragment_start.xml layout.
+ * It is not null between onCreateView() and onDestroyView() lifecycle callbacks, when the view hierarchy is connected to this fragment.
+ * @property sharedViewModel A `OrderViewModel` that holds data related to the Cupcake order shared across multiple fragments.
+ *
+ * Major Methods:
+ * - `onCreateView()` inflates the layout for this fragment.
+ * - `onViewCreated()` handles necessary actions after the view is created like setting the lifecycle owner, initiating button click listeners, and setting the default flavor.
+ * - `orderCupcake(quantity: Int)` allows starting an order with the desired quantity of cupcakes and navigates to the next screen.
+ * - `onDestroyView()` performs clean-up actions when the view hierarchy associated with the fragment is being removed.
  */
+
 class StartFragment : Fragment() {
 
     // Binding object instance corresponding to the fragment_start.xml layout
@@ -40,20 +55,19 @@ class StartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val fragmentBinding = FragmentStartBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_start, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding?.apply {
+            lifecycleOwner = requireActivity()
+            startFragment = this@StartFragment
             // Set up the button click listeners
-            orderOneCupcake.setOnClickListener { orderCupcake(1) }
-            orderSixCupcakes.setOnClickListener { orderCupcake(6) }
-            orderTwelveCupcakes.setOnClickListener { orderCupcake(12) }
         }
+        sharedViewModel.setFlavor(getString(R.string.flavor_vanilla))
     }
 
     /**
@@ -61,8 +75,7 @@ class StartFragment : Fragment() {
      */
     fun orderCupcake(quantity: Int) {
         sharedViewModel.setQuantity(quantity)
-        this.findNavController()
-            .navigate(StartFragmentDirections.actionStartFragmentToFlavorFragment2())
+        findNavController().navigate(StartFragmentDirections.actionStartFragmentToFlavorFragment2())
     }
 
     /**

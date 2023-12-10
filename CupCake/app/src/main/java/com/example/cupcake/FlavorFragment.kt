@@ -19,9 +19,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -43,21 +42,48 @@ class FlavorFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val fragmentBinding = FragmentFlavorBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_flavor, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding?.apply {
-            nextButton.setOnClickListener { goToNextScreen() }
+            lifecycleOwner = viewLifecycleOwner
+            flavorFragment = this@FlavorFragment
             viewModel = sharedViewModel
         }
-        
-        sharedViewModel.setFlavor(getString(R.string.vanilla))
+        setupFlavorOptions()
+    }
 
+    private fun setupFlavorOptions() {
+        binding?.apply {
+            vanilla.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_vanilla))
+                sharedViewModel.resetDate()
+            }
+            chocolate.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_chocolate))
+                sharedViewModel.resetDate()
+            }
+            redVelvet.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_red_velvet))
+                sharedViewModel.resetDate()
+            }
+            saltedCaramel.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_salted_caramel))
+                sharedViewModel.resetDate()
+            }
+            coffee.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_coffee))
+                sharedViewModel.resetDate()
+            }
+            secret.setOnClickListener {
+                sharedViewModel.setFlavor(getString(R.string.flavor_secret))
+                sharedViewModel.setDate(sharedViewModel.dateOptions[1])
+            }
+        }
     }
 
     /**
@@ -78,15 +104,8 @@ class FlavorFragment : Fragment() {
         binding = null
     }
 
-    private fun getFlavor(radioGroup: RadioGroup): String {
-        return when (radioGroup.checkedRadioButtonId) {
-            R.id.vanilla -> getString(R.string.vanilla)
-            R.id.chocolate -> getString(R.string.chocolate)
-            R.id.red_velvet -> getString(R.string.red_velvet)
-            R.id.salted_caramel -> getString(R.string.salted_caramel)
-            R.id.coffee -> getString(R.string.coffee)
-            else -> throw IllegalAccessException("The RadioGroup doesn't contain correct flavor")
-        }
+    fun cancelOrder() {
+        sharedViewModel.resetOrder()
+        findNavController().navigate(FlavorFragmentDirections.actionFlavorFragmentToStartFragment2())
     }
-
 }
