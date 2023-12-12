@@ -17,12 +17,14 @@
     <!-- Base application theme. -->
     <style name="Theme.LunchTray" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">#3F51B5</item>
+        <item name="colorPrimaryVariant">#6474CD</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor">?color</item>
         <!-- Text appearance style. -->
         <item name="textAppearanceSubtitle1">@style/TextAppearance.LunchTray.Subtitle1</item>
+        <item name="actionBarStyle">@style/Widget.LaunchTray.ActionBar</item>
     </style>
 </resources>

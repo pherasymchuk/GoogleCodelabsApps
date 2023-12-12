@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2021 The Android Open Source Project.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +16,7 @@
 <resources>
 
     <!-- Text Appearance Subtitle1 style -->
-    <style name="TextAppearance.LunchTray.Subtitle1"
-        parent="TextAppearance.MaterialComponents.Subtitle1">
+    <style name="TextAppearance.LunchTray.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -63,8 +61,7 @@
     </style>
 
     <!-- TextView Style for Checkout Item Label -->
-    <style name="Widget.LunchTray.TextView.CheckoutItem.Label"
-        parent="Widget.MaterialComponents.TextView">
+    <style name="Widget.LunchTray.TextView.CheckoutItem.Label" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
@@ -73,8 +70,7 @@
     </style>
 
     <!-- TextView Style for Checkout Item Name -->
-    <style name="Widget.LunchTray.TextView.CheckoutItem.Info"
-        parent="Widget.MaterialComponents.TextView">
+    <style name="Widget.LunchTray.TextView.CheckoutItem.Info" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/checkout_item_margin</item>
@@ -97,6 +93,15 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">?attr/dividerHorizontal</item>
         <item name="android:layout_marginTop">@dimen/base_margin</item>
+    </style>
+
+    <style name="Widget.LaunchTray.ActionBar" parent="Widget.Material3.ActionBar.Solid">
+        <item name="background">?colorPrimaryVariant</item>
+        <item name="titleTextStyle">@style/Widget.LaunchTray.ActionBar.Text</item>
+    </style>
+
+    <style name="Widget.LaunchTray.ActionBar.Text" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <string name="cancel">Cancel</string>
