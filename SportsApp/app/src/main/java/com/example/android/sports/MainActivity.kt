@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.android.sports.databinding.ActivityMainBinding
+import com.example.android.sports.insetter.Insetter
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,11 +37,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(top = insets.top)
-            windowInsets
-        }
+        Insetter.Base(binding.root).apply(top = true)
+        Insetter.Base(binding.appBarLayout).apply(left = true, right = true)
 
         binding.toolbar.title = this.title
     }

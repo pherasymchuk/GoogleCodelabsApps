@@ -21,13 +21,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.android.sports.databinding.FragmentSportsListBinding
+import com.example.android.sports.insetter.Insetter
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -49,13 +47,10 @@ class SportsListFragment : Fragment() {
             SportsListOnBackPressedCallback(binding.slidingPaneLayout)
         )
         binding.slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { _, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val bottomPadding = insets.bottom
-            binding.recyclerView.updatePadding(bottom = bottomPadding)
-            binding.detailContainer.updatePadding(bottom = bottomPadding)
-            windowInsets
-        }
+
+        Insetter.Base(binding.recyclerView).apply(bottom = true, left = true)
+        Insetter.Base(binding.detailContainer).apply(bottom = true, right = true)
+
         // Initialize the adapter and set it to the RecyclerView.
         val adapter = SportsAdapter {
             // Update the user selected sport as the current sport in the shared viewmodel

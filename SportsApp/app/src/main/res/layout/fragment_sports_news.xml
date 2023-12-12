@@ -19,7 +19,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginTop="16dp"
     app:cardCornerRadius="8dp"
     tools:context="com.example.android.sports.MainActivity">
 
