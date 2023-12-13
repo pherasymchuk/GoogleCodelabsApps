@@ -24,6 +24,7 @@ import com.example.lunchtray.data.DataSource
 import java.text.NumberFormat
 
 abstract class OrderViewModel : ViewModel() {
+    abstract val menuItems: Map<String, MenuItem>
     abstract val entree: LiveData<MenuItem?>
     abstract val side: LiveData<MenuItem?>
     abstract val accompaniment: LiveData<MenuItem?>
@@ -38,7 +39,7 @@ abstract class OrderViewModel : ViewModel() {
     abstract fun resetOrder()
 
     class Base : OrderViewModel() {
-        val menuItems = DataSource.menuItems
+        override val menuItems = DataSource.menuItems
 
         private var previousEntreePrice = 0.0
         private var previousSidePrice = 0.0

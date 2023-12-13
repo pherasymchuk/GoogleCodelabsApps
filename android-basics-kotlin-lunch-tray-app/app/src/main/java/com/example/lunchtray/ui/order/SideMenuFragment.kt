@@ -37,7 +37,7 @@ class SideMenuFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
-    private val sharedViewModel: OrderViewModel by activityViewModels()
+    private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
