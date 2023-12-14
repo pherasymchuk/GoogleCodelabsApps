@@ -21,6 +21,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.example.lunchtray.R
 import com.example.lunchtray.databinding.FragmentAccompanimentMenuBinding
 import com.example.lunchtray.model.OrderViewModel
 
@@ -34,47 +36,72 @@ class AccompanimentMenuFragment : Fragment() {
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
     // when the view hierarchy is attached to the fragment.
     private var _binding: FragmentAccompanimentMenuBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
     // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
     private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = FragmentAccompanimentMenuBinding.inflate(inflater, container, false)
-        val root = binding.root
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = sharedViewModel
-            // TODO: initialize the AccompanimentMenuFragment variables
+            accompanimentOptions.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    R.id.bread -> sharedViewModel.setAccompaniment("bread")
+                    R.id.berries -> sharedViewModel.setAccompaniment("berries")
+                    R.id.pickles -> sharedViewModel.setAccompaniment("pickles")
+                }
+            }
+            sharedViewModel.subtotalFormatted.observe(viewLifecycleOwner) { newValue ->
+                subtotal.text = newValue
+            }
+            nextButton.setOnClickListener {
+                goToNextScreen()
+            }
+            cancelButton.setOnClickListener {
+                cancelOrder()
+            }
+            sharedViewModel.menuItems["bread"]?.let { menuItem ->
+                bread.text = menuItem.name
+                breadDescription.text = menuItem.description
+                breadPrice.text = menuItem.getFormattedPrice()
+            }
+            sharedViewModel.menuItems["berries"]?.let { menuItem ->
+                berries.text = menuItem.name
+                berriesDescription.text = menuItem.description
+                berriesPrice.text = menuItem.getFormattedPrice()
+            }
+            sharedViewModel.menuItems["pickles"]?.let { menuItem ->
+                pickles.text = menuItem.name
+                picklesDescription.text = menuItem.description
+                picklesPrice.text = menuItem.getFormattedPrice()
+            }
         }
     }
 
     /**
      * Navigate to the checkout fragment.
      */
-    fun goToNextScreen() {
-        // TODO: Navigate to the CheckoutFragment
+    private fun goToNextScreen() {
+        findNavController().navigate(AccompanimentMenuFragmentDirections.actionAccompanimentMenuFragmentToCheckoutFragment())
     }
 
     /**
      * Cancel the order and start over.
      */
-    fun cancelOrder() {
-        // TODO: Reset order in view model
-        // TODO: Navigate back to the [StartFragment] to start over
+    private fun cancelOrder() {
+        sharedViewModel.resetOrder()
+        findNavController().navigate(AccompanimentMenuFragmentDirections.actionAccompanimentMenuFragmentToStartOrder())
     }
 
     /**
