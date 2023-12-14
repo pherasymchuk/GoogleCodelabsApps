@@ -64,8 +64,20 @@ class CheckoutFragment : Fragment() {
             submitButton.setOnClickListener {
                 submitOrder()
             }
-            sharedViewModel.totalFormatted.observe(viewLifecycleOwner) { newValue ->
-                total.text = newValue
+            sharedViewModel.totalFormatted.observe(viewLifecycleOwner) { total.text = it }
+            sharedViewModel.taxFormatted.observe(viewLifecycleOwner) { tax.text = it }
+            sharedViewModel.subtotalFormatted.observe(viewLifecycleOwner) { subtotal.text = it }
+            sharedViewModel.entree.observe(viewLifecycleOwner) { menuItem ->
+                entreeSelection.text = menuItem?.name
+                entreePrice.text = menuItem?.getFormattedPrice()
+            }
+            sharedViewModel.side.observe(viewLifecycleOwner) { menuItem ->
+                sideSelection.text = menuItem?.name
+                sidePrice.text = menuItem?.getFormattedPrice()
+            }
+            sharedViewModel.accompaniment.observe(viewLifecycleOwner) { menuItem ->
+                accompanimentSelection.text = menuItem?.name
+                accompanimentPrice.text = menuItem?.getFormattedPrice()
             }
         }
     }
@@ -73,7 +85,7 @@ class CheckoutFragment : Fragment() {
     /**
      * Cancel the order and start over.
      */
-    fun cancelOrder() {
+    private fun cancelOrder() {
         sharedViewModel.resetOrder()
         findNavController().navigate(CheckoutFragmentDirections.actionCheckoutFragmentToStartOrderFragment())
     }
@@ -81,8 +93,7 @@ class CheckoutFragment : Fragment() {
     /**
      * Submit order and navigate to home screen.
      */
-    fun submitOrder() {
-        // Show snackbar to "confirm" order
+    private fun submitOrder() {
         Snackbar.make(binding.root, R.string.submit_order, Snackbar.LENGTH_SHORT).show()
         sharedViewModel.resetOrder()
         findNavController().navigate(CheckoutFragmentDirections.actionCheckoutFragmentToStartOrderFragment())

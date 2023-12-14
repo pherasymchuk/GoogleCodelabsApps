@@ -31,6 +31,7 @@
             android:id="@+id/accompaniment_options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:checkedButton="@id/bread"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
