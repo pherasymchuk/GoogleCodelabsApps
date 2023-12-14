@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.lunchtray.R
 import com.example.lunchtray.databinding.FragmentSideMenuBinding
 import com.example.lunchtray.model.OrderViewModel
@@ -42,15 +43,16 @@ class SideMenuFragment : Fragment() {
     // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
     private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentSideMenuBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.apply {
             sideOptions.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
@@ -59,6 +61,15 @@ class SideMenuFragment : Fragment() {
                     R.id.potatoes -> sharedViewModel.setSide("potatoes")
                     R.id.rice -> sharedViewModel.setSide("rice")
                 }
+            }
+            sharedViewModel.subtotalFormatted.observe(viewLifecycleOwner) { newValue ->
+                subtotal.text = newValue
+            }
+            binding.nextButton.setOnClickListener {
+                goToNextScreen()
+            }
+            binding.cancelButton.setOnClickListener {
+                cancelOrder()
             }
             sharedViewModel.menuItems["salad"]?.let { menuItem ->
                 salad.text = menuItem.name
@@ -81,29 +92,21 @@ class SideMenuFragment : Fragment() {
                 ricePrice.text = menuItem.getFormattedPrice()
             }
         }
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.apply {
-            // TODO: initialize the SideMenuFragment variables
-        }
     }
 
     /**
      * Navigate to the accompaniments menu fragment
      */
-    fun goToNextScreen() {
-        // TODO: Navigate to the AccompanimentMenuFragment
+    private fun goToNextScreen() {
+        findNavController().navigate(SideMenuFragmentDirections.actionSideMenuFragmentToAccompanimentMenuFragment())
     }
 
     /**
      * Cancel the order and start over.
      */
-    fun cancelOrder() {
-        // TODO: Reset order in view model
-        // TODO: Navigate back to the [StartFragment] to start over
+    private fun cancelOrder() {
+        sharedViewModel.resetOrder()
+        findNavController().navigate(SideMenuFragmentDirections.actionSideMenuFragmentToStartOrder())
     }
 
     /**
