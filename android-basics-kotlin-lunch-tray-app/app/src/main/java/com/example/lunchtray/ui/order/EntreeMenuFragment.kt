@@ -33,9 +33,11 @@ class EntreeMenuFragment : Fragment() {
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
     // when the view hierarchy is attached to the fragment.
     private var _binding: FragmentEntreeMenuBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
     // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
     private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
@@ -45,7 +47,7 @@ class EntreeMenuFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentEntreeMenuBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -54,10 +56,17 @@ class EntreeMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        binding.apply {
+//            lifecycleOwner = viewLifecycleOwner
+//            viewModel = sharedViewModel
+//            // TODO: initialize the EntreeMenuFragment variables
+//        }
         binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = sharedViewModel
-            // TODO: initialize the EntreeMenuFragment variables
+            sharedViewModel.menuItems["cauliflower"].let { menuItem ->
+                cauliflower.text = menuItem?.name
+                cauliflowerDescription.text = menuItem?.description
+                cauliflowerPrice.text = menuItem?.getFormattedPrice()
+            }
         }
     }
 

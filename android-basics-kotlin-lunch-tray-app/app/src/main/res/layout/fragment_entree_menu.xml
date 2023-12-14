@@ -44,6 +44,7 @@
                 android:id="@+id/entree_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checkedButton="@id/cauliflower"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -54,20 +55,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    android:text='@{viewModel.menuItems["cauliflower"].name}'
                     tools:text="Entree 1" />
 
                 <TextView
                     android:id="@+id/cauliflower_description"
                     style="@style/Widget.MenuItem.TextView.Info"
-                    android:text='@{viewModel.menuItems["cauliflower"].description}'
                     tools:text="Entree 1 description" />
 
                 <TextView
                     android:id="@+id/cauliflower_price"
                     style="@style/Widget.MenuItem.TextView.Info"
                     android:paddingTop="@dimen/base_margin"
-                    android:text='@{viewModel.menuItems["cauliflower"].getFormattedPrice()}'
                     tools:text="$0.00" />
 
                 <View
