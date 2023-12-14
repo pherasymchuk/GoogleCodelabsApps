@@ -36,9 +36,11 @@ class CheckoutFragment : Fragment() {
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
     // when the view hierarchy is attached to the fragment.
     private var _binding: FragmentCheckoutBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
     // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
     private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
@@ -56,7 +58,15 @@ class CheckoutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            // TODO: initialize the OrderViewModel and CheckoutFragment variables
+            cancelButton.setOnClickListener {
+                cancelOrder()
+            }
+            submitButton.setOnClickListener {
+                submitOrder()
+            }
+            sharedViewModel.totalFormatted.observe(viewLifecycleOwner) { newValue ->
+                total.text = newValue
+            }
         }
     }
 
