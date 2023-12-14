@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.lunchtray.R
 import com.example.lunchtray.databinding.FragmentSideMenuBinding
 import com.example.lunchtray.model.OrderViewModel
 
@@ -33,9 +34,11 @@ class SideMenuFragment : Fragment() {
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
     // when the view hierarchy is attached to the fragment.
     private var _binding: FragmentSideMenuBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
     // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
     private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
@@ -45,18 +48,45 @@ class SideMenuFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = FragmentSideMenuBinding.inflate(inflater, container, false)
-        val root = binding.root
-        return root
+        binding.apply {
+            sideOptions.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    R.id.salad -> sharedViewModel.setSide("salad")
+                    R.id.soup -> sharedViewModel.setSide("soup")
+                    R.id.potatoes -> sharedViewModel.setSide("potatoes")
+                    R.id.rice -> sharedViewModel.setSide("rice")
+                }
+            }
+            sharedViewModel.menuItems["salad"]?.let { menuItem ->
+                salad.text = menuItem.name
+                saladDescription.text = menuItem.description
+                saladPrice.text = menuItem.getFormattedPrice()
+            }
+            sharedViewModel.menuItems["soup"]?.let { menuItem ->
+                soup.text = menuItem.name
+                soupDescription.text = menuItem.description
+                soupPrice.text = menuItem.getFormattedPrice()
+            }
+            sharedViewModel.menuItems["potatoes"]?.let { menuItem ->
+                potatoes.text = menuItem.name
+                potatoDescription.text = menuItem.description
+                potatoPrice.text = menuItem.getFormattedPrice()
+            }
+            sharedViewModel.menuItems["rice"]?.let { menuItem ->
+                rice.text = menuItem.name
+                riceDescription.text = menuItem.description
+                ricePrice.text = menuItem.getFormattedPrice()
+            }
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = sharedViewModel
             // TODO: initialize the SideMenuFragment variables
         }
     }

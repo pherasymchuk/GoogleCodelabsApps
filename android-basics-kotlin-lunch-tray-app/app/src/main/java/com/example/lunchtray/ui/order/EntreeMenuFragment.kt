@@ -75,25 +75,25 @@ class EntreeMenuFragment : Fragment() {
             cancelButton.setOnClickListener {
                 cancelOrder()
             }
-            sharedViewModel.menuItems["cauliflower"].let { menuItem ->
-                cauliflower.text = menuItem?.name
-                cauliflowerDescription.text = menuItem?.description
-                cauliflowerPrice.text = menuItem?.getFormattedPrice()
+            sharedViewModel.menuItems["cauliflower"]?.let { menuItem ->
+                cauliflower.text = menuItem.name
+                cauliflowerDescription.text = menuItem.description
+                cauliflowerPrice.text = menuItem.getFormattedPrice()
             }
-            sharedViewModel.menuItems["chili"].let { menuItem ->
-                chili.text = menuItem?.name
-                chiliDescription.text = menuItem?.description
-                chiliPrice.text = menuItem?.getFormattedPrice()
+            sharedViewModel.menuItems["chili"]?.let { menuItem ->
+                chili.text = menuItem.name
+                chiliDescription.text = menuItem.description
+                chiliPrice.text = menuItem.getFormattedPrice()
             }
-            sharedViewModel.menuItems["pasta"].let { menuItem ->
-                pasta.text = menuItem?.name
-                pastaDescription.text = menuItem?.description
-                pastaPrice.text = menuItem?.getFormattedPrice()
+            sharedViewModel.menuItems["pasta"]?.let { menuItem ->
+                pasta.text = menuItem.name
+                pastaDescription.text = menuItem.description
+                pastaPrice.text = menuItem.getFormattedPrice()
             }
-            sharedViewModel.menuItems["skillet"].let { menuItem ->
-                skillet.text = menuItem?.name
-                skilletDescription.text = menuItem?.description
-                skilletPrice.text = menuItem?.getFormattedPrice()
+            sharedViewModel.menuItems["skillet"]?.let { menuItem ->
+                skillet.text = menuItem.name
+                skilletDescription.text = menuItem.description
+                skilletPrice.text = menuItem.getFormattedPrice()
             }
         }
     }
