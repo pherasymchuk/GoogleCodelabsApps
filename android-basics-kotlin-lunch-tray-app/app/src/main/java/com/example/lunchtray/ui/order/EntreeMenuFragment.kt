@@ -21,6 +21,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.example.lunchtray.R
 import com.example.lunchtray.databinding.FragmentEntreeMenuBinding
 import com.example.lunchtray.model.OrderViewModel
 
@@ -29,43 +31,69 @@ import com.example.lunchtray.model.OrderViewModel
  */
 class EntreeMenuFragment : Fragment() {
 
-    // Binding object instance corresponding to the fragment_start_order.xml layout
-    // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
-    // when the view hierarchy is attached to the fragment.
+    /**
+     * Binding object instance corresponding to the fragment_start_order.xml layout
+     * This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
+     * when the view hierarchy is attached to the fragment.
+     */
     private var _binding: FragmentEntreeMenuBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    /**
+    This property is only valid between onCreateView and
+    onDestroyView.
+     */
     private val binding get() = _binding!!
 
     // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
     private val sharedViewModel: OrderViewModel by activityViewModels<OrderViewModel.Base>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         _binding = FragmentEntreeMenuBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.apply {
-//            lifecycleOwner = viewLifecycleOwner
-//            viewModel = sharedViewModel
-//            // TODO: initialize the EntreeMenuFragment variables
-//        }
         binding.apply {
+            entreeOptions.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    R.id.cauliflower -> sharedViewModel.setEntree("cauliflower")
+                    R.id.chili -> sharedViewModel.setEntree("chili")
+                    R.id.pasta -> sharedViewModel.setEntree("pasta")
+                    R.id.skillet -> sharedViewModel.setEntree("skillet")
+                }
+            }
+            sharedViewModel.subtotalFormatted.observe(viewLifecycleOwner) { newValue ->
+                subtotal.text = newValue
+            }
+            nextButton.setOnClickListener {
+                goToNextScreen()
+            }
+            cancelButton.setOnClickListener {
+                cancelOrder()
+            }
             sharedViewModel.menuItems["cauliflower"].let { menuItem ->
                 cauliflower.text = menuItem?.name
                 cauliflowerDescription.text = menuItem?.description
                 cauliflowerPrice.text = menuItem?.getFormattedPrice()
+            }
+            sharedViewModel.menuItems["chili"].let { menuItem ->
+                chili.text = menuItem?.name
+                chiliDescription.text = menuItem?.description
+                chiliPrice.text = menuItem?.getFormattedPrice()
+            }
+            sharedViewModel.menuItems["pasta"].let { menuItem ->
+                pasta.text = menuItem?.name
+                pastaDescription.text = menuItem?.description
+                pastaPrice.text = menuItem?.getFormattedPrice()
+            }
+            sharedViewModel.menuItems["skillet"].let { menuItem ->
+                skillet.text = menuItem?.name
+                skilletDescription.text = menuItem?.description
+                skilletPrice.text = menuItem?.getFormattedPrice()
             }
         }
     }
@@ -73,16 +101,16 @@ class EntreeMenuFragment : Fragment() {
     /**
      * Navigate to the side menu fragment.
      */
-    fun goToNextScreen() {
-        // TODO: Navigate to the SideMenuFragment
+    private fun goToNextScreen() {
+        findNavController().navigate(EntreeMenuFragmentDirections.actionEntreeMenuFragmentToSideMenuFragment())
     }
 
     /**
      * Cancel the order and start over.
      */
-    fun cancelOrder() {
-        // TODO: Reset order in view model
-        // TODO: Navigate back to the [StartFragment] to start over
+    private fun cancelOrder() {
+        sharedViewModel.resetOrder()
+        findNavController().navigate(EntreeMenuFragmentDirections.actionEntreeMenuFragmentToStartOrder())
     }
 
     /**
