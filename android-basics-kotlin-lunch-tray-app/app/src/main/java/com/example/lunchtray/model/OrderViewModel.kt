@@ -47,28 +47,17 @@ abstract class OrderViewModel : ViewModel() {
 
         private val taxRate = 0.08
 
-        // Entree for the order
-        override val entree = MutableLiveData<MenuItem?>()
-
-        // Side for the order
+        override var entree = MutableLiveData<MenuItem?>()
         override val side = MutableLiveData<MenuItem?>()
-
-        // Accompaniment for the order.
         override val accompaniment = MutableLiveData<MenuItem?>()
-
-        // Subtotal for the order
         private val subtotal = MutableLiveData(0.0)
         override val subtotalFormatted: LiveData<String> = subtotal.map {
             NumberFormat.getCurrencyInstance().format(it)
         }
-
-        // Total cost of the order
         private val total = MutableLiveData(0.0)
         override val totalFormatted: LiveData<String> = total.map {
             NumberFormat.getCurrencyInstance().format(it)
         }
-
-        // Tax for the order
         private val tax = MutableLiveData(0.0)
         override val taxFormatted: LiveData<String> = tax.map {
             NumberFormat.getCurrencyInstance().format(it)
@@ -135,7 +124,14 @@ abstract class OrderViewModel : ViewModel() {
          * Reset all values pertaining to the order.
          */
         override fun resetOrder() {
-            // TODO: Reset all values associated with an order
+            previousEntreePrice = 0.0
+            previousSidePrice = 0.0
+            previousAccompanimentPrice = 0.0
+            entree.value = null
+            side.value = null
+            accompaniment.value = null
+            subtotal.value = 0.0
+            total.value = 0.0
         }
     }
 }
