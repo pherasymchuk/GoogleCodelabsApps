@@ -64,7 +64,7 @@ class SideMenuFragment : Fragment() {
                 }
             }
             sharedViewModel.subtotalFormatted.observe(viewLifecycleOwner) { newValue ->
-                subtotal.text = newValue
+                subtotal.text = getString(R.string.subtotal, newValue)
             }
             binding.nextButton.setOnClickListener {
                 goToNextScreen()

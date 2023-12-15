@@ -64,9 +64,6 @@ class CheckoutFragment : Fragment() {
             submitButton.setOnClickListener {
                 submitOrder()
             }
-            sharedViewModel.totalFormatted.observe(viewLifecycleOwner) { total.text = it }
-            sharedViewModel.taxFormatted.observe(viewLifecycleOwner) { tax.text = it }
-            sharedViewModel.subtotalFormatted.observe(viewLifecycleOwner) { subtotal.text = it }
             sharedViewModel.entree.observe(viewLifecycleOwner) { menuItem ->
                 entreeSelection.text = menuItem?.name
                 entreePrice.text = menuItem?.getFormattedPrice()
@@ -78,6 +75,15 @@ class CheckoutFragment : Fragment() {
             sharedViewModel.accompaniment.observe(viewLifecycleOwner) { menuItem ->
                 accompanimentSelection.text = menuItem?.name
                 accompanimentPrice.text = menuItem?.getFormattedPrice()
+            }
+            sharedViewModel.subtotalFormatted.observe(viewLifecycleOwner) { newValue ->
+                subtotal.text = getString(R.string.subtotal, newValue)
+            }
+            sharedViewModel.taxFormatted.observe(viewLifecycleOwner) { newTax ->
+                tax.text = getString(R.string.tax, newTax)
+            }
+            sharedViewModel.totalFormatted.observe(viewLifecycleOwner) { totalPrice ->
+                total.text = getString(R.string.total, totalPrice)
             }
         }
     }

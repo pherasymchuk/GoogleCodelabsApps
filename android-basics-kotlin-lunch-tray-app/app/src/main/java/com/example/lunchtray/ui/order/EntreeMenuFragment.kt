@@ -68,7 +68,7 @@ class EntreeMenuFragment : Fragment() {
                 }
             }
             sharedViewModel.subtotalFormatted.observe(viewLifecycleOwner) { newValue ->
-                subtotal.text = newValue
+                subtotal.text = getString(R.string.subtotal, newValue)
             }
             nextButton.setOnClickListener {
                 goToNextScreen()
