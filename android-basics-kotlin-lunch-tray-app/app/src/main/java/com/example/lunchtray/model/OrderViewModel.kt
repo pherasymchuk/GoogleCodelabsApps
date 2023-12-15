@@ -79,14 +79,13 @@ abstract class OrderViewModel : ViewModel() {
          * Set the entree for the order.
          */
         override fun setEntree(entree: String) {
-            // TODO: if _entree.value is not null, set the previous entree price to the current
-            //  entree price.
-
-            // TODO: if _subtotal.value is not null subtract the previous entree price from the current
-            //  subtotal value. This ensures that we only charge for the currently selected entree.
-
-            // TODO: set the current entree value to the menu item corresponding to the passed in string
-            // TODO: update the subtotal to reflect the price of the selected entree.
+            val selectedEntree: MenuItem? = menuItems[entree]
+            if (selectedEntree != null) {
+                previousEntreePrice = this.entree.value?.price ?: 0.0
+                this.entree.value = selectedEntree
+                subtotal.value =
+                    (subtotal.value ?: 0.0) - previousEntreePrice + selectedEntree.price
+            }
         }
 
         /**

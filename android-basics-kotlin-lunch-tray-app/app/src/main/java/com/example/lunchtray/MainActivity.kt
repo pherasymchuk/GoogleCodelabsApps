@@ -21,6 +21,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lunchtray.databinding.ActivityMainBinding
 
+const val TAG = "mainTag"
+
 class MainActivity : AppCompatActivity() {
 
     // Binding object instance corresponding to the activity_main.xml layout

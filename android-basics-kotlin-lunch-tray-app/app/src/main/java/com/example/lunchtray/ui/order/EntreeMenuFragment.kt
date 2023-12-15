@@ -16,6 +16,7 @@
 package com.example.lunchtray.ui.order
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.lunchtray.R
+import com.example.lunchtray.TAG
 import com.example.lunchtray.databinding.FragmentEntreeMenuBinding
 import com.example.lunchtray.model.OrderViewModel
 
@@ -59,6 +61,7 @@ class EntreeMenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             entreeOptions.setOnCheckedChangeListener { _, checkedId ->
+                nextButton.isEnabled = true
                 when (checkedId) {
                     R.id.cauliflower -> sharedViewModel.setEntree("cauliflower")
                     R.id.chili -> sharedViewModel.setEntree("chili")
@@ -79,22 +82,40 @@ class EntreeMenuFragment : Fragment() {
                 cauliflower.text = menuItem.name
                 cauliflowerDescription.text = menuItem.description
                 cauliflowerPrice.text = menuItem.getFormattedPrice()
+                cauliflower.setOnClickListener { sharedViewModel.setEntree("cauliflower") }
             }
             sharedViewModel.menuItems["chili"]?.let { menuItem ->
                 chili.text = menuItem.name
                 chiliDescription.text = menuItem.description
                 chiliPrice.text = menuItem.getFormattedPrice()
+                chili.setOnClickListener { sharedViewModel.setEntree("chili") }
             }
             sharedViewModel.menuItems["pasta"]?.let { menuItem ->
                 pasta.text = menuItem.name
                 pastaDescription.text = menuItem.description
                 pastaPrice.text = menuItem.getFormattedPrice()
+                pasta.setOnClickListener { sharedViewModel.setEntree("pasta") }
             }
             sharedViewModel.menuItems["skillet"]?.let { menuItem ->
                 skillet.text = menuItem.name
                 skilletDescription.text = menuItem.description
                 skilletPrice.text = menuItem.getFormattedPrice()
+                skillet.setOnClickListener { sharedViewModel.setEntree("skillet") }
             }
+            nextButton.isEnabled = entreeOptions.checkedRadioButtonId != -1
+        }
+        sharedViewModel.run {
+            Log.d(
+                TAG, """ViewModel: 
+            |menuItems: $menuItems
+            |entree: ${entree.value}
+            |side: ${side.value}
+            |accompaniment: ${accompaniment.value}
+            |subtotalFormatted: ${subtotalFormatted.value}
+            |totalFormatted: ${totalFormatted.value}
+            |taxFormatted: ${taxFormatted.value}
+        """.trimMargin()
+            )
         }
     }
 
