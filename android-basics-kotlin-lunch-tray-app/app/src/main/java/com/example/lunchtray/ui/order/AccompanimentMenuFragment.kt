@@ -56,6 +56,7 @@ class AccompanimentMenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             accompanimentOptions.setOnCheckedChangeListener { _, checkedId ->
+                nextButton.isEnabled = true
                 when (checkedId) {
                     R.id.bread -> sharedViewModel.setAccompaniment("bread")
                     R.id.berries -> sharedViewModel.setAccompaniment("berries")
@@ -86,6 +87,7 @@ class AccompanimentMenuFragment : Fragment() {
                 picklesDescription.text = menuItem.description
                 picklesPrice.text = menuItem.getFormattedPrice()
             }
+            nextButton.isEnabled = accompanimentOptions.checkedRadioButtonId != -1
         }
     }
 
