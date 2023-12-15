@@ -55,6 +55,7 @@ class SideMenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             sideOptions.setOnCheckedChangeListener { _, checkedId ->
+                nextButton.isEnabled = true
                 when (checkedId) {
                     R.id.salad -> sharedViewModel.setSide("salad")
                     R.id.soup -> sharedViewModel.setSide("soup")
@@ -91,6 +92,7 @@ class SideMenuFragment : Fragment() {
                 riceDescription.text = menuItem.description
                 ricePrice.text = menuItem.getFormattedPrice()
             }
+            nextButton.isEnabled = sideOptions.checkedRadioButtonId != -1
         }
     }
 

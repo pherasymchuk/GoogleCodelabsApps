@@ -51,8 +51,7 @@ abstract class OrderViewModel : ViewModel() {
         override val entree = MutableLiveData<MenuItem?>()
 
         // Side for the order
-        private val _side = MutableLiveData<MenuItem?>()
-        override val side: LiveData<MenuItem?> = _side
+        override val side = MutableLiveData<MenuItem?>()
 
         // Accompaniment for the order.
         override val accompaniment = MutableLiveData<MenuItem?>()
@@ -92,13 +91,12 @@ abstract class OrderViewModel : ViewModel() {
          * Set the side for the order.
          */
         override fun setSide(side: String) {
-            // TODO: if _side.value is not null, set the previous side price to the current side price.
-
-            // TODO: if _subtotal.value is not null subtract the previous side price from the current
-            //  subtotal value. This ensures that we only charge for the currently selected side.
-
-            // TODO: set the current side value to the menu item corresponding to the passed in string
-            // TODO: update the subtotal to reflect the price of the selected side.
+            val selectedSide: MenuItem? = menuItems[side]
+            if (selectedSide != null) {
+                previousSidePrice = this.side.value?.price ?: 0.0
+                this.side.value = selectedSide
+                subtotal.value = (subtotal.value ?: 0.0) - previousSidePrice + selectedSide.price
+            }
         }
 
         /**
