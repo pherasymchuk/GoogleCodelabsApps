@@ -85,7 +85,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/soup_description" />
 
-            <!-- TODO: set the RadioButton text to the accompaniment name using the view model -->
             <RadioButton
                 android:id="@+id/pickles"
                 android:layout_width="wrap_content"
