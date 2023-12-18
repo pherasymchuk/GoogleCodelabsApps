@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MarsPhotos.Material3.ActionBar.Solid" parent="Widget.Material3.ActionBar.Solid">
+        <item name="background">?colorPrimaryVariant</item>
+        <item name="titleTextStyle">@style/MarsPhotos.ActionBar.Solid.Title</item>
+    </style>
+
+    <style name="MarsPhotos.ActionBar.Solid.Title" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="MarsPhotos.ActionBar.Solid.Dark" parent="Widget.Material3.ActionBar.Solid">
+
+    </style>
+</resources>
