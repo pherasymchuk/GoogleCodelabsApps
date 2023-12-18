@@ -29,7 +29,9 @@ import com.example.android.marsphotos.databinding.FragmentOverviewBinding
  */
 class OverviewFragment : Fragment() {
 
-    private val viewModel: OverviewViewModel by viewModels()
+    private val viewModel: OverviewViewModel by viewModels<OverviewViewModel.Base>()
+    private var _binding: FragmentOverviewBinding? = null
+    private val binding: FragmentOverviewBinding get() = _binding!!
 
     /**
      * Inflates the layout with Data Binding, sets its lifecycle owner to the OverviewFragment
@@ -37,9 +39,9 @@ class OverviewFragment : Fragment() {
      */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = FragmentOverviewBinding.inflate(inflater)
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FragmentOverviewBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
