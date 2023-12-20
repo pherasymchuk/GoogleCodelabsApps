@@ -33,7 +33,7 @@ abstract class OverviewViewModel : ViewModel() {
 
     /**
      * Gets Mars photos information from the Mars API Retrofit service and updates the
-     * [MarsPhoto] [List] [LiveData].
+     * [com.example.android.marsphotos.network.MarsPhoto] [List] [LiveData].
      */
     protected abstract fun getMarsPhotos()
 
@@ -50,8 +50,12 @@ abstract class OverviewViewModel : ViewModel() {
         override fun getMarsPhotos() {
             status.value = "Set the Mars API status response here!"
             viewModelScope.launch {
-                val listResult: String = MarsApi.retrofitService.getPhotos()
-                status.value = listResult
+                try {
+                    val listResult: String = MarsApi.retrofitService.getPhotos().size.toString()
+                    status.value = listResult
+                } catch (e: Exception) {
+                    status.value = "Failure: ${e.message}"
+                }
             }
         }
     }
