@@ -30,8 +30,7 @@ import com.example.android.marsphotos.databinding.FragmentOverviewBinding
 class OverviewFragment : Fragment() {
 
     private val viewModel: OverviewViewModel by viewModels<OverviewViewModel.Base>()
-    private var _binding: FragmentOverviewBinding? = null
-    private val binding: FragmentOverviewBinding get() = _binding!!
+    private lateinit var binding: FragmentOverviewBinding
 
     /**
      * Inflates the layout with Data Binding, sets its lifecycle owner to the OverviewFragment
@@ -41,14 +40,14 @@ class OverviewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentOverviewBinding.inflate(inflater)
+        binding = FragmentOverviewBinding.inflate(layoutInflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
         // Giving the binding access to the OverviewViewModel
-        binding.viewModel = viewModel
-
+        binding.viewModel = viewModel as OverviewViewModel.Base
+        binding.photosGrid.adapter = PhotoGridAdapter()
         return binding.root
     }
 }

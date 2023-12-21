@@ -21,6 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.marsphotos.network.MarsApi
+import com.example.android.marsphotos.network.MarsPhoto
 import kotlinx.coroutines.launch
 
 /**
@@ -30,29 +31,32 @@ abstract class OverviewViewModel : ViewModel() {
 
     // The internal MutableLiveData that stores the status of the most recent request
     abstract val status: LiveData<String>
+    abstract val marsPhotos: LiveData<List<MarsPhoto>>
 
     /**
      * Gets Mars photos information from the Mars API Retrofit service and updates the
-     * [com.example.android.marsphotos.network.MarsPhoto] [List] [LiveData].
+     * [MarsPhoto] [List] [LiveData].
      */
-    protected abstract fun getMarsPhotos()
+    protected abstract fun fetchMarsPhotos()
 
     class Base : OverviewViewModel() {
         override val status = MutableLiveData<String>()
+        override val marsPhotos: MutableLiveData<List<MarsPhoto>> =
+            MutableLiveData<List<MarsPhoto>>()
 
         /**
          * Call getMarsPhotos() on init so we can display status immediately.
          */
         init {
-            getMarsPhotos()
+            fetchMarsPhotos()
         }
 
-        override fun getMarsPhotos() {
+        override fun fetchMarsPhotos() {
             status.value = "Set the Mars API status response here!"
             viewModelScope.launch {
                 try {
-                    val listResult: String = MarsApi.retrofitService.getPhotos().size.toString()
-                    status.value = listResult
+                    marsPhotos.value = MarsApi.retrofitService.getPhotos()
+                    status.value = "Success: Mars properties retrieved"
                 } catch (e: Exception) {
                     status.value = "Failure: ${e.message}"
                 }
