@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 abstract class OverviewViewModel : ViewModel() {
 
     // The internal MutableLiveData that stores the status of the most recent request
-    abstract val status: LiveData<String>
+    abstract val status: LiveData<MarsApiStatus>
     abstract val marsPhotos: LiveData<List<MarsPhoto>>
 
     /**
@@ -40,7 +40,7 @@ abstract class OverviewViewModel : ViewModel() {
     protected abstract fun fetchMarsPhotos()
 
     class Base : OverviewViewModel() {
-        override val status = MutableLiveData<String>()
+        override val status = MutableLiveData<MarsApiStatus>()
         override val marsPhotos: MutableLiveData<List<MarsPhoto>> =
             MutableLiveData<List<MarsPhoto>>()
 
@@ -52,15 +52,17 @@ abstract class OverviewViewModel : ViewModel() {
         }
 
         override fun fetchMarsPhotos() {
-            status.value = "Set the Mars API status response here!"
+            status.value = MarsApiStatus.Loading
             viewModelScope.launch {
                 try {
                     marsPhotos.value = MarsApi.retrofitService.getPhotos()
-                    status.value = "Success: Mars properties retrieved"
+                    status.value = MarsApiStatus.Done
                 } catch (e: Exception) {
-                    status.value = "Failure: ${e.message}"
+                    status.value = MarsApiStatus.Error
+                    marsPhotos.value = emptyList()
                 }
             }
         }
     }
+
 }
