@@ -35,5 +35,6 @@
         android:padding="2dp"
         android:scaleType="fitXY"
         app:imageUrl="@{photo.imgSrc}"
+        android:contentDescription="@string/mars_photo"
         tools:src="@tools:sample/backgrounds/scenic" />
 </layout>

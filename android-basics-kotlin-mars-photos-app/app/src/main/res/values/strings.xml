@@ -17,4 +17,5 @@
 
 <resources>
     <string name="app_name">Mars Photos</string>
+    <string name="mars_photo">Mars photo</string>
 </resources>
