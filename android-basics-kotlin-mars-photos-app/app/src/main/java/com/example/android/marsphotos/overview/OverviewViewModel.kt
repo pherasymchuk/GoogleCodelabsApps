@@ -20,7 +20,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.marsphotos.network.MarsApi
+import com.example.android.marsphotos.network.Api
 import com.example.android.marsphotos.network.MarsPhoto
 import kotlinx.coroutines.launch
 
@@ -55,7 +55,7 @@ abstract class OverviewViewModel : ViewModel() {
             status.value = MarsApiStatus.Loading
             viewModelScope.launch {
                 try {
-                    marsPhotos.value = MarsApi.retrofitService.getPhotos()
+                    marsPhotos.value = Api.MarsApi.retrofitService.getPhotos()
                     status.value = MarsApiStatus.Done
                 } catch (e: Exception) {
                     status.value = MarsApiStatus.Error
