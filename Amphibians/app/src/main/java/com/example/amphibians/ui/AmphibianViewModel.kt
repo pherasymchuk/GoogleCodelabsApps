@@ -30,8 +30,6 @@ abstract class AmphibianViewModel : ViewModel() {
     abstract val status: LiveData<AmphibianApiStatus>
     abstract val amphibians: LiveData<List<Amphibian>>
     abstract val amphibian: LiveData<Amphibian>
-    // TODO: Create a function that gets a list of amphibians from the api service and sets the
-    //  status via a Coroutine
     abstract fun fetchAmphibians()
     abstract fun onAmphibianClicked(amphibian: Amphibian)
 
@@ -44,7 +42,7 @@ abstract class AmphibianViewModel : ViewModel() {
             status.value = AmphibianApiStatus.LOADING
             viewModelScope.launch {
                 try {
-                    Api.Amphibians.retrofitService.getAmphibians()
+                    amphibians.value = Api.Amphibians.retrofitService.getAmphibians()
                     status.value = AmphibianApiStatus.DONE
                 } catch (e: Exception) {
                     status.value = AmphibianApiStatus.ERROR
