@@ -28,14 +28,14 @@ import com.example.amphibians.databinding.FragmentAmphibianListBinding
 
 class AmphibianListFragment : Fragment() {
 
-    private val viewModel: AmphibianViewModel by activityViewModels()
+    private val viewModel: AmphibianViewModel by activityViewModels<AmphibianViewModel.Base>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?,
+    ): View {
         val binding = FragmentAmphibianListBinding.inflate(inflater)
-        // TODO: call the view model method that calls the amphibians api
+        viewModel.fetchAmphibians()
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.recyclerView.adapter = AmphibianListAdapter(AmphibianListener { amphibian ->
@@ -44,7 +44,6 @@ class AmphibianListFragment : Fragment() {
                 .navigate(R.id.action_amphibianListFragment_to_amphibianDetailFragment)
         })
 
-        // Inflate the layout for this fragment
         return binding.root
     }
 }

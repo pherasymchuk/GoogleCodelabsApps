@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Amphibians.Material3.ActionBar.Solid" parent="Base.Widget.Material3.ActionBar.Solid">
+        <item name="background">?colorPrimaryVariant</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="titleTextStyle">@style/TextAppearance.Amphibians.ActionBar.Title</item>
+    </style>
+
+    <style name="TextAppearance.Amphibians.ActionBar.Title" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

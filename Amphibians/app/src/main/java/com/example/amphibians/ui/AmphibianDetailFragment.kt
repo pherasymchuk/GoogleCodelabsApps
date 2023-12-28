@@ -28,12 +28,12 @@ import com.example.amphibians.databinding.FragmentAmphibianDetailBinding
  */
 class AmphibianDetailFragment : Fragment() {
 
-    private val viewModel: AmphibianViewModel by activityViewModels()
+    private val viewModel: AmphibianViewModel by activityViewModels<AmphibianViewModel.Base>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?,
+    ): View {
 
         val binding = FragmentAmphibianDetailBinding.inflate(inflater)
         binding.lifecycleOwner = this

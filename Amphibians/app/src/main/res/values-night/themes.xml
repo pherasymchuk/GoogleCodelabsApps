@@ -13,16 +13,18 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
-    <style name="Theme.Amphibians" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Amphibians" parent="Theme.Material3.Dark">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/green_light</item>
         <item name="colorPrimaryVariant">@color/green_dark</item>
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="actionBarStyle">@style/Base.Amphibians.Material3.ActionBar.Solid</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

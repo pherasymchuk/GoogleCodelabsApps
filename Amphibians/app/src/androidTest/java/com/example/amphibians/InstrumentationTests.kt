@@ -30,14 +30,14 @@ import org.junit.runner.RunWith
 class InstrumentationTests : BaseTest() {
 
     @Test
-    fun `recycler_view_content`() {
+    fun recycler_view_content() {
         launchFragmentInContainer<AmphibianListFragment>(themeResId = R.style.Theme_Amphibians)
         waitForView(withText("Great Basin Spadefoot")).check(matches(isDisplayed()))
         waitForView(withText("Tiger Salamander")).check(matches(isDisplayed()))
     }
 
     @Test
-    fun `detail_content`() {
+    fun detail_content() {
         launchActivity<MainActivity>()
         waitForView(withText("Blue Jeans Frog")).perform(click())
         waitForView(withText("Blue Jeans Frog")).check(matches(isDisplayed()))

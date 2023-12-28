@@ -33,7 +33,7 @@
         android:layout_margin="8dp"
         android:onClick="@{() -> clickListener.onClick(amphibian)}"
         app:cardElevation="4dp"
-        app:cardCornerRadius="4dp">
+        app:cardCornerRadius="14dp">
 
         <TextView
             android:id="@+id/amphibian_name"
