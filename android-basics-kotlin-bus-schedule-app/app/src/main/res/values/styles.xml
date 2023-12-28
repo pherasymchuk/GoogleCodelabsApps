@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.BusScheduler.ActionBar.Solid" parent="Widget.Material3.ActionBar.Solid">
+        <item name="background">?colorPrimaryDark</item>
+        <item name="titleTextStyle">@style/TextAppearance.BusScheduler.ActionBar.Title</item>
+    </style>
+
+    <style name="TextAppearance.BusScheduler.ActionBar.Title" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+</resources>
