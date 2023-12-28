@@ -15,7 +15,5 @@ abstract class BusScheduleViewModel : ViewModel() {
 
         override fun scheduleForStopName(name: String): List<Schedule> =
             scheduleDao.getStopByName(name)
-
-
     }
 }
