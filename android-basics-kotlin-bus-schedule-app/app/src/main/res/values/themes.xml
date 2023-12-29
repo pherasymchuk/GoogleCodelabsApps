@@ -14,8 +14,8 @@
 -->
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.BusScheduler" parent="Theme.Material3.DayNight">
+    <style name="Theme.BusScheduler" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="actionBarStyle">@style/Widget.BusScheduler.ActionBar.Solid</item>
+        <item name="colorOnSurface">@android:color/white</item>
     </style>
 </resources>
