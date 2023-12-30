@@ -13,8 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -28,8 +27,8 @@
         style="@style/Widget.Inventory.Header"
         android:layout_marginStart="@dimen/margin_between_elements"
         android:text="@string/item"
-        app:layout_constraintEnd_toStartOf="@+id/item_price"
         app:layout_constraintBottom_toTopOf="@id/recyclerView"
+        app:layout_constraintEnd_toStartOf="@+id/item_price"
         app:layout_constraintHorizontal_weight="1.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,9 +39,9 @@
         android:layout_marginStart="@dimen/margin_between_elements"
         android:text="@string/price"
         android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
         app:layout_constraintEnd_toStartOf="@+id/item_quantity"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView"
         app:layout_constraintStart_toEndOf="@+id/item_name"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -79,14 +78,15 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
+        style="@style/Widget.Material3.FloatingActionButton.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_between_elements"
         android:layout_marginBottom="@dimen/margin_between_elements"
         android:contentDescription="@string/add_new_item"
         android:src="@android:drawable/ic_input_add"
+        app:elevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@android:color/white" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
