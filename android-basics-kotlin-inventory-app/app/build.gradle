@@ -18,16 +18,16 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'com.google.devtools.ksp' version '1.8.0-1.0.8'
+    id 'com.google.devtools.ksp' version '1.9.22-1.0.16'
 }
 
 android {
-    compileSdkVersion 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.inventory"
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdkVersion 27
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 

@@ -18,15 +18,15 @@
 buildscript {
     ext {
         activity_version = '1.1.0'
-        appcompat_version = '1.6.0'
+        appcompat_version = '1.6.1'
         constraintlayout_version = '2.1.4'
-        core_ktx_version = '1.9.0'
+        core_ktx_version = '1.12.0'
         coroutines_version = '1.4.2'
-        kotlin_version = '1.8.0'
-        lifecycle_version = '2.5.1'
-        material_version = '1.8.0'
-        nav_version = '2.5.3'
-        room_version = '2.5.0'
+        kotlin_version = '1.9.22'
+        lifecycle_version = '2.6.2'
+        material_version = '1.11.0'
+        nav_version = '2.7.6'
+        room_version = '2.6.1'
     }
     repositories {
         google()
@@ -49,6 +49,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
