@@ -22,4 +22,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red_700">#FFD32F2F</color>
+
+    <color name="dark_grey">#4A4242</color>
+    <color name="purple_dark">#ff6750a4</color>
 </resources>

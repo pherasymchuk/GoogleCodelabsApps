@@ -20,19 +20,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import com.example.inventory.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
         // Retrieve NavController from the NavHostFragment
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         // Set up the action bar for use with the NavController
+        setSupportActionBar(binding.toolbar)
         setupActionBarWithNavController(this, navController)
     }
 
