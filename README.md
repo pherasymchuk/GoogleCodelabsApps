@@ -19,3 +19,20 @@ has to guess the word using all the letters from the scrambled word. The player 
 otherwise the player can try any number of times. The app also has an option to skip the current word. In the left top
 corner, the app displays the word count, which is the number of words played in this current game. There are 10 words
 per game.
+
+# Inventory
+
+**Created on: 2023.12.X**
+
+This app is an Inventory tracking app. Demos how to add, update, sell, and delete items from the local database. This app demonstrates the use of Android Jetpack component Room database.
+
+The app also leverages ViewModel, LiveData, Flow, View Binding, and Navigation with the SafeArgs plugin for parameter passing between fragments.
+
+<div style="display: flex; overflow-x: auto;">
+  <img src="assets/Inventory1.png" alt="Inventory 1" style="width: 50%; height: 50%;" />
+  <img src="assets/Inventory2.png" alt="Inventory 2" style="width: 50%; height: 50%;" />
+  <img src="assets/Inventory3.png" alt="Inventory 3" style="width: 50%; height: 50%;" />
+  <img src="assets/Inventory4.png" alt="Inventory 4" style="width: 50%; height: 50%;" />
+</div>
+
+
