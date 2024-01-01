@@ -21,15 +21,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.inventory.data.Item
 import com.example.inventory.databinding.FragmentAddItemBinding
+import com.example.inventory.viewmodels.InventoryViewModel
+import com.example.inventory.viewmodels.InventoryViewModelFactory
 
 /**
  * Fragment to add or update an item in the Inventory database.
  */
 class AddItemFragment : Fragment() {
-
+    private val viewModel: InventoryViewModel by activityViewModels<InventoryViewModel.Base> {
+        InventoryViewModelFactory((activity?.application as InventoryApplication).database.getItemDao())
+    }
+    lateinit var item: Item
     private val navigationArgs: ItemDetailFragmentArgs by navArgs()
 
     // Binding object instance corresponding to the fragment_add_item.xml layout
@@ -47,6 +56,44 @@ class AddItemFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val id = navigationArgs.itemId
+        if (id > 0) {
+            viewModel.retrieveItem(id).observe(viewLifecycleOwner) { selectedItem ->
+                item = selectedItem
+                bind(item)
+            }
+            binding.saveAction.setOnClickListener {
+                updateItem()
+            }
+        } else {
+            binding.saveAction.setOnClickListener {
+                addNewItem()
+            }
+        }
+    }
+
+    private fun isEntryValid(): Boolean {
+        return viewModel.isEntryValid(
+            binding.itemName.text.toString(),
+            binding.itemPrice.text.toString(),
+            binding.itemCount.text.toString()
+        )
+    }
+
+    private fun addNewItem() {
+        if (isEntryValid()) {
+            viewModel.addNewItem(
+                binding.itemName.text.toString(),
+                binding.itemPrice.text.toString(),
+                binding.itemCount.text.toString()
+            )
+        }
+        val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
+        findNavController().navigate(action)
+    }
+
     /**
      * Called before fragment is destroyed.
      */
@@ -57,5 +104,27 @@ class AddItemFragment : Fragment() {
                 InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
         _binding = null
+    }
+
+    private fun bind(item: Item) {
+        val price = "%.2f".format(item.itemPrice)
+        binding.apply {
+            itemName.setText(item.itemName, TextView.BufferType.SPANNABLE)
+            itemCount.setText(item.quantityInStock.toString(), TextView.BufferType.SPANNABLE)
+            itemPrice.setText(price, TextView.BufferType.SPANNABLE)
+        }
+    }
+
+    private fun updateItem() {
+        if (isEntryValid()) {
+            viewModel.updateItem(
+                navigationArgs.itemId,
+                binding.itemName.text.toString(),
+                binding.itemPrice.text.toString(),
+                binding.itemCount.text.toString()
+            )
+            val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
+            findNavController().navigate(action)
+        }
     }
 }
