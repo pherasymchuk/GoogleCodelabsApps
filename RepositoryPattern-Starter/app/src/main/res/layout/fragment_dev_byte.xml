@@ -49,5 +49,3 @@
             tools:listitem="@layout/devbyte_item" />
     </FrameLayout>
 </layout>
-
-

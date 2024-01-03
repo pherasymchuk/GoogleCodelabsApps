@@ -23,10 +23,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.android.devbyteviewer.database.VideosDatabase
 import com.example.android.devbyteviewer.domain.DevByteVideo
-import com.example.android.devbyteviewer.network.DevByteNetwork
-import com.example.android.devbyteviewer.network.asDomainModel
-import kotlinx.coroutines.*
+import com.example.android.devbyteviewer.repository.VideosRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 /**
@@ -39,69 +40,141 @@ import java.io.IOException
  * reference to applications across rotation since Application is never recreated during actiivty
  * or fragment lifecycle events.
  */
-class DevByteViewModel(application: Application) : AndroidViewModel(application) {
 
-    /**
+abstract class DevByteViewModel(application: Application) : AndroidViewModel(application) {
+    abstract val eventNetworkError: LiveData<Boolean>
+    abstract val isNetworkErrorShown: LiveData<Boolean>
+    abstract val videosRepository: VideosRepository
+    abstract val playlist: LiveData<List<DevByteVideo>>
+
+    protected abstract fun refreshDataFromRepository(): Job
+    abstract fun onNetworkErrorShown()
+
+    class Base(application: Application) : DevByteViewModel(application) {
+        override val eventNetworkError: MutableLiveData<Boolean> = MutableLiveData(false)
+        override val isNetworkErrorShown: MutableLiveData<Boolean> = MutableLiveData(false)
+        override val videosRepository: VideosRepository =
+            VideosRepository(VideosDatabase.getDatabase(application))
+        override val playlist: LiveData<List<DevByteVideo>> = videosRepository.videos
+
+        init {
+            refreshDataFromRepository()
+        }
+
+        override fun refreshDataFromRepository() = viewModelScope.launch {
+            viewModelScope.launch {
+                try {
+                    videosRepository.refreshVideos()
+                    eventNetworkError.value = false
+                    isNetworkErrorShown.value = false
+                } catch (networkError: IOException) {
+                    if (playlist.value.isNullOrEmpty()) {
+                        eventNetworkError.value = true
+                    }
+                }
+            }
+        }
+
+        override fun onNetworkErrorShown() {
+            isNetworkErrorShown.value = true
+        }
+    }
+
+    class Factory(private val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(Base::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return Base(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
+    }
+}
+
+/*
+class Base(application: Application) : AndroidViewModel(application) {
+
+    */
+/**
      * The data source this ViewModel will fetch results from.
-     */
+ *//*
+
     // TODO: Add a reference to the VideosRepository class
 
-    /**
+    */
+/**
      * A playlist of videos displayed on the screen.
-     */
+ *//*
+
     // TODO: Replace the MutableLiveData and backing property below to a reference to the 'videos'
     // TODO: from the VideosRepository
-    /**
+    */
+/**
      * A playlist of videos that can be shown on the screen. This is private to avoid exposing a
      * way to set this value to observers.
-     */
+ *//*
+
     private val _playlist = MutableLiveData<List<DevByteVideo>>()
 
-    /**
+    */
+/**
      * A playlist of videos that can be shown on the screen. Views should use this to get access
      * to the data.
-     */
+ *//*
+
     val playlist: LiveData<List<DevByteVideo>>
         get() = _playlist
 
-    /**
+    */
+/**
      * Event triggered for network error. This is private to avoid exposing a
      * way to set this value to observers.
-     */
+ *//*
+
     private var _eventNetworkError = MutableLiveData<Boolean>(false)
 
-    /**
+    */
+/**
      * Event triggered for network error. Views should use this to get access
      * to the data.
-     */
+ *//*
+
     val eventNetworkError: LiveData<Boolean>
         get() = _eventNetworkError
 
-    /**
+    */
+/**
      * Flag to display the error message. This is private to avoid exposing a
      * way to set this value to observers.
-     */
+ *//*
+
     private var _isNetworkErrorShown = MutableLiveData<Boolean>(false)
 
-    /**
+    */
+/**
      * Flag to display the error message. Views should use this to get access
      * to the data.
-     */
+ *//*
+
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
 
-    /**
+    */
+/**
      * init{} is called immediately when this ViewModel is created.
-     */
+ *//*
+
     init {
         // TODO: Replace with a call to the refreshDataFromRepository9) method
         refreshDataFromNetwork()
     }
 
-    /**
+    */
+/**
      * Refresh data from the repository. Use a coroutine launch to run in a
      * background thread.
-     */
+ *//*
+
     // TODO: Replace with the refreshDataFromRepository() method
     private fun refreshDataFromNetwork() = viewModelScope.launch {
         try {
@@ -117,23 +190,19 @@ class DevByteViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    /**
+    */
+/**
      * Resets the network error flag.
-     */
+ *//*
+
     fun onNetworkErrorShown() {
         _isNetworkErrorShown.value = true
     }
 
-    /**
+    */
+/**
      * Factory for constructing DevByteViewModel with parameter
-     */
-    class Factory(val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(DevByteViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return DevByteViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
+ *//*
+
 }
+*/

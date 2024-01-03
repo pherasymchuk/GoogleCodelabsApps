@@ -18,7 +18,11 @@ package com.example.android.devbyteviewer.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.android.devbyteviewer.R
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
+import com.example.android.devbyteviewer.databinding.ActivityDevByteViewerBinding
 
 /**
  * This is a single activity application that uses the Navigation library. Content is displayed
@@ -26,12 +30,29 @@ import com.example.android.devbyteviewer.R
  */
 class DevByteActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityDevByteViewerBinding
+
     /**
      * Called when the activity is starting.  This is where most initialization
      * should go
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dev_byte_viewer)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        binding = ActivityDevByteViewerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        applyInsets()
+    }
+
+    private fun applyInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(
+                top = insets.top,
+                left = insets.left,
+                right = insets.right,
+            )
+            windowInsets
+        }
     }
 }
