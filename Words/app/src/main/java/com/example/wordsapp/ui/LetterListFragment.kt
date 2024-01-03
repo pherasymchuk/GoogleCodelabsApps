@@ -11,18 +11,24 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wordsapp.R
 import com.example.wordsapp.adapters.LetterAdapter
+import com.example.wordsapp.data.SettingsDataStore
 import com.example.wordsapp.databinding.FragmentLetterListBinding
 
 class LetterListFragment : Fragment() {
     private var binding: FragmentLetterListBinding? = null
     private var layout: Layout = Layout.Linear
     private lateinit var recyclerView: RecyclerView
+    private lateinit var settingsDataStore: SettingsDataStore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +66,15 @@ class LetterListFragment : Fragment() {
             }
 
         }, viewLifecycleOwner)
+
+        settingsDataStore = SettingsDataStore(requireContext())
+        settingsDataStore.preferenceFlow.asLiveData()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding!!.recyclerView) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = insets.bottom)
+            windowInsets
+        }
     }
 
     override fun onDestroyView() {
