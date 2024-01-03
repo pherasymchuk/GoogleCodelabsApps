@@ -1,4 +1,4 @@
-package com.example.wordsapp
+package com.example.wordsapp.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wordsapp.R
+import com.example.wordsapp.adapters.LetterAdapter
 import com.example.wordsapp.databinding.FragmentLetterListBinding
 
 class LetterListFragment : Fragment() {

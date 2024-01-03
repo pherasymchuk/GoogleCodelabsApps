@@ -10,8 +10,8 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.wordsapp.LetterListFragment
 import com.example.wordsapp.R
+import com.example.wordsapp.ui.LetterListFragment
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.wordsapp
+package com.example.wordsapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +24,7 @@ import androidx.core.view.updatePadding
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.wordsapp.R
 import com.example.wordsapp.databinding.ActivityMainBinding
 
 /**

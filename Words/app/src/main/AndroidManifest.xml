@@ -26,7 +26,7 @@
         android:theme="@style/Theme.Words"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

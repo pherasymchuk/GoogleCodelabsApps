@@ -1,4 +1,4 @@
-package com.example.wordsapp
+package com.example.wordsapp.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wordsapp.adapters.WordAdapter
 import com.example.wordsapp.databinding.FragmentWordListBinding
 
 class WordListFragment : Fragment() {
