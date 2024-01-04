@@ -68,7 +68,9 @@ class LetterListFragment : Fragment() {
         }, viewLifecycleOwner)
 
         settingsDataStore = SettingsDataStore(requireContext())
-        settingsDataStore.preferenceFlow.asLiveData()
+        settingsDataStore.preferenceFlow.asLiveData().observe(viewLifecycleOwner) { newValue ->
+
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding!!.recyclerView) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
