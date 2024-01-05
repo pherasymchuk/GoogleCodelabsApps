@@ -22,14 +22,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.forage.BaseApplication
 import com.example.forage.R
 import com.example.forage.databinding.FragmentForageableListBinding
 import com.example.forage.ui.adapter.ForageableListAdapter
 import com.example.forage.ui.viewmodel.ForageableViewModel
+import com.example.forage.ui.viewmodel.ForageableViewModelFactory
 
 /**
- * A fragment to view the list of [Forageable]s stored in the database.
- * Clicking on a [Forageable] list item launches the [ForageableDetailFragment].
+ * A fragment to view the list of [com.example.forage.model.Forageable]s stored in the database.
+ * Clicking on a [com.example.forage.model.Forageable] list item launches the [ForageableDetailFragment].
  * Clicking the [FloatingActionButton] launched the [AddForageableFragment]
  */
 class ForageableListFragment : Fragment() {
@@ -37,18 +39,22 @@ class ForageableListFragment : Fragment() {
     // TODO: Refactor the creation of the view model to take an instance of
     //  ForageableViewModelFactory. The factory should take an instance of the Database retrieved
     //  from BaseApplication
-    private val viewModel: ForageableViewModel by activityViewModels()
+    private val viewModel: ForageableViewModel by activityViewModels {
+        ForageableViewModelFactory(
+            (requireActivity().application as BaseApplication).database.getForageableDao()
+        )
+    }
 
     private var _binding: FragmentForageableListBinding? = null
 
-    // This property is only valid between onCreateView and
+    // This property is only valid between onCreateView andplication as B
     // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?,
+    ): View {
 
         _binding = FragmentForageableListBinding.inflate(inflater, container, false)
         return binding.root
@@ -64,7 +70,9 @@ class ForageableListFragment : Fragment() {
         }
 
         // TODO: observe the list of forageables from the view model and submit it the adapter
-
+        viewModel.forageables.observe(viewLifecycleOwner) { forageables ->
+            adapter.submitList(forageables)
+        }
         binding.apply {
             recyclerView.adapter = adapter
             addForageableFab.setOnClickListener {
