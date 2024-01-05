@@ -14,8 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.forage">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:name = ".BaseApplication"
@@ -26,8 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Forage">
         <activity
+            android:exported="true"
             android:name=".MainActivity"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Forage.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
