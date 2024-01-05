@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 
 class LetterListFragment : Fragment() {
     private var _binding: FragmentLetterListBinding? = null
-    private val binding: FragmentLetterListBinding = _binding!!
+    private val binding: FragmentLetterListBinding get() = _binding!!
     private var layout: Layout = Layout.Linear
     private lateinit var settingsDataStore: SettingsDataStore
 
