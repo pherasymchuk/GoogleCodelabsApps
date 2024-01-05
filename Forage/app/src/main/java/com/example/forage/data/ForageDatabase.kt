@@ -15,6 +15,9 @@
  */
 package com.example.forage.data
 
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.forage.model.Forageable
 
@@ -22,5 +25,27 @@ import com.example.forage.model.Forageable
  * Room database to persist data for the Forage app.
  * This database stores a [Forageable] entity
  */
-// TODO: create the database with all necessary annotations, methods, variables, etc.
-abstract class ForageDatabase : RoomDatabase()
+@Database(entities = [Forageable::class], version = 1, exportSchema = false)
+abstract class ForageDatabase : RoomDatabase() {
+
+    abstract fun getForageableDao(): ForageableDao
+
+    companion object {
+        @Volatile
+        private var instance: ForageDatabase? = null
+
+        @Synchronized
+        fun getInstance(context: Context): ForageDatabase {
+            return instance ?: synchronized(this) {
+                val newInstance = Room.databaseBuilder(
+                    context,
+                    ForageDatabase::class.java,
+                    "forage_database"
+                )
+                    .build()
+                instance = newInstance
+                newInstance
+            }
+        }
+    }
+}
