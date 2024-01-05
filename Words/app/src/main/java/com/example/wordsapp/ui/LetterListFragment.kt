@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,25 +24,26 @@ import com.example.wordsapp.R
 import com.example.wordsapp.adapters.LetterAdapter
 import com.example.wordsapp.data.SettingsDataStore
 import com.example.wordsapp.databinding.FragmentLetterListBinding
+import kotlinx.coroutines.launch
 
 class LetterListFragment : Fragment() {
-    private var binding: FragmentLetterListBinding? = null
+    private var _binding: FragmentLetterListBinding? = null
+    private val binding: FragmentLetterListBinding = _binding!!
     private var layout: Layout = Layout.Linear
-    private lateinit var recyclerView: RecyclerView
     private lateinit var settingsDataStore: SettingsDataStore
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        binding = FragmentLetterListBinding.inflate(inflater, container, false)
-        return binding?.root
+    ): View {
+        _binding = FragmentLetterListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView = binding!!.recyclerView
-        recyclerView.adapter = LetterAdapter()
+        binding.recyclerView.adapter = LetterAdapter()
+        settingsDataStore = SettingsDataStore(requireContext())
 
         val menuHost: MenuHost = this.requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
@@ -50,15 +52,21 @@ class LetterListFragment : Fragment() {
                 menuInflater.inflate(R.menu.layout_menu, menu)
 
                 val layoutButton = menu.findItem(R.id.action_switch_layout)
-                layout.apply(requireContext(), recyclerView, layoutButton)
+                layout.apply(requireContext(), binding.recyclerView, layoutButton)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
                 R.id.action_switch_layout -> {
                     layout = if (layout == Layout.Linear) Layout.Grid else Layout.Linear
                     layout.apply(
-                        requireContext(), binding!!.recyclerView, menuItem
+                        requireContext(), binding.recyclerView, menuItem
                     )
+                    lifecycleScope.launch {
+                        settingsDataStore.saveLayoutToPreferencesStore(
+                            layout is Layout.Linear,
+                            requireContext()
+                        )
+                    }
                     true
                 }
 
@@ -67,12 +75,17 @@ class LetterListFragment : Fragment() {
 
         }, viewLifecycleOwner)
 
-        settingsDataStore = SettingsDataStore(requireContext())
-        settingsDataStore.preferenceFlow.asLiveData().observe(viewLifecycleOwner) { newValue ->
+        settingsDataStore.preferenceFlow.asLiveData()
+            .observe(viewLifecycleOwner) { isLinearLayout ->
+                layout = if (isLinearLayout) {
+                    Layout.Linear
+                } else {
+                    Layout.Grid
+                }
+                menuHost.invalidateMenu()
+            }
 
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding!!.recyclerView) { v, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updatePadding(bottom = insets.bottom)
             windowInsets
@@ -81,7 +94,7 @@ class LetterListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 }
 
