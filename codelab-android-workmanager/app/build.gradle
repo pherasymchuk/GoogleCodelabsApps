@@ -56,6 +56,7 @@ android {
     viewBinding {
         enabled = true
     }
+    namespace 'com.example.background'
 }
 
 dependencies {
