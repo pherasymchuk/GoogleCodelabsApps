@@ -21,7 +21,7 @@ buildscript {
     versions.compileSdk = 34
     versions.minSdk = 27
     versions.targetSdk = 34
-    versions.kotlin = '1.6.10'
+    versions.kotlin = '1.9.22'
     versions.work = "2.7.1"
 
     repositories {
@@ -41,6 +41,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }

@@ -32,6 +32,7 @@ class BlurViewModel(application: Application) : ViewModel() {
     init {
         imageUri = getImageUri(application.applicationContext)
     }
+
     /**
      * Create the WorkRequest to apply the blur and save the resulting image
      * @param blurLevel The amount to blur the image
@@ -65,12 +66,12 @@ class BlurViewModel(application: Application) : ViewModel() {
 
     class BlurViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
 
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(BlurViewModel::class.java)) {
-                BlurViewModel(application) as T
-            } else {
-                throw IllegalArgumentException("Unknown ViewModel class")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(BlurViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return BlurViewModel(application) as T
             }
+            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }
