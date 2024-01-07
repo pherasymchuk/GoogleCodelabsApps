@@ -13,8 +13,6 @@ App that lets users roll a virtual dice with the click of a button.
     <img src="assets/DiceRoller.png" alt="Dice Roller" style="width: 25%; height: 25%;" />
 </div>
 
-___
-
 # Unscramble
 
 **Created on: 2023.11.22**
@@ -30,8 +28,6 @@ per game.
   <img src="assets/Unscramble2.png" alt="Unscramble 2" style="width: 25%; height: 25%;" />
   <img src="assets/Unscramble3.png" alt="Unscramble 3" style="width: 25%; height: 25%;" />
 </div>
-
-___
 
 # Inventory
 
@@ -50,9 +46,11 @@ passing between fragments.
   <img src="assets/Inventory4.png" alt="Inventory 4" style="width: 25%; height: 25%;" />
 </div>
 
-___
-
 # Sports
+
+Sports app is a basic app to introduce beginner students to adaptive layouts. This app consists of two fragments: a
+sports topics list and a details screen. The details screen displays placeholder text for the sports news. This app
+demonstrated the use of SlidingPaneLayout.
 
 <div style="display: flex; overflow-x: auto;">
   <img src="assets/Sports1.png" alt="Sports 1" style="width: 50%; height: 50%;" />
