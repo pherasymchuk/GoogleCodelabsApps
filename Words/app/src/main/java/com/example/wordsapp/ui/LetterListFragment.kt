@@ -32,19 +32,22 @@ class LetterListFragment : Fragment() {
     private var layout: Layout = Layout.Linear
     private lateinit var settingsDataStore: SettingsDataStore
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        settingsDataStore = SettingsDataStore(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentLetterListBinding.inflate(inflater, container, false)
+        binding.recyclerView.adapter = LetterAdapter()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.recyclerView.adapter = LetterAdapter()
-        settingsDataStore = SettingsDataStore(requireContext())
-
         val menuHost: MenuHost = this.requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
 
