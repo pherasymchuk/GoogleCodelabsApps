@@ -13,6 +13,8 @@ App that lets users roll a virtual dice with the click of a button.
     <img src="assets/DiceRoller.png" alt="Dice Roller" style="width: 25%; height: 25%;" />
 </div>
 
+___
+
 # Unscramble
 
 **Created on: 2023.11.22**
@@ -28,6 +30,8 @@ per game.
   <img src="assets/Unscramble2.png" alt="Unscramble 2" style="width: 25%; height: 25%;" />
   <img src="assets/Unscramble3.png" alt="Unscramble 3" style="width: 25%; height: 25%;" />
 </div>
+
+___
 
 # Inventory
 
@@ -46,5 +50,13 @@ passing between fragments.
   <img src="assets/Inventory4.png" alt="Inventory 4" style="width: 25%; height: 25%;" />
 </div>
 
+___
 
+# Sports
 
+<div style="display: flex; overflow-x: auto;">
+  <img src="assets/Sports1.png" alt="Sports 1" style="width: 25%; height: 25%;" />
+  <img src="assets/Sports2.png" alt="Sports 2" style="width: 25%; height: 25%;" />
+  <img src="assets/Sports3.png" alt="Sports 3" style="width: 25%; height: 25%;" />
+  <img src="assets/Sports4.png" alt="Sports 4" style="width: 25%; height: 25%;" />
+</div>
