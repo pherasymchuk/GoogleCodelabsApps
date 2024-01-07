@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
 
 android {
-    compileSdk versions.compileSdk
+    compileSdk 34
     defaultConfig {
         applicationId "com.example.background"
         renderscriptTargetApi 27
@@ -34,10 +36,13 @@ android {
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
 
-        minSdkVersion versions.minSdk
-        targetSdkVersion versions.targetSdk
+        minSdkVersion 27
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
+    }
+    buildFeatures {
+        viewBinding true
     }
     buildTypes {
         release {
@@ -53,9 +58,6 @@ android {
         jvmTarget = "11"
     }
 
-    viewBinding {
-        enabled = true
-    }
     namespace 'com.example.background'
 }
 

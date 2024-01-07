@@ -17,12 +17,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.versions = [:]
-    versions.compileSdk = 34
-    versions.minSdk = 27
-    versions.targetSdk = 34
-    versions.kotlin = '1.9.22'
-    versions.work = "2.7.1"
+    ext {
+        versions = [
+                compileSdk: 34,
+                kotlin    : '1.9.22',
+                minSdk    : 27,
+                targetSdk : 34,
+                work      : "2.7.1"
+        ]
+    }
 
     repositories {
         google()
@@ -30,7 +33,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
     }
 }
 
