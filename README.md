@@ -55,8 +55,11 @@ ___
 # Sports
 
 <div style="display: flex; overflow-x: auto;">
-  <img src="assets/Sports1.png" alt="Sports 1" style="width: 25%; height: 25%;" />
-  <img src="assets/Sports2.png" alt="Sports 2" style="width: 25%; height: 25%;" />
+  <img src="assets/Sports1.png" alt="Sports 1" style="width: 50%; height: 50%;" />
+  <img src="assets/Sports2.png" alt="Sports 2" style="width: 50%; height: 50%;" />
+</div>
+
+<div style="display: flex; overflow-x: auto;">
   <img src="assets/Sports3.png" alt="Sports 3" style="width: 25%; height: 25%;" />
   <img src="assets/Sports4.png" alt="Sports 4" style="width: 25%; height: 25%;" />
 </div>
