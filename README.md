@@ -20,6 +20,12 @@ otherwise the player can try any number of times. The app also has an option to 
 corner, the app displays the word count, which is the number of words played in this current game. There are 10 words
 per game.
 
+<div style="display: flex; overflow-x: auto;">
+  <img src="assets/Unscramble1.png" alt="Unscramble 1" style="width: 25%; height: 25%;" />
+  <img src="assets/Unscramble2.png" alt="Unscramble 2" style="width: 25%; height: 25%;" />
+  <img src="assets/Unscramble3.png" alt="Unscramble 3" style="width: 25%; height: 25%;" />
+</div>
+
 # Inventory
 
 **Created on: 2023.12.X**
