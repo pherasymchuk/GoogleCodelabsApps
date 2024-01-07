@@ -9,6 +9,9 @@ A collection of Android projects from Google Codelabs
 One of the first apps I created when I was just starting to learn Android development. The app is
 really simple, just consists of one Activity.
 App that lets users roll a virtual dice with the click of a button.
+<div style="display: flex; overflow-x: auto;">
+    <img src="assets/DiceRoller.png" alt="Dice Roller" style="width: 25%; height: 25%;" />
+</div>
 
 # Unscramble
 
@@ -30,9 +33,11 @@ per game.
 
 **Created on: 2023.12.X**
 
-This app is an Inventory tracking app. Demos how to add, update, sell, and delete items from the local database. This app demonstrates the use of Android Jetpack component Room database.
+This app is an Inventory tracking app. Demos how to add, update, sell, and delete items from the local database. This
+app demonstrates the use of Android Jetpack component Room database.
 
-The app also leverages ViewModel, LiveData, Flow, View Binding, and Navigation with the SafeArgs plugin for parameter passing between fragments.
+The app also leverages ViewModel, LiveData, Flow, View Binding, and Navigation with the SafeArgs plugin for parameter
+passing between fragments.
 
 <div style="display: flex; overflow-x: auto;">
   <img src="assets/Inventory1.png" alt="Inventory 1" style="width: 25%; height: 25%;" />
