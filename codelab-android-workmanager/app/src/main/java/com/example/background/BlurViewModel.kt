@@ -22,56 +22,72 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import com.example.background.workers.BlurWorker
 
-
-class BlurViewModel(application: Application) : ViewModel() {
-
-    internal var imageUri: Uri? = null
-    internal var outputUri: Uri? = null
-
-    init {
-        imageUri = getImageUri(application.applicationContext)
-    }
+abstract class BlurViewModel(private val application: Application) : ViewModel() {
+    abstract val workManager: WorkManager
+    internal abstract val imageUri: Uri?
+    internal abstract val outputUri: Uri?
 
     /**
      * Create the WorkRequest to apply the blur and save the resulting image
      * @param blurLevel The amount to blur the image
      */
-    internal fun applyBlur(blurLevel: Int) {}
+    internal abstract fun applyBlur(blurLevel: Int)
+    protected abstract fun uriOrNull(uriString: String?): Uri?
+    protected abstract fun getImageUri(context: Context): Uri
+    abstract fun setOutputUri(outputImageUri: String?)
 
-    private fun uriOrNull(uriString: String?): Uri? {
-        return if (!uriString.isNullOrEmpty()) {
-            Uri.parse(uriString)
-        } else {
-            null
+    protected class Base(application: Application) : BlurViewModel(application) {
+        override val workManager: WorkManager = WorkManager.getInstance(application)
+        override var imageUri: Uri? = null
+        override var outputUri: Uri? = null
+
+        init {
+            imageUri = getImageUri(application.applicationContext)
         }
-    }
 
-    private fun getImageUri(context: Context): Uri {
-        val resources = context.resources
+        override fun applyBlur(blurLevel: Int) {
+            workManager.enqueue(OneTimeWorkRequest.from(BlurWorker::class.java))
+        }
 
-        val imageUri = Uri.Builder()
-            .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-            .authority(resources.getResourcePackageName(R.drawable.android_cupcake))
-            .appendPath(resources.getResourceTypeName(R.drawable.android_cupcake))
-            .appendPath(resources.getResourceEntryName(R.drawable.android_cupcake))
-            .build()
+        override fun uriOrNull(uriString: String?): Uri? {
+            return if (!uriString.isNullOrEmpty()) {
+                Uri.parse(uriString)
+            } else {
+                null
+            }
+        }
 
-        return imageUri
-    }
+        override fun getImageUri(context: Context): Uri {
+            val resources = context.resources
 
-    internal fun setOutputUri(outputImageUri: String?) {
-        outputUri = uriOrNull(outputImageUri)
+            val imageUri = Uri.Builder()
+                .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                .authority(resources.getResourcePackageName(R.drawable.android_cupcake))
+                .appendPath(resources.getResourceTypeName(R.drawable.android_cupcake))
+                .appendPath(resources.getResourceEntryName(R.drawable.android_cupcake))
+                .build()
+
+            return imageUri
+        }
+
+        override fun setOutputUri(outputImageUri: String?) {
+            outputUri = uriOrNull(outputImageUri)
+        }
     }
 
     class BlurViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(BlurViewModel::class.java)) {
+            if (modelClass.isAssignableFrom(BlurViewModel.Base::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return BlurViewModel(application) as T
+                return Base(application) as T
             }
-            throw IllegalArgumentException("Unknown ViewModel class")
+                throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }
