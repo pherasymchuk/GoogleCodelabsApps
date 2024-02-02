@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Basics with Compose</string>
+    <string name="happy_birthday_text">Happy Birthday Sam!</string>
 </resources>
