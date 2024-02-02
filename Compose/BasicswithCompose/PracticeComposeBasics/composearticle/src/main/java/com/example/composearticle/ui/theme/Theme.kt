@@ -1,4 +1,4 @@
-package com.herasymchuk.basicswithcompose.ui.theme
+package com.example.composearticle.ui.theme
 
 import android.app.Activity
 import android.os.Build
