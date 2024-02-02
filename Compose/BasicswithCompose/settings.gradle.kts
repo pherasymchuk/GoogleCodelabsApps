@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Basics with Compose"
 include(":app")
+include(":PracticeComposeBasics")
