@@ -20,9 +20,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Basics with Compose"
-include(":app")
+include(":Greetings")
 include(":PracticeComposeBasics")
 include(":PracticeComposeBasics:composearticle")
 include(":PracticeComposeBasics:taskmanager")
 include(":PracticeComposeBasics:composequadrant")
 include(":PracticeComposeBasics:businesscard")
+include(":diceroller")
