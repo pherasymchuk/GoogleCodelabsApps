@@ -1,5 +1,6 @@
 package com.example.art
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,8 +12,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -27,13 +32,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +54,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             BasicsWithComposeTheme {
                 Scaffold {
-                    ArtScreen(
+                    Art(
                         modifier = Modifier
                             .padding(it)
                             .padding(12.dp)
@@ -60,21 +66,75 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ArtScreen(modifier: Modifier = Modifier) {
+fun Art(modifier: Modifier = Modifier) {
+    val configuration: Configuration = LocalConfiguration.current
     val pictures: List<BiblePicture> by remember { derivedStateOf { BiblePictureRepository().getPictures() } }
-    var currentScreen: Int by remember { mutableIntStateOf(1) }
-    var currentPicture: BiblePicture by remember { mutableStateOf(pictures.first()) }
+    var currentScreen: Int by remember { mutableIntStateOf(0) }
+    val currentPicture: BiblePicture by remember(currentScreen) { derivedStateOf { pictures[currentScreen] } }
 
-    Column(modifier = modifier) {
-        ArtworkWall(
-            modifier = Modifier
-                .weight(1f)
-                .align(Alignment.CenterHorizontally)
-                .wrapContentSize(Alignment.Center),
-            imageRes = currentPicture.imageRes
-        )
-        ArtworkDescriptor(currentPicture.verseText, bibleChapter = currentPicture.verseNumber)
-        DisplayController()
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f)
+                    .width(IntrinsicSize.Min)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+
+                ArtworkWall(
+                    imageRes = currentPicture.imageRes,
+                    modifier = Modifier
+                        .weight(1f, false)
+                        .align(Alignment.CenterHorizontally)
+                )
+                ArtworkDescriptor(
+                    currentPicture.verseText,
+                    bibleChapter = currentPicture.verseNumber,
+                    modifier = Modifier
+                        .wrapContentSize()
+//                    .fillMaxWidth(0.8f)
+                )
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+
+                ArtworkWall(
+                    imageRes = currentPicture.imageRes,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(12.dp)
+                )
+                ArtworkDescriptor(
+                    currentPicture.verseText,
+                    bibleChapter = currentPicture.verseNumber,
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically)
+                        .height(IntrinsicSize.Max)
+//                    .fillMaxWidth(0.8f)
+                )
+            }
+        }
+        DisplayController(modifier = Modifier,
+            onNextClick = {
+                if (currentScreen < pictures.lastIndex) {
+                    currentScreen += 1
+                }
+            },
+            onPreviousClick = {
+                if (currentScreen > 0) {
+                    currentScreen -= 1
+                }
+            })
     }
 }
 
@@ -87,9 +147,15 @@ fun ArtworkWall(
     Card(
         modifier = modifier.shadow(elevation = 8.dp),
         shape = AbsoluteCutCornerShape(0),
-        colors = CardDefaults.elevatedCardColors(),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
-        Image(painter = image, contentDescription = null, Modifier.padding(24.dp))
+        Image(
+            painter = image, contentDescription = null,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .padding(14.dp)
+                .align(Alignment.CenterHorizontally)
+        )
     }
 }
 
@@ -101,33 +167,39 @@ fun ArtworkDescriptor(
 ) {
     Box(
         modifier = modifier
-            .padding(16.dp)
+            .padding(vertical = 16.dp)
             .background(MaterialTheme.colorScheme.primaryContainer)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier
+            .padding(12.dp)
+            .align(Alignment.Center)) {
             Text(
-                text = stringResource(R.string.bible_story_text_1),
+                text = stringResource(name),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Normal,
                 color = Color.Gray
             )
-            Text(text = stringResource(R.string.bible_story_verse_1), fontWeight = FontWeight.Bold)
+            Text(text = stringResource(bibleChapter), fontWeight = FontWeight.Bold)
         }
     }
 }
 
 @Composable
-fun DisplayController(modifier: Modifier = Modifier) {
+fun DisplayController(
+    modifier: Modifier = Modifier,
+    onPreviousClick: () -> Unit = {},
+    onNextClick: () -> Unit = {}
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp), horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.width(150.dp)) {
+        Button(onClick = onPreviousClick, modifier = Modifier.width(150.dp)) {
             Text(text = "Previous")
         }
 
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.width(150.dp)) {
+        Button(onClick = onNextClick, modifier = Modifier.width(150.dp)) {
 
             Text(text = "Next")
         }
@@ -156,6 +228,6 @@ private fun DisplayControllerPreview() {
 @Composable
 fun ArtScreenPreview() {
     BasicsWithComposeTheme {
-        ArtScreen()
+        Art()
     }
 }
