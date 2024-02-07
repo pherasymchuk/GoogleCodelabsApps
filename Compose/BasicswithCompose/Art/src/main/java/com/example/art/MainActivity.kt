@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -70,73 +71,97 @@ fun Art(modifier: Modifier = Modifier) {
     val configuration: Configuration = LocalConfiguration.current
     val pictures: List<BiblePicture> by remember { derivedStateOf { BiblePictureRepository().getPictures() } }
     var currentScreen: Int by remember { mutableIntStateOf(0) }
+
     val currentPicture: BiblePicture by remember(currentScreen) { derivedStateOf { pictures[currentScreen] } }
+    val isPortrait: Boolean = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+    var isFirstScreen: Boolean by remember { mutableStateOf(currentScreen == 0) }
+    var isLastScreen: Boolean by remember { mutableStateOf(currentScreen == pictures.lastIndex) }
 
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
+        if (isPortrait) {
+            ArtScreenPortrait(
+                currentPicture = currentPicture,
+                Modifier
                     .weight(1f)
                     .width(IntrinsicSize.Min)
                     .align(Alignment.CenterHorizontally)
-            ) {
-
-                ArtworkWall(
-                    imageRes = currentPicture.imageRes,
-                    modifier = Modifier
-                        .weight(1f, false)
-                        .align(Alignment.CenterHorizontally)
-                )
-                ArtworkDescriptor(
-                    currentPicture.verseText,
-                    bibleChapter = currentPicture.verseNumber,
-                    modifier = Modifier
-                        .wrapContentSize()
-//                    .fillMaxWidth(0.8f)
-                )
-            }
+            )
         } else {
-            Row(
+            ArtScreenLandscape(
+                currentPicture = currentPicture,
                 modifier = Modifier
                     .weight(1f)
                     .align(Alignment.CenterHorizontally)
-            ) {
-
-                ArtworkWall(
-                    imageRes = currentPicture.imageRes,
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(12.dp)
-                )
-                ArtworkDescriptor(
-                    currentPicture.verseText,
-                    bibleChapter = currentPicture.verseNumber,
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                        .fillMaxHeight()
-                        .align(Alignment.CenterVertically)
-                        .height(IntrinsicSize.Max)
-//                    .fillMaxWidth(0.8f)
-                )
-            }
+            )
         }
-        DisplayController(modifier = Modifier,
+        DisplayController(
             onNextClick = {
                 if (currentScreen < pictures.lastIndex) {
                     currentScreen += 1
                 }
+                isFirstScreen = currentScreen == 0
+                isLastScreen = currentScreen == pictures.lastIndex
             },
             onPreviousClick = {
                 if (currentScreen > 0) {
                     currentScreen -= 1
                 }
-            })
+                isFirstScreen = currentScreen == 0
+                isLastScreen = currentScreen == pictures.lastIndex
+            },
+            isPreviousEnabled = !isFirstScreen,
+            isNextEnabled = !isLastScreen
+        )
     }
 }
+
+@Composable
+fun ArtScreenPortrait(currentPicture: BiblePicture, modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+
+    ) {
+
+        ArtworkWall(
+            imageRes = currentPicture.imageRes,
+            modifier = Modifier
+                .weight(1f, false)
+                .align(Alignment.CenterHorizontally)
+        )
+        ArtworkDescriptor(
+            currentPicture.verseText,
+            bibleChapter = currentPicture.verseNumber,
+            modifier = Modifier
+                .wrapContentSize()
+        )
+    }
+}
+
+@Composable
+fun ArtScreenLandscape(currentPicture: BiblePicture, modifier: Modifier = Modifier) {
+    Row(modifier = modifier) {
+        ArtworkWall(
+            imageRes = currentPicture.imageRes,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(12.dp)
+        )
+        ArtworkDescriptor(
+            currentPicture.verseText,
+            bibleChapter = currentPicture.verseNumber,
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .fillMaxHeight()
+                .align(Alignment.CenterVertically)
+                .height(IntrinsicSize.Max)
+        )
+    }
+}
+
 
 @Composable
 fun ArtworkWall(
@@ -170,9 +195,11 @@ fun ArtworkDescriptor(
             .padding(vertical = 16.dp)
             .background(MaterialTheme.colorScheme.primaryContainer)
     ) {
-        Column(modifier = Modifier
-            .padding(12.dp)
-            .align(Alignment.Center)) {
+        Column(
+            modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.Center)
+        ) {
             Text(
                 text = stringResource(name),
                 style = MaterialTheme.typography.bodyLarge,
@@ -188,18 +215,20 @@ fun ArtworkDescriptor(
 fun DisplayController(
     modifier: Modifier = Modifier,
     onPreviousClick: () -> Unit = {},
-    onNextClick: () -> Unit = {}
+    onNextClick: () -> Unit = {},
+    isPreviousEnabled: Boolean = true,
+    isNextEnabled: Boolean = true
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp), horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(onClick = onPreviousClick, modifier = Modifier.width(150.dp)) {
+        Button(onClick = onPreviousClick, modifier = Modifier.width(150.dp), enabled = isPreviousEnabled) {
             Text(text = "Previous")
         }
 
-        Button(onClick = onNextClick, modifier = Modifier.width(150.dp)) {
+        Button(onClick = onNextClick, modifier = Modifier.width(150.dp), enabled = isNextEnabled) {
 
             Text(text = "Next")
         }
