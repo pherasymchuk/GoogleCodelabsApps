@@ -3,73 +3,73 @@
 
     <!-- Bible Story 1 -->
     <string name="bible_story_text_1">And I will make of thee a great nation, and I will bless thee, and make thy name great; and thou shalt be a blessing:</string>
-    <string name="bible_story_verse_1">12:2</string>
+    <string name="bible_story_verse_1">Genesis 12:2</string>
 
     <!-- Bible Story 2 -->
     <string name="bible_story_text_2">Neither shall thy name any more be called Abram, but thy name shall be Abraham; for a father of many nations have I made thee.</string>
-    <string name="bible_story_verse_2">17:5</string>
+    <string name="bible_story_verse_2">Genesis 17:5</string>
 
     <!-- Bible Story 3 -->
     <string name="bible_story_text_3">That in blessing I will bless thee, and in multiplying I will multiply thy seed as the stars of the heaven, and as the sand which is upon the sea shore; and thy seed shall possess the gate of his enemies;</string>
-    <string name="bible_story_verse_3">22:17</string>
+    <string name="bible_story_verse_3">Genesis 22:17</string>
 
     <!-- Bible Story 4 -->
     <string name="bible_story_text_4">And, behold, the LORD stood above it, and said, I am the LORD God of Abraham thy father, and the God of Isaac: the land whereon thou liest, to thee will I give it, and to thy seed;</string>
-    <string name="bible_story_verse_4">28:13</string>
+    <string name="bible_story_verse_4">Genesis 28:13</string>
 
     <!-- Bible Story 5 -->
     <string name="bible_story_text_5">Moreover he said, I am the God of thy father, the God of Abraham, the God of Isaac, and the God of Jacob. And Moses hid his face; for he was afraid to look upon God.</string>
-    <string name="bible_story_verse_5">3:6</string>
+    <string name="bible_story_verse_5">Exodus 3:6</string>
 
     <!-- Bible Story 6 -->
     <string name="bible_story_text_6">Honor thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.</string>
-    <string name="bible_story_verse_6">20:12</string>
+    <string name="bible_story_verse_6">Exodus 20:12</string>
 
     <!-- Bible Story 7 -->
     <string name="bible_story_text_7">And he said, Hear now my words: If there be a prophet among you, I the LORD will make myself known unto him in a vision, and will speak unto him in a dream.</string>
-    <string name="bible_story_verse_7">12:6</string>
+    <string name="bible_story_verse_7">Numbers 12:6</string>
 
     <!-- Bible Story 8 -->
     <string name="bible_story_text_8">I will raise them up a Prophet from among their brethren, like unto thee, and will put my words in his mouth; and he shall speak unto them all that I shall command him.</string>
-    <string name="bible_story_verse_8">18:18</string>
+    <string name="bible_story_verse_8">Deuteronomy 18:18</string>
 
     <!-- Bible Story 9 -->
     <string name="bible_story_text_9">And all Israel from Dan even to Beersheba knew that Samuel was established to be a prophet of the LORD.</string>
-    <string name="bible_story_verse_9">3:20</string>
+    <string name="bible_story_verse_9">1 Samuel 3:20</string>
 
     <!-- Bible Story 10 -->
     <string name="bible_story_text_10">And it came to pass at the time of the offering of the evening sacrifice, that Elijah the prophet came near, and said, LORD God of Abraham, Isaac, and of Israel, let it be known this day that thou art God in Israel, and that I am thy servant, and that I have done all these things at thy word.</string>
-    <string name="bible_story_verse_10">18:36</string>
+    <string name="bible_story_verse_10">2 Kings 18:36</string>
 
     <!-- Bible Story 11 -->
     <string name="bible_story_text_11">Yet the LORD testified against Israel, and against Judah, by all the prophets, and by all the seers, saying, Turn ye from your evil ways, and keep my commandments and my statutes, according to all the law which I commanded your fathers, and which I sent to you by my servants the prophets.</string>
-    <string name="bible_story_verse_11">17:13</string>
+    <string name="bible_story_verse_11">2 Kings 17:13</string>
 
     <!-- Bible Story 12 -->
     <string name="bible_story_text_12">Also I heard the voice of the Lord, saying, Whom shall I send, and who will go for us? Then said I, Here am I; send me.</string>
-    <string name="bible_story_verse_12">6:8</string>
+    <string name="bible_story_verse_12">Isaiah 6:8</string>
 
     <!-- Bible Story 13 -->
     <string name="bible_story_text_13">Before I formed thee in the belly I knew thee; and before thou camest forth out of the womb I sanctified thee, and I ordained thee a prophet unto the nations.</string>
-    <string name="bible_story_verse_13">1:5</string>
+    <string name="bible_story_verse_13">Jeremiah 1:5</string>
 
     <!-- Bible Story 14 -->
     <string name="bible_story_text_14">And they, whether they will hear, or whether they will forbear, (for they are a rebellious house,) yet shall know that there hath been a prophet among them.</string>
-    <string name="bible_story_verse_14">2:5</string>
+    <string name="bible_story_verse_14">Ezekiel 2:5</string>
 
     <!-- Bible Story 15 -->
     <string name="bible_story_text_15">Neither have we hearkened unto thy servants the prophets, which spake in thy name to our kings, our princes, and our fathers, and to all the people of the land.</string>
-    <string name="bible_story_verse_15">9:6</string>
+    <string name="bible_story_verse_15">Daniel 9:6</string>
 
     <!-- Bible Story 16 -->
     <string name="bible_story_text_16">Surely the Lord GOD will do nothing, but he revealeth his secret unto his servants the prophets.</string>
-    <string name="bible_story_verse_16">3:7</string>
+    <string name="bible_story_verse_16">Amos 3:7</string>
 
     <!-- Bible Story 17 -->
     <string name="bible_story_text_17">Arise, go unto Nineveh, that great city, and preach unto it the preaching that I bid thee.</string>
-    <string name="bible_story_verse_17">3:2</string>
+    <string name="bible_story_verse_17">Jonah 3:2</string>
 
     <!-- Bible Story 18 -->
     <string name="bible_story_text_18">But thou, Bethlehem Ephratah, though thou be little among the thousands of Judah, yet out of thee shall he come forth unto me that is to be ruler in Israel; whose goings forth have been from of old, from everlasting.</string>
-    <string name="bible_story_verse_18">5:2</string>
+    <string name="bible_story_verse_18">Micah 5:2</string>
 </resources>
