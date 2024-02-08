@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 import java.text.NumberFormat
 
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class TipTimeInstrumentedTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 

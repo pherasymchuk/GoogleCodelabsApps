@@ -38,9 +38,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -180,6 +180,7 @@ fun ArtworkWall(
             modifier = Modifier
                 .padding(14.dp)
                 .align(Alignment.CenterHorizontally)
+                .testTag(imageRes.toString())
         )
     }
 }
@@ -204,9 +205,12 @@ fun ArtworkDescriptor(
                 text = stringResource(name),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Normal,
-                color = Color.Gray
             )
-            Text(text = stringResource(bibleChapter), fontWeight = FontWeight.Bold)
+            Text(
+                text = stringResource(bibleChapter),
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
