@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -61,7 +62,9 @@ fun CoursesApp(modifier: Modifier = Modifier) {
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(start = 4.dp, top = 4.dp, end = 4.dp),
+        contentPadding = PaddingValues(start = 8.dp, top = 8.dp, end = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
     ) {
         items(topics) { topic ->
@@ -69,9 +72,7 @@ fun CoursesApp(modifier: Modifier = Modifier) {
                 name = stringResource(id = topic.nameStringId),
                 numberOfCourses = topic.numberOfCourses,
                 image = painterResource(id = topic.imageResId),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp)
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
