@@ -13,7 +13,7 @@ composeBom = "2024.01.00"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics", version = "21.5.1" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -28,7 +28,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version = "1.6.0" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.1.2" }
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version = "5.10.2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
