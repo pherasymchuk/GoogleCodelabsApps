@@ -104,7 +104,13 @@ fun HeroItem(
                 .padding(16.dp)
                 .sizeIn(minHeight = 72.dp)
         ) {
-            HeroInfo(name = name, description = description, modifier = Modifier.weight(1f))
+            HeroInfo(
+                name = name,
+                description = description,
+                modifier = Modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+            )
             Spacer(modifier = Modifier.width(16.dp))
             HeroImage(
                 painter = image, modifier = Modifier
