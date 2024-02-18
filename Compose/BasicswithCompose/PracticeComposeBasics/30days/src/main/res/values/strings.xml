@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">30 Days</string>
+    <string name="app_bar_title">30 Days of Wellness</string>
+    <string name="day_1_goal">Go out for a walking</string>
+    <string name="day_1_description">You should care about your body, just go out for a little</string>
+    <string name="day">Day</string>
 </resources>
