@@ -50,13 +50,14 @@ fun ThirtyDaysOfWellnessApp(modifier: Modifier = Modifier) {
         modifier = Modifier.fillMaxSize(),
         topBar = { ThirtyDaysAppBar() }
     ) { innerPadding ->
-        LazyColumn(contentPadding = innerPadding, modifier = modifier.padding(horizontal = 8.dp)) {
+        LazyColumn(contentPadding = innerPadding, modifier = modifier.padding(horizontal = 4.dp)) {
             this.items(days) { day ->
                 OneDayCard(
                     dayNumber = day.dayNumber,
                     goal = stringResource(id = day.goalStringResId),
                     image = painterResource(id = day.imageResId),
-                    description = stringResource(id = day.descriptionResId)
+                    description = stringResource(id = day.descriptionResId),
+                    modifier = Modifier.padding(horizontal = 4.dp)
                 )
             }
         }
@@ -102,7 +103,7 @@ private fun OneDayCard(
 private fun DayNumber(dayNumber: Int, modifier: Modifier = Modifier) {
     Text(
         text = "${stringResource(R.string.day)} $dayNumber",
-        style = MaterialTheme.typography.labelLarge,
+        style = MaterialTheme.typography.titleSmall,
         modifier = modifier
     )
 }

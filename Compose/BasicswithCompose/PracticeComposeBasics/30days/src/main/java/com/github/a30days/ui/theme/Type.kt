@@ -31,6 +31,11 @@ val Typography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
-    labelLarge = TextStyle.Default.copy(fontWeight = FontWeight.Bold)
+    labelLarge = TextStyle.Default.copy(fontWeight = FontWeight.Bold),
+    titleSmall = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = Oswald,
+        fontSize = 14.sp
+    )
 )
 
