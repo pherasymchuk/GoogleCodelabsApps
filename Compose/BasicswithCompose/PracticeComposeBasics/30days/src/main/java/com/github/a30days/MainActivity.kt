@@ -7,7 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -15,13 +17,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,16 +50,22 @@ fun ThirtyDaysOfWellnessApp(modifier: Modifier = Modifier) {
     val days: List<Day> by remember { derivedStateOf { DaysRepository().getAllDays() } }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { ThirtyDaysAppBar() }
     ) { innerPadding ->
-        LazyColumn(contentPadding = innerPadding, modifier = modifier.padding(horizontal = 4.dp)) {
-            this.items(days) { day ->
+        LazyColumn(
+            contentPadding = innerPadding,
+            modifier = modifier.padding(horizontal = 4.dp)
+        ) {
+            this.item {
+                ThirtyDaysAppBar(modifier = Modifier.fillMaxWidth().wrapContentWidth())
+            }
+            this.items(days, key = { it.dayNumber }) { day ->
                 OneDayCard(
                     dayNumber = day.dayNumber,
                     goal = stringResource(id = day.goalStringResId),
                     image = painterResource(id = day.imageResId),
                     description = stringResource(id = day.descriptionResId),
-                    modifier = Modifier.padding(horizontal = 4.dp)
+                    onClick = {},
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
                 )
             }
         }
@@ -67,12 +75,12 @@ fun ThirtyDaysOfWellnessApp(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThirtyDaysAppBar(modifier: Modifier = Modifier) {
-    TopAppBar(title = {
-        Text(
-            text = stringResource(R.string.app_bar_title),
-            style = MaterialTheme.typography.titleLarge
-        )
-    }, modifier = modifier)
+    Text(
+        text = stringResource(R.string.app_bar_title),
+        style = MaterialTheme.typography.titleLarge,
+        modifier = modifier
+    )
+
 }
 
 @Composable
@@ -80,10 +88,11 @@ private fun OneDayCard(
     dayNumber: Int,
     goal: String,
     image: Painter,
+    onClick: () -> Unit,
     description: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Card(modifier = modifier, onClick = { /*TODO*/ }) {
+    Card(modifier = modifier, onClick = onClick) {
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             DayNumber(
                 dayNumber = dayNumber,
@@ -137,9 +146,10 @@ private fun OneDayCardPreview() {
     BasicsWithComposeTheme {
         OneDayCard(
             dayNumber = 1,
-            goal = "Read 5 pages",
+            goal = "Read 6 pages",
             image = painterResource(id = R.drawable.daypicture1),
-            description = "Should add later"
+            description = "Should add later",
+            onClick = {}
         )
     }
 }
@@ -150,4 +160,10 @@ private fun ThirtyDaysAppBarPreview() {
     BasicsWithComposeTheme {
         ThirtyDaysAppBar()
     }
+}
+
+@Preview
+@Composable
+private fun ThirtyDaysAppPreview() {
+    ThirtyDaysOfWellnessApp()
 }
