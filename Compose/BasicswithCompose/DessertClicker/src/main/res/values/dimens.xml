@@ -15,6 +15,6 @@
     limitations under the License.
 -->
 <resources>
-
-    <style name="Theme.DessertClicker" parent="android:Theme.Material.Light.NoActionBar" />
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="image_size">150dp</dimen>
 </resources>
