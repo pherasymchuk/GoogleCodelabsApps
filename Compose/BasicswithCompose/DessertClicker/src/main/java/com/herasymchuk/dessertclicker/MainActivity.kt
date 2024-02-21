@@ -12,6 +12,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +27,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -122,15 +126,15 @@ private fun DessertClickerApp(
     desserts: List<Dessert>,
 ) {
 
-    var revenue by remember { mutableIntStateOf(0) }
-    var dessertsSold by remember { mutableStateOf(0) }
+    var revenue by rememberSaveable { mutableIntStateOf(0) }
+    var dessertsSold by rememberSaveable { mutableStateOf(0) }
 
-    val currentDessertIndex by remember { mutableStateOf(0) }
+    val currentDessertIndex by rememberSaveable { mutableStateOf(0) }
 
-    var currentDessertPrice by remember {
+    var currentDessertPrice by rememberSaveable {
         mutableStateOf(desserts[currentDessertIndex].price)
     }
-    var currentDessertImageId by remember {
+    var currentDessertImageId by rememberSaveable {
         mutableStateOf(desserts[currentDessertIndex].imageId)
     }
 
@@ -166,7 +170,13 @@ private fun DessertClickerApp(
                 currentDessertPrice = dessertToShow.price
             },
             insets = innerPaddings,
-//            modifier = Modifier.padding(contentPadding)
+            modifier = Modifier
+                .padding(
+                    start = innerPaddings.calculateStartPadding(LocalLayoutDirection.current),
+                    end = innerPaddings.calculateEndPadding(LocalLayoutDirection.current),
+                    top = innerPaddings.calculateTopPadding()
+                )
+                .scrollable(rememberScrollState(), Orientation.Vertical)
         )
     }
 }
