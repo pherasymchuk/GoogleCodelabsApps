@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.dessertclicker.model
+package com.herasymchuk.dessertclicker.model
 
 /**
  * [Dessert] is the data class to represent the Dessert imageId, price, and startProductionAmount

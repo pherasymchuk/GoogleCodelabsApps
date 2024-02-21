@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.example.dessertclicker.data
+package com.herasymchuk.dessertclicker.data
 
-import com.example.dessertclicker.R
-import com.example.dessertclicker.model.Dessert
+import com.herasymchuk.dessertclicker.R
+import com.herasymchuk.dessertclicker.model.Dessert
 
 /**
  * [Datasource] generates a list of [Dessert]

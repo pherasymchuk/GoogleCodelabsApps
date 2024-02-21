@@ -16,5 +16,5 @@
 -->
 <resources>
 
-    <style name="Theme.DessertClicker" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.BasicsWithCompose" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
