@@ -1,8 +1,9 @@
-package com.herasymchuk.unscramble.ui.theme
+package com.herasymchuk.unscramble.ui
 
 import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.herasymchuk.unscramble.R
+import com.herasymchuk.unscramble.ui.theme.BasicsWithComposeTheme
 
 @Composable
 fun GameScreen() {
@@ -207,5 +209,21 @@ private fun FinalScoreDialog(
 fun GameScreenPreview() {
     BasicsWithComposeTheme {
         GameScreen()
+    }
+}
+
+@Preview
+@Composable
+private fun GameStatusPreview() {
+    BasicsWithComposeTheme {
+        GameStatus(score = 20, modifier = Modifier.padding(16.dp))
+    }
+}
+
+@Preview
+@Composable
+private fun GameLayoutPreview() {
+    BasicsWithComposeTheme {
+        GameLayout()
     }
 }
