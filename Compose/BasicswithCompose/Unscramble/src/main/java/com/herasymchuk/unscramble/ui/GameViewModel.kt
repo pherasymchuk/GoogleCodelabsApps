@@ -1,5 +1,8 @@
 package com.herasymchuk.unscramble.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.herasymchuk.unscramble.model.allWords
@@ -8,15 +11,17 @@ import kotlinx.coroutines.flow.StateFlow
 
 abstract class GameViewModel<T> : ViewModel() {
     abstract val uiState: StateFlow<T>
+    abstract val userGuess: Word
 
     abstract fun resetGame()
+    abstract fun updateUserGuess(guessedWord: String)
 
-    class Base : GameViewModel<GameUiState>() {
+    private class Base : GameViewModel<GameUiState>() {
         override val uiState: MutableStateFlow<GameUiState> = MutableStateFlow(GameUiState())
         private var randomWords: RandomWords = RandomWords(allWords)
-
-        private var currentWord: Word = Word("")
         private val usedWords: MutableList<Word> = mutableListOf()
+        private var currentWord: Word = Word("")
+        override var userGuess: Word by mutableStateOf(Word(""))
 
         init {
             resetGame()
@@ -30,14 +35,19 @@ abstract class GameViewModel<T> : ViewModel() {
             uiState.value = GameUiState(currentScrambledWord = scrambled)
         }
 
-        class Factory : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(Base::class.java)) {
-                    @Suppress("UNCHECKED_CAST")
-                    return Base() as T
-                }
-                throw IllegalArgumentException("Unknown ViewModel class")
+        override fun updateUserGuess(guessedWord: String) {
+            userGuess = Word(guessedWord)
+        }
+
+    }
+
+    object BaseFactory : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(Base::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return Base() as T
             }
+            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }
