@@ -1,4 +1,4 @@
-package com.herasymchuk.unscramble.ui
+package com.herasymchuk.unscramble.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.background
@@ -26,8 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,15 +37,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.herasymchuk.unscramble.R
-import com.herasymchuk.unscramble.ui.theme.BasicsWithComposeTheme
 
 @Composable
-fun GameScreen(
-    gameViewModel: GameViewModel<GameUiState> = viewModel(factory = GameViewModel.Factory()),
-) {
-    val gameUiState: GameUiState by gameViewModel.uiState.collectAsState()
+fun GameScreen() {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
     Column(
@@ -59,17 +52,12 @@ fun GameScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(
             text = stringResource(R.string.app_name),
             style = typography.titleLarge,
         )
         GameLayout(
-            currentScrambledWord = gameUiState.currentScrambledWord,
-            isGuessWrong = gameUiState.isGuessedWordWrong,
-            wordCount = gameUiState.currentWordCount,
-            userGuess = gameViewModel.userGuess,
-            onUserGuessChanged = { gameViewModel.updateUserGuess(Word(it)) },
-            onKeyboardDone = { gameViewModel.checkUserGuess() },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
@@ -85,7 +73,7 @@ fun GameScreen(
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { gameViewModel.checkUserGuess() }
+                onClick = { }
             ) {
                 Text(
                     text = stringResource(R.string.submit),
@@ -94,7 +82,7 @@ fun GameScreen(
             }
 
             OutlinedButton(
-                onClick = { gameViewModel.scipWord() },
+                onClick = { },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -104,7 +92,7 @@ fun GameScreen(
             }
         }
 
-        GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
+        GameStatus(score = 0, modifier = Modifier.padding(20.dp))
     }
 }
 
@@ -122,15 +110,7 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun GameLayout(
-    userGuess: Word,
-    isGuessWrong: Boolean,
-    wordCount: Int,
-    currentScrambledWord: ScrambledWord,
-    onUserGuessChanged: (String) -> Unit,
-    onKeyboardDone: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun GameLayout(modifier: Modifier = Modifier) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
     Card(
@@ -148,12 +128,12 @@ fun GameLayout(
                     .background(colorScheme.surfaceTint)
                     .padding(horizontal = 10.dp, vertical = 4.dp)
                     .align(alignment = Alignment.End),
-                text = stringResource(R.string.word_count, wordCount),
+                text = stringResource(R.string.word_count, 0),
                 style = typography.titleMedium,
                 color = colorScheme.onPrimary
             )
             Text(
-                text = currentScrambledWord.value,
+                text = "scrambleun",
                 style = typography.displayMedium
             )
             Text(
@@ -162,7 +142,7 @@ fun GameLayout(
                 style = typography.titleMedium
             )
             OutlinedTextField(
-                value = userGuess.value,
+                value = "",
                 singleLine = true,
                 shape = shapes.large,
                 modifier = Modifier.fillMaxWidth(),
@@ -171,20 +151,14 @@ fun GameLayout(
                     unfocusedContainerColor = colorScheme.surface,
                     disabledContainerColor = colorScheme.surface,
                 ),
-                onValueChange = onUserGuessChanged,
-                label = {
-                    if (isGuessWrong) {
-                        Text(text = stringResource(id = R.string.wrong_guess))
-                    } else {
-                        Text(stringResource(R.string.enter_your_word))
-                    }
-                },
-                isError = isGuessWrong,
+                onValueChange = { },
+                label = { Text(stringResource(R.string.enter_your_word)) },
+                isError = false,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { onKeyboardDone() }
+                    onDone = { }
                 )
             )
         }
@@ -198,7 +172,7 @@ fun GameLayout(
 private fun FinalScoreDialog(
     score: Int,
     onPlayAgain: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val activity = (LocalContext.current as Activity)
 
@@ -233,28 +207,5 @@ private fun FinalScoreDialog(
 fun GameScreenPreview() {
     BasicsWithComposeTheme {
         GameScreen()
-    }
-}
-
-@Preview
-@Composable
-private fun GameStatusPreview() {
-    BasicsWithComposeTheme {
-        GameStatus(score = 20, modifier = Modifier.padding(16.dp))
-    }
-}
-
-@Preview
-@Composable
-private fun GameLayoutPreview() {
-    BasicsWithComposeTheme {
-        GameLayout(
-            userGuess = Word("usesrguess"),
-            currentScrambledWord = ScrambledWord(Word("order")),
-            onKeyboardDone = {},
-            isGuessWrong = true,
-            wordCount = 3,
-            onUserGuessChanged = {}
-        )
     }
 }
