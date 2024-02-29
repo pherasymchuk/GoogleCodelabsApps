@@ -15,6 +15,7 @@ abstract class GameViewModel<T> : ViewModel() {
 
     abstract fun resetGame()
     abstract fun updateUserGuess(guessedWord: String)
+    abstract fun checkUserGuess()
 
     private class Base : GameViewModel<GameUiState>() {
         override val uiState: MutableStateFlow<GameUiState> = MutableStateFlow(GameUiState())
@@ -37,6 +38,16 @@ abstract class GameViewModel<T> : ViewModel() {
 
         override fun updateUserGuess(guessedWord: String) {
             userGuess = Word(guessedWord)
+        }
+
+        override fun checkUserGuess() {
+            if (userGuess.value.equals(currentWord.value, ignoreCase = true)) {
+
+            } else {
+                uiState.value = uiState.value.copy(isUserGuessWrong = true)
+            }
+            // Reset user guess
+            updateUserGuess("")
         }
 
     }
