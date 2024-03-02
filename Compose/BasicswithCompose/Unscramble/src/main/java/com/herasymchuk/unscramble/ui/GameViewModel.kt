@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.herasymchuk.unscramble.model.MAX_NO_OF_WORDS
 import com.herasymchuk.unscramble.model.SCORE_INCREASE
 import com.herasymchuk.unscramble.model.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +36,7 @@ abstract class GameViewModel<T> : ViewModel() {
             usedWords.clear()
             randomWords = RandomWords(allWords)
             currentWord = randomWords.next()
+            usedWords.add(currentWord)
             val scrambled = ScrambledWord(currentWord)
             uiState.value = GameUiState(currentScrambledWord = scrambled)
         }
@@ -46,14 +48,8 @@ abstract class GameViewModel<T> : ViewModel() {
         override fun checkUserGuess() {
             if (userGuess.value.equals(currentWord.value, ignoreCase = true)) {
                 val updatedScore: Int = uiState.value.score + SCORE_INCREASE
-                uiState.update { currentState: GameUiState ->
-                    currentState.copy(
-                        isUserGuessWrong = false,
-                        currentScrambledWord = ScrambledWord(randomWords.next()),
-                        score = updatedScore,
-                        count = currentState.count.inc()
-                    )
-                }
+                updateGameState(updatedScore)
+                nextWord()
             } else {
                 uiState.value = uiState.value.copy(isUserGuessWrong = true)
             }
@@ -62,15 +58,39 @@ abstract class GameViewModel<T> : ViewModel() {
         }
 
         override fun scipWord() {
-            uiState.update { currentState: GameUiState ->
-                currentState.copy(
-                    isUserGuessWrong = false,
-                    currentScrambledWord = ScrambledWord(randomWords.next()),
-                    count = currentState.count.inc()
-                )
-            }
+            nextWord()
+            updateGameState(uiState.value.score)
             updateUserGuess("")
         }
+
+        private fun updateGameState(newScore: Int) {
+            val isLastRound = usedWords.size > MAX_NO_OF_WORDS
+            if (isLastRound) {
+                uiState.update {
+                    it.copy(
+                        isUserGuessWrong = false,
+                        score = newScore,
+                        isGameOver = true
+                    )
+                }
+            } else {
+                uiState.update {
+                    it.copy(
+                        isUserGuessWrong = false,
+                        score = newScore,
+                        count = it.count.inc()
+                    )
+                }
+            }
+
+        }
+
+        private fun nextWord() {
+            currentWord = randomWords.next()
+            usedWords.add(currentWord)
+            uiState.value = uiState.value.copy(currentScrambledWord = ScrambledWord(currentWord))
+        }
+
     }
 
     object BaseFactory : ViewModelProvider.Factory {
@@ -100,7 +120,7 @@ open class RandomWords(private val words: Collection<String>) : Collection<Strin
     }
 }
 
-open class ScrambledWord(private val word: Word) {
+open class ScrambledWord(word: Word) {
     val value: String
 
     init {
