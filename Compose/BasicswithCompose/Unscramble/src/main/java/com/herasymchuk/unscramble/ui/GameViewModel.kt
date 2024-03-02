@@ -5,9 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.herasymchuk.unscramble.model.SCORE_INCREASE
 import com.herasymchuk.unscramble.model.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 abstract class GameViewModel<T> : ViewModel() {
     abstract val uiState: StateFlow<T>
@@ -16,6 +18,7 @@ abstract class GameViewModel<T> : ViewModel() {
     abstract fun resetGame()
     abstract fun updateUserGuess(guessedWord: String)
     abstract fun checkUserGuess()
+    abstract fun scipWord()
 
     private class Base : GameViewModel<GameUiState>() {
         override val uiState: MutableStateFlow<GameUiState> = MutableStateFlow(GameUiState())
@@ -42,7 +45,15 @@ abstract class GameViewModel<T> : ViewModel() {
 
         override fun checkUserGuess() {
             if (userGuess.value.equals(currentWord.value, ignoreCase = true)) {
-
+                val updatedScore: Int = uiState.value.score + SCORE_INCREASE
+                uiState.update { currentState: GameUiState ->
+                    currentState.copy(
+                        isUserGuessWrong = false,
+                        currentScrambledWord = ScrambledWord(randomWords.next()),
+                        score = updatedScore,
+                        count = currentState.count.inc()
+                    )
+                }
             } else {
                 uiState.value = uiState.value.copy(isUserGuessWrong = true)
             }
@@ -50,6 +61,16 @@ abstract class GameViewModel<T> : ViewModel() {
             updateUserGuess("")
         }
 
+        override fun scipWord() {
+            uiState.update { currentState: GameUiState ->
+                currentState.copy(
+                    isUserGuessWrong = false,
+                    currentScrambledWord = ScrambledWord(randomWords.next()),
+                    count = currentState.count.inc()
+                )
+            }
+            updateUserGuess("")
+        }
     }
 
     object BaseFactory : ViewModelProvider.Factory {
@@ -63,35 +84,35 @@ abstract class GameViewModel<T> : ViewModel() {
     }
 }
 
-    @JvmInline
-    value class Word(val value: String)
+@JvmInline
+value class Word(val value: String)
 
-    open class RandomWords(private val words: Collection<String>) : Collection<String> by words {
-        private val randomWords: MutableList<String> = words.toMutableSet().toMutableList()
-        private val iterator: MutableListIterator<String> = randomWords.listIterator()
+open class RandomWords(private val words: Collection<String>) : Collection<String> by words {
+    private val randomWords: MutableList<String> = words.toMutableSet().toMutableList()
+    private val iterator: MutableListIterator<String> = randomWords.listIterator()
 
-        init {
-            randomWords.shuffle()
-        }
-
-        fun next(): Word {
-            return Word(iterator.next())
-        }
+    init {
+        randomWords.shuffle()
     }
 
-    open class ScrambledWord(private val word: Word) {
-        val value: String
-
-        init {
-            var scrambled: String = word.value
-            var count = 0
-            while (scrambled == word.value) {
-                if (word.value.isBlank() || count == 50) break
-                val charArray = word.value.toCharArray()
-                charArray.shuffle()
-                scrambled = String(charArray)
-                count++
-            }
-            value = scrambled
-        }
+    fun next(): Word {
+        return Word(iterator.next())
     }
+}
+
+open class ScrambledWord(private val word: Word) {
+    val value: String
+
+    init {
+        var scrambled: String = word.value
+        var count = 0
+        while (scrambled == word.value) {
+            if (word.value.isBlank() || count == 50) break
+            val charArray = word.value.toCharArray()
+            charArray.shuffle()
+            scrambled = String(charArray)
+            count++
+        }
+        value = scrambled
+    }
+}
