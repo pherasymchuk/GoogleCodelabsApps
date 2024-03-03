@@ -1,6 +1,6 @@
 [versions]
 agp = "8.4.0-alpha12"
-firebaseBom = "32.7.2"
+firebaseBom = "32.7.3"
 haze = "0.5.1"
 junitJupiter = "5.8.1"
 kotlin = "1.9.22"
