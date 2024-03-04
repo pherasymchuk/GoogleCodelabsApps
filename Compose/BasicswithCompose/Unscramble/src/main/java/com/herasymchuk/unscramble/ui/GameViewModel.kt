@@ -52,7 +52,7 @@ abstract class GameViewModel<T> : ViewModel() {
             if (userGuess.value.equals(uiState.value.currentWord.value, ignoreCase = true)) {
                 val updatedScore: Int = uiState.value.score + SCORE_INCREASE
                 nextWord()
-                updateGameState(updatedScore)
+                updateGameScore(updatedScore)
             } else {
                 uiState.value = uiState.value.copy(isUserGuessWrong = true)
             }
@@ -62,11 +62,11 @@ abstract class GameViewModel<T> : ViewModel() {
 
         override fun scipWord() {
             nextWord()
-            updateGameState(uiState.value.score)
+            updateGameScore(uiState.value.score)
             updateUserGuess("")
         }
 
-        private fun updateGameState(newScore: Int) {
+        private fun updateGameScore(newScore: Int) {
             val isLastRound = usedWords.size == MAX_NO_OF_WORDS + 1
             if (isLastRound) {
                 uiState.update {
