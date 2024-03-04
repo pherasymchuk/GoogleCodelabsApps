@@ -41,7 +41,16 @@ abstract class GameViewModel<T> : ViewModel() {
             val currentWord = randomWords.next()
             usedWords.add(currentWord)
             val scrambled = ScrambledWord(currentWord)
-            uiState.update { it.copy(currentWord = currentWord, currentScrambledWord = scrambled) }
+            uiState.update {
+                it.copy(
+                    currentWord = currentWord,
+                    currentScrambledWord = scrambled,
+                    isUserGuessWrong = false,
+                    score = 0,
+                    count = 1,
+                    isGameOver = false
+                )
+            }
         }
 
         override fun updateUserGuess(guessedWord: String) {
@@ -51,8 +60,12 @@ abstract class GameViewModel<T> : ViewModel() {
         override fun checkUserGuess() {
             if (userGuess.value.equals(uiState.value.currentWord.value, ignoreCase = true)) {
                 val updatedScore: Int = uiState.value.score + SCORE_INCREASE
-                nextWord()
                 updateGameScore(updatedScore)
+                if (isGameOver()) uiState.update {
+                    it.copy(isGameOver = true)
+                } else {
+                    nextWord()
+                }
             } else {
                 uiState.value = uiState.value.copy(isUserGuessWrong = true)
             }
@@ -61,14 +74,20 @@ abstract class GameViewModel<T> : ViewModel() {
         }
 
         override fun scipWord() {
-            nextWord()
             updateGameScore(uiState.value.score)
             updateUserGuess("")
+            if (isGameOver()) {
+                uiState.update { it.copy(isGameOver = true) }
+            } else {
+                nextWord()
+            }
         }
 
+        private fun isGameOver(): Boolean =
+            usedWords.size == MAX_NO_OF_WORDS
+
         private fun updateGameScore(newScore: Int) {
-            val isLastRound = usedWords.size == MAX_NO_OF_WORDS + 1
-            if (isLastRound) {
+            if (isGameOver()) {
                 uiState.update {
                     it.copy(
                         isUserGuessWrong = false,
