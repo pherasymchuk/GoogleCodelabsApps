@@ -1,10 +1,12 @@
 package com.herasymchuk.unscramble.ui
 
+import androidx.lifecycle.ViewModel
 import com.herasymchuk.unscramble.model.MAX_NO_OF_WORDS
 import com.herasymchuk.unscramble.model.SCORE_INCREASE
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -46,7 +48,6 @@ class GameViewModelTest {
     @Test
     fun gameViewModel_Initialization_FirstWordLoaded() {
         val gameUiState: GameUiState = vm.uiState.value
-        val correctWord: Word = gameUiState.currentWord
         assertNotEquals(
             "Scrambled word should not be the same as correct word",
             gameUiState.currentScrambledWord.value,
@@ -75,4 +76,43 @@ class GameViewModelTest {
         assertEquals(exprectedScore, gameUiState.score)
         assertTrue(gameUiState.isGameOver)
     }
+
+    @Test
+    fun gameViewModel_ScippedWord_ScoreUnchangedAndWordCountIncreased() {
+        var gameUiState: GameUiState = vm.uiState.value
+        val expectedScore = SCORE_INCREASE
+        val expectedCount = MAX_NO_OF_WORDS
+
+        vm.updateUserGuess(gameUiState.currentWord.value)
+        vm.checkUserGuess()
+
+        repeat(MAX_NO_OF_WORDS - 1) {
+            vm.scipWord()
+        }
+
+        gameUiState = vm.uiState.value
+
+        assertTrue(
+            "Game score should be $SCORE_INCREASE but was ${gameUiState.score}",
+            gameUiState.score == expectedScore
+        )
+        assertTrue(expectedCount == expectedCount)
+    }
+
+    @Test
+    fun viewModelFactory_createViewModel_BaseInstanceCreated() {
+        val gameVMBase: GameViewModel<*> =
+            GameViewModel.BaseFactory.create(GameViewModel::class.java)
+        val isBaseInstance: Boolean = gameVMBase is GameViewModel.Base
+        assertTrue(isBaseInstance)
+    }
+
+    @Test
+    fun viewModelFactory_PassWrongViewModelClass_ThrowException() {
+        assertThrows(IllegalArgumentException::class.java) {
+            GameViewModel.BaseFactory.create(FakeViewModel::class.java)
+        }
+    }
 }
+
+class FakeViewModel : ViewModel()
