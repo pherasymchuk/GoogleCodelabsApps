@@ -18,14 +18,17 @@ abstract class GameViewModel<T> : ViewModel() {
 
     abstract fun resetGame()
     abstract fun updateUserGuess(guessedWord: String)
+
+    /**
+     * If user guessed word correctly - increases score, count and moves to the next word
+     */
     abstract fun checkUserGuess()
     abstract fun scipWord()
 
-    private class Base : GameViewModel<GameUiState>() {
+    class Base : GameViewModel<GameUiState>() {
         override val uiState: MutableStateFlow<GameUiState> = MutableStateFlow(GameUiState())
         private var randomWords: RandomWords = RandomWords(allWords)
         private val usedWords: MutableList<Word> = mutableListOf()
-        private var currentWord: Word = Word("")
         override var userGuess: Word by mutableStateOf(Word(""))
 
         init {
@@ -35,10 +38,10 @@ abstract class GameViewModel<T> : ViewModel() {
         override fun resetGame() {
             usedWords.clear()
             randomWords = RandomWords(allWords)
-            currentWord = randomWords.next()
+            val currentWord = randomWords.next()
             usedWords.add(currentWord)
             val scrambled = ScrambledWord(currentWord)
-            uiState.value = GameUiState(currentScrambledWord = scrambled)
+            uiState.update { it.copy(currentWord = currentWord, currentScrambledWord = scrambled) }
         }
 
         override fun updateUserGuess(guessedWord: String) {
@@ -46,10 +49,10 @@ abstract class GameViewModel<T> : ViewModel() {
         }
 
         override fun checkUserGuess() {
-            if (userGuess.value.equals(currentWord.value, ignoreCase = true)) {
+            if (userGuess.value.equals(uiState.value.currentWord.value, ignoreCase = true)) {
                 val updatedScore: Int = uiState.value.score + SCORE_INCREASE
-                updateGameState(updatedScore)
                 nextWord()
+                updateGameState(updatedScore)
             } else {
                 uiState.value = uiState.value.copy(isUserGuessWrong = true)
             }
@@ -64,7 +67,7 @@ abstract class GameViewModel<T> : ViewModel() {
         }
 
         private fun updateGameState(newScore: Int) {
-            val isLastRound = usedWords.size > MAX_NO_OF_WORDS
+            val isLastRound = usedWords.size == MAX_NO_OF_WORDS + 1
             if (isLastRound) {
                 uiState.update {
                     it.copy(
@@ -86,9 +89,11 @@ abstract class GameViewModel<T> : ViewModel() {
         }
 
         private fun nextWord() {
-            currentWord = randomWords.next()
+            val currentWord: Word = randomWords.next()
             usedWords.add(currentWord)
-            uiState.value = uiState.value.copy(currentScrambledWord = ScrambledWord(currentWord))
+            uiState.value = uiState.value.copy(
+                currentWord = currentWord, currentScrambledWord = ScrambledWord(currentWord)
+            )
         }
 
     }
