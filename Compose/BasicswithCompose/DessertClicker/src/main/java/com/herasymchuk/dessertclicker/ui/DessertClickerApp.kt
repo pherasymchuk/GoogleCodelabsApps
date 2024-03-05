@@ -46,7 +46,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.herasymchuk.dessertclicker.R
 import com.herasymchuk.dessertclicker.ui.theme.BasicsWithComposeTheme
-import com.herasymchuk.dessertclicker.ui.theme.DessertClickerViewModel
 
 @Composable
 fun DessertClickerApp(

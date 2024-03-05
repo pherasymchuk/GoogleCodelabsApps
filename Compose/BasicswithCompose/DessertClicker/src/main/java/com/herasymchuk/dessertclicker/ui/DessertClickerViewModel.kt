@@ -1,4 +1,4 @@
-package com.herasymchuk.dessertclicker.ui.theme
+package com.herasymchuk.dessertclicker.ui
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.herasymchuk.dessertclicker.R
 import com.herasymchuk.dessertclicker.data.Datasource
 import com.herasymchuk.dessertclicker.model.Dessert
-import com.herasymchuk.dessertclicker.ui.DessertClickerState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
