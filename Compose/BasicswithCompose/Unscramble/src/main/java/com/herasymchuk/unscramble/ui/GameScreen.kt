@@ -4,10 +4,16 @@ import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -32,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -49,20 +56,32 @@ import com.herasymchuk.unscramble.ui.Word
 @Composable
 fun GameScreen(
     gameViewModel: GameViewModel<GameUiState> = viewModel(factory = GameViewModel.BaseFactory),
+    innerPadding: PaddingValues = PaddingValues(0.dp),
+    modifier: Modifier = Modifier,
 ) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val gameUiState: GameUiState by gameViewModel.uiState.collectAsState()
 
+    val safePaddingStart = WindowInsets.safeDrawing.asPaddingValues().calculateStartPadding(
+        LocalLayoutDirection.current
+    )
+    val safePaddingEnd = WindowInsets.safeDrawing.asPaddingValues().calculateEndPadding(
+        LocalLayoutDirection.current
+    )
     Column(
-        modifier = Modifier
-            .statusBarsPadding()
+        modifier = modifier
             .verticalScroll(rememberScrollState())
+            .padding(innerPadding)
+            .consumeWindowInsets(innerPadding)
             .safeDrawingPadding()
-            .padding(mediumPadding),
+            .padding(
+                start = if (mediumPadding < safePaddingStart) 0.dp else mediumPadding,
+                end = if (mediumPadding < safePaddingEnd) 0.dp else mediumPadding
+            ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+//        Spacer(modifier = Modifier.size(innerPadding.calculateTopPadding()))
         Text(
             text = stringResource(R.string.app_name),
             style = typography.titleLarge,
@@ -109,6 +128,7 @@ fun GameScreen(
         }
 
         GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
+//        Spacer(modifier = Modifier.size(innerPadding.calculateBottomPadding() - mediumPadding))
     }
     if (gameUiState.isGameOver) {
         FinalScoreDialog(
@@ -242,6 +262,6 @@ private fun FinalScoreDialog(
 @Composable
 fun GameScreenPreview() {
     BasicsWithComposeTheme {
-        GameScreen()
+        GameScreen(innerPadding = PaddingValues(0.dp))
     }
 }
