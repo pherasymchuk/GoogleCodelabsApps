@@ -110,6 +110,14 @@ fun SelectQuantityButton(
 
 @Preview
 @Composable
+fun SelectQuantityButtonPreview() {
+    CupcakeTheme {
+        SelectQuantityButton(labelResourceId = R.string.one_cupcake, onClick = { /*TODO*/ })
+    }
+}
+
+@Preview
+@Composable
 fun StartOrderPreview() {
     CupcakeTheme {
         StartOrderScreen(

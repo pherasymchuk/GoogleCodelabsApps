@@ -20,7 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.herasymchuk.cupcake.R
+import com.herasymchuk.cupcake.ui.theme.CupcakeTheme
 
 /**
  * Composable that displays formatted [price] that will be formatted and displayed on screen
@@ -32,4 +34,12 @@ fun FormattedPriceLabel(subtotal: String, modifier: Modifier = Modifier) {
         modifier = modifier,
         style = MaterialTheme.typography.headlineSmall
     )
+}
+
+@Preview
+@Composable
+private fun FormatterdPriceLabelPreview() {
+    CupcakeTheme {
+        FormattedPriceLabel(subtotal = "20")
+    }
 }

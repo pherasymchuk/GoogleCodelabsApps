@@ -1,6 +1,7 @@
 package com.herasymchuk.cupcake.ui
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,7 +51,7 @@ fun CupcakeAppBar(
 
 @Composable
 fun CupcakeApp(
-    viewModel: OrderViewModel = viewModel(),
+    viewModel: OrderViewModel = viewModel<OrderViewModel.Base>(),
     navController: NavHostController = rememberNavController(),
 ) {
     Scaffold(
