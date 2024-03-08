@@ -18,12 +18,11 @@ abstract class DessertClickerViewModel : ViewModel() {
     abstract val state: StateFlow<DessertClickerState>
 
     abstract fun sellDessert()
-    abstract fun determineDessertToShow()
+    protected abstract fun determineDessertToShow()
     abstract fun shareSoldDessertsInformation(intentContext: Context)
 
     class Base : DessertClickerViewModel() {
         private val desserts: List<Dessert> = Datasource.dessertList
-        private var currentDessert: Dessert = desserts.first()
 
         override val state: MutableStateFlow<DessertClickerState> = MutableStateFlow(
             DessertClickerState(0, 0, desserts.first())
