@@ -2,9 +2,15 @@ package com.herasymchuk.cupcake.ui
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.StringRes
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,22 +25,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.herasymchuk.cupcake.R
 import com.herasymchuk.cupcake.data.DataSource
 
-enum class CupcakeScreen {
-    START,
-    FLAVOR,
-    PICKUP,
-    SUMMARY,
+enum class CupcakeScreen(@StringRes val title: Int) {
+    START(title = R.string.app_name),
+    FLAVOR(title = R.string.choose_flavor),
+    PICKUP(title = R.string.choose_pickup_date),
+    SUMMARY(title = R.string.order_summary),
 }
 
 /**
@@ -43,14 +52,27 @@ enum class CupcakeScreen {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CupcakeAppBar(
+    currentScreen: CupcakeScreen,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var containerColor = Color.Black
+    var titleContentColor = Color.Black
+    if (isSystemInDarkTheme()) {
+        containerColor = MaterialTheme.colorScheme.primaryContainer
+        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+    } else {
+        containerColor = MaterialTheme.colorScheme.primary
+        titleContentColor = MaterialTheme.colorScheme.onPrimary
+    }
+
     TopAppBar(
-        title = { Text(stringResource(id = R.string.app_name)) },
+        title = { Text(stringResource(id = currentScreen.title)) },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = containerColor,
+            titleContentColor = titleContentColor,
+            navigationIconContentColor = if (isSystemInDarkTheme()) Color.Black else Color.White
         ),
         modifier = modifier,
         navigationIcon = {
@@ -71,11 +93,18 @@ fun CupcakeApp(
     viewModel: OrderViewModel = viewModel<OrderViewModel.Base>(),
     navController: NavHostController = rememberNavController(),
 ) {
+
+    val backStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+    val currentScreen: CupcakeScreen =
+        CupcakeScreen.valueOf(backStackEntry?.destination?.route ?: CupcakeScreen.START.name)
+
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             CupcakeAppBar(
-                canNavigateBack = false,
-                navigateUp = { /* TODO: implement back navigation */ }
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() }
             )
         }
     ) { innerPadding ->
@@ -84,7 +113,12 @@ fun CupcakeApp(
         NavHost(
             navController = navController,
             startDestination = CupcakeScreen.START.name,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+                .safeDrawingPadding()
         ) {
 
             composable(CupcakeScreen.START.name) {
