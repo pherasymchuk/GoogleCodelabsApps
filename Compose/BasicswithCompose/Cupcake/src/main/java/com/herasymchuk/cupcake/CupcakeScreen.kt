@@ -57,8 +57,8 @@ fun CupcakeAppBar(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var containerColor = Color.Black
-    var titleContentColor = Color.Black
+    val containerColor: Color
+    val titleContentColor: Color
     if (isSystemInDarkTheme()) {
         containerColor = MaterialTheme.colorScheme.primaryContainer
         titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
