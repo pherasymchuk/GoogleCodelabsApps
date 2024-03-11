@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -38,6 +39,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.herasymchuk.cupcake.R
 import com.herasymchuk.cupcake.data.DataSource
+import com.herasymchuk.cupcake.ui.theme.CupcakeTheme
 
 enum class CupcakeScreen(@StringRes val title: Int) {
     START(title = R.string.app_name),
@@ -201,4 +203,20 @@ private fun shareOrder(context: Context, subject: String, summary: String) {
             context.getString(R.string.new_cupcake_order)
         )
     )
+}
+
+@Preview
+@Composable
+private fun CupcakeAppBarPreview() {
+    CupcakeTheme {
+        CupcakeAppBar(currentScreen = CupcakeScreen.PICKUP, canNavigateBack = true, navigateUp = { /*TODO*/ })
+    }
+}
+
+@Preview
+@Composable
+private fun CupcakeAppPreview() {
+    CupcakeTheme {
+        CupcakeApp()
+    }
 }

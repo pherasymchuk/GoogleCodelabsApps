@@ -97,8 +97,10 @@ fun CupcakeTheme(
 
     val view = LocalView.current
     SideEffect {
-        val window = (view.context as Activity).window
-        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+        if (!view.isInEditMode) {
+            val window = (view.context as Activity).window
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+        }
     }
 
 

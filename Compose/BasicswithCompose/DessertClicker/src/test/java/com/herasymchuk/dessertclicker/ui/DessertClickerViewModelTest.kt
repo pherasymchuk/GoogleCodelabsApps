@@ -17,17 +17,6 @@ class DessertClickerViewModelTest {
         Assert.assertTrue(state.dessertsSold == 1)
     }
 
-    @Test
-    fun dessertClickerViewModel_Sell55Desserts_RevenuAndCountShoudIncreaseCorrectly() {
-        var currentPrice = state.dessert.price
-        var revenueResult = 0
-
-        for (i in 1..55) {
-            vm.sellDessert()
-        }
-
-        Assert.assertTrue(state.)
-    }
 
     @Test
     fun determineDessertToShow() {
