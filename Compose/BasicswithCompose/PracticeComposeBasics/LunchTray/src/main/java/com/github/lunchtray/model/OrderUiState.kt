@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.lunchtray.model
+package com.github.lunchtray.model
+
+import com.example.lunchtray.model.MenuItem
 
 data class OrderUiState(
     // Entree Selection

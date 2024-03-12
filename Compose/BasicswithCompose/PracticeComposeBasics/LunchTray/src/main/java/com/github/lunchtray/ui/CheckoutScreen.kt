@@ -36,8 +36,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.lunchtray.datasource.DataSource
 import com.example.lunchtray.model.MenuItem
-import com.example.lunchtray.model.OrderUiState
 import com.github.lunchtray.R
+import com.github.lunchtray.model.FormattedPrice
+import com.github.lunchtray.model.OrderUiState
 
 @Composable
 fun CheckoutScreen(
@@ -65,18 +66,18 @@ fun CheckoutScreen(
 
         OrderSubCost(
             resourceId = R.string.subtotal,
-            price = orderUiState.itemTotalPrice.formatPrice(),
+            price = FormattedPrice(orderUiState.itemTotalPrice).value,
             Modifier.align(Alignment.End)
         )
 
         OrderSubCost(
             resourceId = R.string.tax,
-            price = orderUiState.orderTax.formatPrice(),
+            price = FormattedPrice(orderUiState.orderTax).value,
             Modifier.align(Alignment.End)
         )
 
         Text(
-            text = stringResource(R.string.total, orderUiState.orderTotalPrice.formatPrice()),
+            text = stringResource(R.string.total, FormattedPrice(orderUiState.orderTotalPrice).value),
             modifier = Modifier.align(Alignment.End),
             fontWeight = FontWeight.Bold
         )
