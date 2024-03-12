@@ -11,7 +11,7 @@ import com.herasymchuk.cupcake.ui.SelectOptionScreen
 import org.junit.Rule
 import org.junit.Test
 
-class CupcakeOrderScreenTest {
+class CupcakeFlavorScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
