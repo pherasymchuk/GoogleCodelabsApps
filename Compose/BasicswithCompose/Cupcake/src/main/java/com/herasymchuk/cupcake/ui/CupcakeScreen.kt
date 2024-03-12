@@ -126,7 +126,7 @@ fun CupcakeApp(
             composable(CupcakeScreen.START.name) {
                 StartOrderScreen(
                     quantityOptions = DataSource.quantityOptions,
-                    onNextButtonClicked = { numberOfCupcakes: Int ->
+                    onSelectQuantityButtonClicked = { numberOfCupcakes: Int ->
                         viewModel.setQuantity(numberOfCupcakes)
                         navController.navigate(CupcakeScreen.FLAVOR.name)
                     },

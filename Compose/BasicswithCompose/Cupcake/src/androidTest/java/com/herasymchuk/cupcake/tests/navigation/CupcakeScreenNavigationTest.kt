@@ -1,4 +1,4 @@
-package com.herasymchuk.cupcake
+package com.herasymchuk.cupcake.tests.navigation
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
@@ -11,7 +11,10 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.herasymchuk.cupcake.R
+import com.herasymchuk.cupcake.assertCurrentRouteName
 import com.herasymchuk.cupcake.data.DataSource
+import com.herasymchuk.cupcake.onNodeWithStringId
 import com.herasymchuk.cupcake.ui.CupcakeApp
 import com.herasymchuk.cupcake.ui.CupcakeScreen
 import org.junit.Before

@@ -1,4 +1,4 @@
-package com.herasymchuk.cupcake
+package com.herasymchuk.cupcake.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

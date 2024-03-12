@@ -1,4 +1,4 @@
-package com.herasymchuk.cupcake
+package com.herasymchuk.cupcake.tests.navigation
 
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
@@ -7,7 +7,9 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.herasymchuk.cupcake.R
 import com.herasymchuk.cupcake.data.DataSource
+import com.herasymchuk.cupcake.onNodeWithStringId
 import com.herasymchuk.cupcake.ui.CupcakeScreen
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -16,8 +18,7 @@ import java.util.Locale
 class TestCupcakeNavigation(
     private val composeTestRule: AndroidComposeTestRule<ActivityScenarioRule<ComponentActivity>, ComponentActivity>
 ) {
-    var currentScreen = CupcakeScreen.START
-        private set
+    private var currentScreen = CupcakeScreen.START
 
     fun navigateToStartScreen() {
         val repeat: Int = currentScreen.ordinal
@@ -62,7 +63,7 @@ class TestCupcakeNavigation(
         composeTestRule.onNodeWithContentDescription(backText).performClick()
     }
 
-    fun clickNext() {
+    private fun clickNext() {
         composeTestRule.onNodeWithStringId(R.string.next).performClick()
     }
 
