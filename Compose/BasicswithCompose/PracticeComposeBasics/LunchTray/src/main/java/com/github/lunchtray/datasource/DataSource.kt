@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.lunchtray.datasource
+package com.github.lunchtray.datasource
 
-import com.example.lunchtray.model.MenuItem.AccompanimentItem
-import com.example.lunchtray.model.MenuItem.EntreeItem
-import com.example.lunchtray.model.MenuItem.SideDishItem
+import com.github.lunchtray.model.MenuItem.AccompanimentItem
+import com.github.lunchtray.model.MenuItem.EntreeItem
+import com.github.lunchtray.model.MenuItem.SideDishItem
 
 /**
  * Map of available menu items to be displayed in the menu fragments.

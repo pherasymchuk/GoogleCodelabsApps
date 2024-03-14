@@ -15,8 +15,6 @@
  */
 package com.github.lunchtray.model
 
-import com.example.lunchtray.model.MenuItem
-
 data class OrderUiState(
     // Entree Selection
     val entree: MenuItem.EntreeItem? = null,

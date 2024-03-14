@@ -27,7 +27,6 @@ class CupcakeScreenNavigationTest {
         createAndroidComposeRule()
     private val testCupcakeNavigation = TestCupcakeNavigation(composeTestRule)
     private lateinit var navController: TestNavHostController
-    private var currentScreen = CupcakeScreen.START
 
     @Before
     fun setupCupcakeNavHost() {

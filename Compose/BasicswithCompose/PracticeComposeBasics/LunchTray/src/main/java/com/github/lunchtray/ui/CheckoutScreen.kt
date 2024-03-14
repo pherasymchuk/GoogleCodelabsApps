@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.lunchtray.ui
+package com.github.lunchtray.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -34,16 +34,16 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.lunchtray.datasource.DataSource
-import com.example.lunchtray.model.MenuItem
 import com.github.lunchtray.R
+import com.github.lunchtray.datasource.DataSource
 import com.github.lunchtray.model.FormattedPrice
+import com.github.lunchtray.model.MenuItem
 import com.github.lunchtray.model.OrderUiState
 
 @Composable
 fun CheckoutScreen(
     orderUiState: OrderUiState,
-    onNextButtonClicked: () -> Unit,
+    onSubmitOrderButtonClicked: () -> Unit,
     onCancelButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -93,7 +93,7 @@ fun CheckoutScreen(
             }
             Button(
                 modifier = Modifier.weight(1f),
-                onClick = onNextButtonClicked
+                onClick = onSubmitOrderButtonClicked
             ) {
                 Text(stringResource(R.string.submit).uppercase())
             }
@@ -139,7 +139,7 @@ fun CheckoutScreenPreview() {
             orderTax = 1.00,
             orderTotalPrice = 16.00
         ),
-        onNextButtonClicked = {},
+        onSubmitOrderButtonClicked = {},
         onCancelButtonClicked = {},
         modifier = Modifier
             .padding(dimensionResource(R.dimen.padding_medium))

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.lunchtray.ui
+package com.github.lunchtray.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.lunchtray.R
+import com.github.lunchtray.ui.theme.LunchTrayTheme
 
 @Composable
 fun StartOrderScreen(
@@ -53,10 +54,12 @@ fun StartOrderScreen(
 @Preview
 @Composable
 fun StartOrderPreview() {
-    StartOrderScreen(
-        onStartOrderButtonClicked = {},
-        modifier = Modifier
-            .padding(dimensionResource(R.dimen.padding_medium))
-            .fillMaxSize()
-    )
+    LunchTrayTheme {
+        StartOrderScreen(
+            onStartOrderButtonClicked = {},
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.padding_medium))
+                .fillMaxSize()
+        )
+    }
 }

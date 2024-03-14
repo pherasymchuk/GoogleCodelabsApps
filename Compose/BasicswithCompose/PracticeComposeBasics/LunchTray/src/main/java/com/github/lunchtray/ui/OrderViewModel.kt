@@ -16,10 +16,10 @@
 package com.github.lunchtray.ui
 
 import androidx.lifecycle.ViewModel
-import com.example.lunchtray.model.MenuItem
-import com.example.lunchtray.model.MenuItem.AccompanimentItem
-import com.example.lunchtray.model.MenuItem.EntreeItem
-import com.example.lunchtray.model.MenuItem.SideDishItem
+import com.github.lunchtray.model.MenuItem
+import com.github.lunchtray.model.MenuItem.AccompanimentItem
+import com.github.lunchtray.model.MenuItem.EntreeItem
+import com.github.lunchtray.model.MenuItem.SideDishItem
 import com.github.lunchtray.model.OrderUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
