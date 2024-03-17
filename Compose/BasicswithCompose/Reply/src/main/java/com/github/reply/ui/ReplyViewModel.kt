@@ -15,58 +15,76 @@
  */
 package com.github.reply.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.reply.data.Email
 import com.github.reply.data.MailboxType
 import com.github.reply.data.local.LocalEmailsDataProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class ReplyViewModel : ViewModel() {
+abstract class ReplyViewModel : ViewModel() {
+    abstract val uiState: StateFlow<ReplyUiState>
 
-    private val _uiState = MutableStateFlow(ReplyUiState())
-    val uiState: StateFlow<ReplyUiState> = _uiState
+    protected abstract fun initializeUIState()
+    abstract fun updateDetailsScreenStates(email: Email)
+    abstract fun resetHomeScreenStates()
+    abstract fun updateCurrentMailbox(mailboxType: MailboxType)
 
-    init {
-        initializeUIState()
-    }
+    class Base : ReplyViewModel() {
+        override val uiState: MutableStateFlow<ReplyUiState> = MutableStateFlow(ReplyUiState())
 
-    private fun initializeUIState() {
-        val mailboxes: Map<MailboxType, List<Email>> =
-            LocalEmailsDataProvider.allEmails.groupBy { it.mailbox }
-        _uiState.value =
-            ReplyUiState(
+        init {
+            initializeUIState()
+            viewModelScope.launch {
+                uiState.collect { uiState ->
+                    Log.i(TAG, "Current mailbox: ${uiState.currentMailbox}")
+                }
+            }
+        }
+
+        override fun initializeUIState() {
+            val mailboxes: Map<MailboxType, List<Email>> =
+                LocalEmailsDataProvider.allEmails.groupBy { it.mailbox }
+            Log.i(TAG, "initializeUIState: mailboxes -> ${mailboxes.map { "\n\t$it" }}")
+            uiState.value = ReplyUiState(
                 mailboxes = mailboxes,
-                currentSelectedEmail = mailboxes[MailboxType.Inbox]?.get(0)
-                    ?: LocalEmailsDataProvider.defaultEmail
+                currentSelectedEmail = mailboxes[MailboxType.Inbox]?.get(0) ?: LocalEmailsDataProvider.defaultEmail
             )
-    }
+        }
 
-    fun updateDetailsScreenStates(email: Email) {
-        _uiState.update {
-            it.copy(
-                currentSelectedEmail = email,
-                isShowingHomepage = false
-            )
+        override fun updateDetailsScreenStates(email: Email) {
+            uiState.update {
+                it.copy(
+                    currentSelectedEmail = email,
+                    isShowingHomepage = false
+                )
+            }
+        }
+
+        override fun resetHomeScreenStates() {
+            uiState.update {
+                it.copy(
+                    currentSelectedEmail = it.mailboxes[it.currentMailbox]?.get(0)
+                        ?: LocalEmailsDataProvider.defaultEmail,
+                    isShowingHomepage = true
+                )
+            }
+        }
+
+        override fun updateCurrentMailbox(mailboxType: MailboxType) {
+            uiState.update {
+                it.copy(
+                    currentMailbox = mailboxType
+                )
+            }
         }
     }
 
-    fun resetHomeScreenStates() {
-        _uiState.update {
-            it.copy(
-                currentSelectedEmail = it.mailboxes[it.currentMailbox]?.get(0)
-                    ?: LocalEmailsDataProvider.defaultEmail,
-                isShowingHomepage = true
-            )
-        }
-    }
-
-    fun updateCurrentMailbox(mailboxType: MailboxType) {
-        _uiState.update {
-            it.copy(
-                currentMailbox = mailboxType
-            )
-        }
+    companion object {
+        private const val TAG = "ReplyLogs"
     }
 }

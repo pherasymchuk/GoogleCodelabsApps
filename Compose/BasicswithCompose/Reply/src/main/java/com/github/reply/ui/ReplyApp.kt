@@ -17,17 +17,20 @@ package com.github.reply.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.reply.data.Email
 import com.github.reply.data.MailboxType
+import com.github.reply.ui.theme.ReplyTheme
 
 @Composable
 fun ReplyApp(
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: ReplyViewModel = viewModel()
-    val replyUiState = viewModel.uiState.collectAsState().value
+    val viewModel: ReplyViewModel = viewModel<ReplyViewModel.Base>()
+    val replyUiState: ReplyUiState by viewModel.uiState.collectAsState()
 
     ReplyHomeScreen(
         replyUiState = replyUiState,
@@ -45,4 +48,12 @@ fun ReplyApp(
         },
         modifier = modifier
     )
+}
+
+@Preview
+@Composable
+private fun ReplyAppPreview() {
+    ReplyTheme {
+        ReplyApp()
+    }
 }
