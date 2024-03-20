@@ -39,6 +39,7 @@ abstract class ReplyViewModel : ViewModel() {
 
         init {
             initializeUIState()
+            // Log changing screens
             viewModelScope.launch {
                 uiState.collect { uiState ->
                     Log.i(TAG, "Current mailbox: ${uiState.currentMailbox}")
@@ -57,7 +58,7 @@ abstract class ReplyViewModel : ViewModel() {
         }
 
         override fun updateDetailsScreenStates(email: Email) {
-            uiState.update {
+            uiState.update { it: ReplyUiState ->
                 it.copy(
                     currentSelectedEmail = email,
                     isShowingHomepage = false
@@ -66,7 +67,7 @@ abstract class ReplyViewModel : ViewModel() {
         }
 
         override fun resetHomeScreenStates() {
-            uiState.update {
+            uiState.update { it: ReplyUiState ->
                 it.copy(
                     currentSelectedEmail = it.mailboxes[it.currentMailbox]?.get(0)
                         ?: LocalEmailsDataProvider.defaultEmail,
@@ -76,7 +77,7 @@ abstract class ReplyViewModel : ViewModel() {
         }
 
         override fun updateCurrentMailbox(mailboxType: MailboxType) {
-            uiState.update {
+            uiState.update { it: ReplyUiState ->
                 it.copy(
                     currentMailbox = mailboxType
                 )

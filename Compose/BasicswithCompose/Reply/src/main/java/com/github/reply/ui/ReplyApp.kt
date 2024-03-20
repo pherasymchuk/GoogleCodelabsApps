@@ -15,24 +15,41 @@
  */
 package com.github.reply.ui
 
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.reply.data.Email
 import com.github.reply.data.MailboxType
-import com.github.reply.ui.theme.ReplyTheme
+import com.github.reply.ui.theme.ReplyNavigationType
 
 @Composable
 fun ReplyApp(
+    windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: ReplyViewModel = viewModel<ReplyViewModel.Base>()
     val replyUiState: ReplyUiState by viewModel.uiState.collectAsState()
 
+    val navigationType: ReplyNavigationType = when (windowSize) {
+        WindowWidthSizeClass.Compact -> {
+            ReplyNavigationType.BOTTOM_NAVIGATION
+        }
+        WindowWidthSizeClass.Medium -> {
+            ReplyNavigationType.NAVIGATION_RAIL
+        }
+        WindowWidthSizeClass.Expanded -> {
+            ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER
+        }
+        else -> {
+            ReplyNavigationType.BOTTOM_NAVIGATION
+        }
+    }
+
     ReplyHomeScreen(
+        navigationType = navigationType,
         replyUiState = replyUiState,
         onTabPressed = { mailboxType: MailboxType ->
             viewModel.updateCurrentMailbox(mailboxType = mailboxType)
@@ -43,17 +60,7 @@ fun ReplyApp(
                 email = email
             )
         },
-        onDetailScreenBackPressed = {
-            viewModel.resetHomeScreenStates()
-        },
+        onDetailScreenBackPressed = viewModel::resetHomeScreenStates,
         modifier = modifier
     )
-}
-
-@Preview
-@Composable
-private fun ReplyAppPreview() {
-    ReplyTheme {
-        ReplyApp()
-    }
 }

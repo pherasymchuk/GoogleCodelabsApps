@@ -30,10 +30,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,9 +44,15 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.reply.R
 import com.github.reply.data.Email
 import com.github.reply.data.local.LocalAccountsDataProvider
+import com.github.reply.data.local.LocalEmailsDataProvider
+import com.github.reply.ui.theme.ReplyTheme
 
 @Composable
 fun ReplyListOnlyContent(
@@ -119,7 +125,6 @@ fun ReplyListAndDetailContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReplyEmailListItem(
     email: Email,
@@ -244,5 +249,66 @@ private fun ReplyHomeTopBar(modifier: Modifier = Modifier) {
                 .padding(end = dimensionResource(R.dimen.topbar_profile_image_padding_end))
                 .size(dimensionResource(R.dimen.topbar_profile_image_size))
         )
+    }
+}
+
+@Preview
+@Composable
+private fun EmailListItemPreview(
+    @PreviewParameter(EmailItemParams::class) isSelected: Boolean,
+) {
+    ReplyTheme {
+        ReplyEmailListItem(
+            email = LocalEmailsDataProvider.allEmails[8],
+            selected = isSelected,
+            onCardClick = { /*TODO*/ })
+    }
+}
+
+class EmailItemParams : PreviewParameterProvider<Boolean> {
+    override val values: Sequence<Boolean>
+        get() = sequenceOf(false, true)
+}
+
+
+@Preview
+@Composable
+private fun ReplyHomeTopBarPreview() {
+    ReplyTheme {
+        ReplyHomeTopBar(modifier = Modifier.fillMaxWidth())
+    }
+}
+
+@Preview
+@Composable
+private fun ReplyListOnlyContentPreview() {
+    ReplyPreview { _, uiState ->
+        ReplyListOnlyContent(
+            replyUiState = uiState,
+            onEmailCardPressed = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun TestOnlyContentPreview() {
+    ReplyPreview { _, uiState ->
+        ReplyListOnlyContent(
+            replyUiState = uiState,
+            onEmailCardPressed = {}
+        )
+    }
+}
+
+@Composable
+fun ReplyPreview(
+    content: @Composable (viewModel: ReplyViewModel, uiState: ReplyUiState) -> Unit = { _, _ -> },
+) {
+    val viewModel: ReplyViewModel = viewModel(ReplyViewModel.Base::class.java)
+    val uiState: ReplyUiState = viewModel.uiState.collectAsState().value
+
+    ReplyTheme {
+        content(viewModel, uiState)
     }
 }
