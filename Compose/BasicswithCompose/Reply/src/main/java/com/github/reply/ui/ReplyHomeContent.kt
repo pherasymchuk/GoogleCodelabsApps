@@ -32,8 +32,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,7 +47,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.reply.R
 import com.github.reply.data.Email
 import com.github.reply.data.local.LocalAccountsDataProvider
@@ -89,6 +88,7 @@ fun ReplyListOnlyContent(
 
 @Composable
 fun ReplyListAndDetailContent(
+    windowSize: WindowWidthSizeClass,
     replyUiState: ReplyUiState,
     onEmailCardPressed: (Email) -> Unit,
     modifier: Modifier = Modifier
@@ -118,6 +118,7 @@ fun ReplyListAndDetailContent(
         }
         val activity = LocalContext.current as Activity
         ReplyDetailsScreen(
+            windowSize = windowSize,
             replyUiState = replyUiState,
             onBackPressed = {},
             modifier = Modifier.weight(1f)
@@ -282,7 +283,7 @@ private fun ReplyHomeTopBarPreview() {
 @Preview
 @Composable
 private fun ReplyListOnlyContentPreview() {
-    ReplyPreview { _, uiState ->
+    ReplyPreview { _, uiState, _ ->
         ReplyListOnlyContent(
             replyUiState = uiState,
             onEmailCardPressed = {}
@@ -293,7 +294,7 @@ private fun ReplyListOnlyContentPreview() {
 @Preview
 @Composable
 private fun TestOnlyContentPreview() {
-    ReplyPreview { _, uiState ->
+    ReplyPreview { _, uiState, _ ->
         ReplyListOnlyContent(
             replyUiState = uiState,
             onEmailCardPressed = {}
@@ -301,14 +302,3 @@ private fun TestOnlyContentPreview() {
     }
 }
 
-@Composable
-fun ReplyPreview(
-    content: @Composable (viewModel: ReplyViewModel, uiState: ReplyUiState) -> Unit = { _, _ -> },
-) {
-    val viewModel: ReplyViewModel = viewModel(ReplyViewModel.Base::class.java)
-    val uiState: ReplyUiState = viewModel.uiState.collectAsState().value
-
-    ReplyTheme {
-        content(viewModel, uiState)
-    }
-}

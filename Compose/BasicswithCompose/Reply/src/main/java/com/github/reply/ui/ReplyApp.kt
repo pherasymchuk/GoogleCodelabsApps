@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.reply.data.Email
 import com.github.reply.data.MailboxType
-import com.github.reply.ui.theme.ReplyNavigationType
 
 @Composable
 fun ReplyApp(
@@ -33,34 +32,24 @@ fun ReplyApp(
     val viewModel: ReplyViewModel = viewModel<ReplyViewModel.Base>()
     val replyUiState: ReplyUiState by viewModel.uiState.collectAsState()
 
-    val navigationType: ReplyNavigationType = when (windowSize) {
-        WindowWidthSizeClass.Compact -> {
-            ReplyNavigationType.BOTTOM_NAVIGATION
-        }
-        WindowWidthSizeClass.Medium -> {
-            ReplyNavigationType.NAVIGATION_RAIL
-        }
-        WindowWidthSizeClass.Expanded -> {
-            ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER
-        }
-        else -> {
-            ReplyNavigationType.BOTTOM_NAVIGATION
-        }
+    if (replyUiState.isShowingHomepage) {
+        ReplyHomeScreen(
+            windowSize = windowSize,
+            replyUiState = replyUiState,
+            onTabPressed = { mailboxType: MailboxType ->
+                viewModel.updateCurrentMailbox(mailboxType)
+                viewModel.resetHomeScreenStates()
+            },
+            onEmailCardPressed = { email: Email ->
+                viewModel.updateDetailsScreenStates(email = email)
+            },
+        )
+    } else {
+        ReplyDetailsScreen(
+            windowSize = windowSize,
+            replyUiState = replyUiState,
+            onBackPressed = viewModel::resetHomeScreenStates,
+            modifier = modifier
+        )
     }
-
-    ReplyHomeScreen(
-        navigationType = navigationType,
-        replyUiState = replyUiState,
-        onTabPressed = { mailboxType: MailboxType ->
-            viewModel.updateCurrentMailbox(mailboxType = mailboxType)
-            viewModel.resetHomeScreenStates()
-        },
-        onEmailCardPressed = { email: Email ->
-            viewModel.updateDetailsScreenStates(
-                email = email
-            )
-        },
-        onDetailScreenBackPressed = viewModel::resetHomeScreenStates,
-        modifier = modifier
-    )
 }

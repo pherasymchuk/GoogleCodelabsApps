@@ -15,6 +15,13 @@
  */
 package com.github.reply.ui
 
+import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Drafts
+import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material.icons.filled.Report
+import com.github.reply.R
 import com.github.reply.data.Email
 import com.github.reply.data.MailboxType
 import com.github.reply.data.local.LocalEmailsDataProvider
@@ -26,4 +33,26 @@ data class ReplyUiState(
     val isShowingHomepage: Boolean = true
 ) {
     val currentMailboxEmails: List<Email> by lazy { mailboxes[currentMailbox]!! }
+    fun navigationItemContentList(context: Context) = listOf(
+        NavigationItemContent(
+            mailboxType = MailboxType.Inbox,
+            icon = Icons.Default.Inbox,
+            text = context.getString(R.string.tab_inbox)
+        ),
+        NavigationItemContent(
+            mailboxType = MailboxType.Sent,
+            icon = Icons.AutoMirrored.Filled.Send,
+            text = context.getString(R.string.tab_sent)
+        ),
+        NavigationItemContent(
+            mailboxType = MailboxType.Drafts,
+            icon = Icons.Default.Drafts,
+            text = context.getString(R.string.tab_drafts)
+        ),
+        NavigationItemContent(
+            mailboxType = MailboxType.Spam,
+            icon = Icons.Default.Report,
+            text = context.getString(R.string.tab_spam)
+        )
+    )
 }
