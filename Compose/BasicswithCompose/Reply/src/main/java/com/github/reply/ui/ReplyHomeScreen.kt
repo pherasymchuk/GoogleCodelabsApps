@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -43,6 +44,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,11 +68,13 @@ fun ReplyHomeScreen(
 ) {
     val navigationContentList: List<NavigationItemContent> =
         replyUiState.navigationItemContentList(LocalContext.current)
+    val homeScreenScrollState: LazyListState by viewModel.homeScreenScrollState
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
             ReplyCompactHomeScreen(
                 replyUiState = replyUiState,
+                homeScreenScrollState = homeScreenScrollState,
                 onTabPressed = onTabPressed,
                 onEmailCardPressed = { email: Email ->
                     viewModel.updateCurrentEmail(email)
@@ -112,19 +116,22 @@ fun ReplyHomeScreen(
 @Composable
 fun ReplyCompactHomeScreen(
     replyUiState: ReplyUiState,
+    homeScreenScrollState: LazyListState = LazyListState(),
     onTabPressed: (MailboxType) -> Unit,
     onEmailCardPressed: (Email) -> Unit,
     navigationItemContentList: List<NavigationItemContent>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         bottomBar = {
+            val bottomNavigationContentDescription = stringResource(id = R.string.navigation_bottom)
             ReplyBottomNavigationBar(
                 currentTab = replyUiState.currentMailbox,
                 onTabPressed = onTabPressed,
                 navigationItemContentList = navigationItemContentList,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .testTag(bottomNavigationContentDescription)
             )
         }, modifier = Modifier.fillMaxSize()
     ) { it: PaddingValues ->
@@ -133,6 +140,7 @@ fun ReplyCompactHomeScreen(
                 replyUiState = replyUiState,
                 onEmailCardPressed = onEmailCardPressed,
                 innerPadding = it,
+                scrollState = homeScreenScrollState,
                 modifier = modifier
                     .padding(horizontal = dimensionResource(id = R.dimen.email_list_only_horizontal_padding))
                     .consumeWindowInsets(it)
@@ -157,8 +165,8 @@ fun ReplyMediumHomeScreen(
             onTabPressed = onTabPressed,
             navigationItemContentList = navigationItemContentList,
             modifier = Modifier
-                .testTag(navigationRailContentDescription)
                 .wrapContentWidth()
+                .testTag(navigationRailContentDescription)
         )
         ReplyListOnlyContent(
             replyUiState = replyUiState,
@@ -176,6 +184,7 @@ fun ReplyLargeHomeScreen(
     onEmailCardPressed: (Email) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val navigationDrawerContentDescription: String = stringResource(id = R.string.navigation_drawer)
     Box {
         PermanentNavigationDrawer(
             drawerContent = {
@@ -192,6 +201,7 @@ fun ReplyLargeHomeScreen(
                             .wrapContentWidth()
                             .background(MaterialTheme.colorScheme.inverseOnSurface)
                             .padding(start = dimensionResource(id = R.dimen.drawer_padding_content))
+                            .testTag(navigationDrawerContentDescription)
                     )
                 }
             }

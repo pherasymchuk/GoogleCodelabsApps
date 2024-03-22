@@ -16,6 +16,9 @@
 package com.github.reply.ui
 
 import android.util.Log
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.reply.data.Email
@@ -28,6 +31,7 @@ import kotlinx.coroutines.launch
 
 abstract class ReplyViewModel : ViewModel() {
     abstract val uiState: StateFlow<ReplyUiState>
+    abstract val homeScreenScrollState: MutableState<LazyListState>
 
     protected abstract fun initializeUIState()
     abstract fun updateCurrentEmail(email: Email)
@@ -37,8 +41,10 @@ abstract class ReplyViewModel : ViewModel() {
 
     class Base : ReplyViewModel() {
         override val uiState: MutableStateFlow<ReplyUiState> = MutableStateFlow(ReplyUiState())
+        override var homeScreenScrollState: MutableState<LazyListState> = mutableStateOf(LazyListState())
 
         init {
+            homeScreenScrollState
             initializeUIState()
             // Log changing screens
             viewModelScope.launch {

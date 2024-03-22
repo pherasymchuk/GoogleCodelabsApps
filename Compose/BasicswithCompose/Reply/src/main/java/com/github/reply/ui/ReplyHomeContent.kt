@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
@@ -60,6 +61,7 @@ import com.github.reply.ui.theme.ReplyTheme
 @Composable
 fun ReplyListOnlyContent(
     replyUiState: ReplyUiState,
+    scrollState: LazyListState = LazyListState(),
     onEmailCardPressed: (Email) -> Unit,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues = PaddingValues(),
@@ -68,6 +70,7 @@ fun ReplyListOnlyContent(
 
     Box(modifier = modifier) {
         LazyColumn(
+            state = scrollState,
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(R.dimen.email_list_item_vertical_spacing)
             ),
