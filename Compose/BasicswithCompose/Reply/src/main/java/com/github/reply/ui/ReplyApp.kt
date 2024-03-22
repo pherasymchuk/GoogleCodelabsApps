@@ -15,14 +15,17 @@
  */
 package com.github.reply.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.reply.data.Email
 import com.github.reply.data.MailboxType
+import com.github.reply.ui.theme.ReplyTheme
 
 @Composable
 fun ReplyApp(
@@ -40,16 +43,46 @@ fun ReplyApp(
                 viewModel.updateCurrentMailbox(mailboxType)
                 viewModel.resetHomeScreenStates()
             },
-            onEmailCardPressed = { email: Email ->
-                viewModel.updateDetailsScreenStates(email = email)
-            },
+            viewModel = viewModel,
+            modifier = Modifier.fillMaxSize()
         )
     } else {
         ReplyDetailsScreen(
-            windowSize = windowSize,
+            showBackButton = true,
+            showTopBar = true,
             replyUiState = replyUiState,
             onBackPressed = viewModel::resetHomeScreenStates,
             modifier = modifier
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ReplyAppCompactPreview() {
+    ReplyTheme {
+        Surface {
+            ReplyApp(windowSize = WindowWidthSizeClass.Compact)
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 700)
+@Composable
+private fun ReplyAppMediumPreview() {
+    ReplyTheme {
+        Surface {
+            ReplyApp(windowSize = WindowWidthSizeClass.Medium)
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 1000)
+@Composable
+fun ReplyAppExpandedPreview() {
+    ReplyTheme {
+        Surface {
+            ReplyApp(windowSize = WindowWidthSizeClass.Expanded)
+        }
     }
 }

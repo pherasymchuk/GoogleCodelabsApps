@@ -21,9 +21,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,7 +37,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,70 +61,69 @@ import com.github.reply.ui.theme.ReplyTheme
 fun ReplyListOnlyContent(
     replyUiState: ReplyUiState,
     onEmailCardPressed: (Email) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    innerPadding: PaddingValues = PaddingValues(),
 ) {
     val emails = replyUiState.currentMailboxEmails
 
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(
-            dimensionResource(R.dimen.email_list_item_vertical_spacing)
-        )
-    ) {
-        item {
-            ReplyHomeTopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = dimensionResource(R.dimen.topbar_padding_vertical))
-            )
-        }
-        items(emails, key = { email -> email.id }) { email ->
-            ReplyEmailListItem(
-                email = email,
-                selected = false,
-                onCardClick = {
-                    onEmailCardPressed(email)
-                }
-            )
+    Box(modifier = modifier) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(
+                dimensionResource(R.dimen.email_list_item_vertical_spacing)
+            ),
+            contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.detail_card_list_padding_top))
+                    + innerPadding,
+            modifier = Modifier.safeDrawingPadding()
+        ) {
+            item {
+                ReplyHomeTopBar(
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            items(emails, key = { email -> email.id }) { email ->
+                ReplyEmailListItem(
+                    email = email,
+                    selected = false,
+                    onCardClick = {
+                        onEmailCardPressed(email)
+                    },
+                )
+            }
+            //        item { Spacer(modifier = Modifier.size(innerPadding.calculateBottomPadding())) }
         }
     }
 }
 
 @Composable
 fun ReplyListAndDetailContent(
-    windowSize: WindowWidthSizeClass,
     replyUiState: ReplyUiState,
     onEmailCardPressed: (Email) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val emails: List<Email> = replyUiState.currentMailboxEmails
     Row(modifier = modifier) {
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
-                .padding(
-                    end = dimensionResource(R.dimen.list_and_detail_list_padding_end),
-                    top = dimensionResource(R.dimen.list_and_detail_list_padding_top)
-                ),
-            verticalArrangement = Arrangement.spacedBy(
-                dimensionResource(R.dimen.email_list_item_vertical_spacing)
-            )
+                .padding(start = dimensionResource(R.dimen.list_and_detail_list_padding_end)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.email_list_item_vertical_spacing)),
+            contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.detail_card_list_padding_top))
+                    + WindowInsets.safeDrawing.asPaddingValues()
         ) {
             items(emails, key = { email -> email.id }) { email ->
                 ReplyEmailListItem(
                     email = email,
                     selected = replyUiState.currentSelectedEmail.id == email.id,
-                    onCardClick = {
-                        onEmailCardPressed(email)
-                    },
+                    onCardClick = { onEmailCardPressed(email) },
                 )
             }
         }
-        val activity = LocalContext.current as Activity
+        val activity: Activity = (LocalContext.current as Activity)
         ReplyDetailsScreen(
-            windowSize = windowSize,
+            showBackButton = false,
+            showTopBar = false,
             replyUiState = replyUiState,
-            onBackPressed = {},
+            onBackPressed = { activity.finish() },
             modifier = Modifier.weight(1f)
         )
     }
@@ -131,7 +134,7 @@ fun ReplyEmailListItem(
     email: Email,
     selected: Boolean,
     onCardClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
@@ -221,7 +224,7 @@ fun ReplyProfileImage(
 @Composable
 fun ReplyLogo(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary
+    color: Color = MaterialTheme.colorScheme.primary,
 ) {
     Image(
         painter = painterResource(R.drawable.logo),

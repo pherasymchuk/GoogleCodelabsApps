@@ -30,7 +30,8 @@ abstract class ReplyViewModel : ViewModel() {
     abstract val uiState: StateFlow<ReplyUiState>
 
     protected abstract fun initializeUIState()
-    abstract fun updateDetailsScreenStates(email: Email)
+    abstract fun updateCurrentEmail(email: Email)
+    abstract fun selectDetailsScreen()
     abstract fun resetHomeScreenStates()
     abstract fun updateCurrentMailbox(mailboxType: MailboxType)
 
@@ -57,12 +58,17 @@ abstract class ReplyViewModel : ViewModel() {
             )
         }
 
-        override fun updateDetailsScreenStates(email: Email) {
+        override fun updateCurrentEmail(email: Email) {
             uiState.update { it: ReplyUiState ->
                 it.copy(
                     currentSelectedEmail = email,
-                    isShowingHomepage = false
                 )
+            }
+        }
+
+        override fun selectDetailsScreen() {
+            uiState.update { it: ReplyUiState ->
+                it.copy(isShowingHomepage = false)
             }
         }
 

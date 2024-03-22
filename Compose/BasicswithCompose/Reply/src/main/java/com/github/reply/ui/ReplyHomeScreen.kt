@@ -17,6 +17,7 @@ package com.github.reply.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -58,9 +59,9 @@ import com.github.reply.data.local.LocalAccountsDataProvider
 @Composable
 fun ReplyHomeScreen(
     windowSize: WindowWidthSizeClass,
+    viewModel: ReplyViewModel,
     replyUiState: ReplyUiState,
     onTabPressed: (MailboxType) -> Unit,
-    onEmailCardPressed: (Email) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationContentList: List<NavigationItemContent> =
@@ -71,9 +72,12 @@ fun ReplyHomeScreen(
             ReplyCompactHomeScreen(
                 replyUiState = replyUiState,
                 onTabPressed = onTabPressed,
-                onEmailCardPressed = onEmailCardPressed,
+                onEmailCardPressed = { email: Email ->
+                    viewModel.updateCurrentEmail(email)
+                    viewModel.selectDetailsScreen()
+                },
                 navigationItemContentList = navigationContentList,
-                modifier = modifier
+                modifier = modifier.fillMaxSize()
             )
         }
 
@@ -81,7 +85,10 @@ fun ReplyHomeScreen(
             ReplyMediumHomeScreen(
                 replyUiState = replyUiState,
                 onTabPressed = onTabPressed,
-                onEmailCardPressed = onEmailCardPressed,
+                onEmailCardPressed = { email: Email ->
+                    viewModel.updateCurrentEmail(email)
+                    viewModel.selectDetailsScreen()
+                },
                 navigationItemContentList = navigationContentList,
                 modifier = modifier
             )
@@ -91,9 +98,11 @@ fun ReplyHomeScreen(
             ReplyLargeHomeScreen(
                 replyUiState = replyUiState,
                 onTabPressed = onTabPressed,
-                onEmailCardPressed = onEmailCardPressed,
+                onEmailCardPressed = { email: Email ->
+                    viewModel.updateCurrentEmail(email)
+                },
                 navigationItemContentList = navigationContentList,
-                modifier = modifier
+                modifier = modifier.fillMaxSize()
             )
         }
     }
@@ -117,17 +126,16 @@ fun ReplyCompactHomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
             )
-        }
+        }, modifier = Modifier.fillMaxSize()
     ) { it: PaddingValues ->
-        Row(
-            modifier = Modifier
-                .padding(it)
-                .consumeWindowInsets(it)
-        ) {
-            ReplyAppContent(
+        Row(modifier = Modifier) {
+            ReplyListOnlyContent(
                 replyUiState = replyUiState,
                 onEmailCardPressed = onEmailCardPressed,
-                modifier = modifier.fillMaxSize()
+                innerPadding = it,
+                modifier = modifier
+                    .padding(horizontal = dimensionResource(id = R.dimen.email_list_only_horizontal_padding))
+                    .consumeWindowInsets(it)
             )
         }
     }
@@ -142,8 +150,8 @@ fun ReplyMediumHomeScreen(
     navigationItemContentList: List<NavigationItemContent>,
     modifier: Modifier = Modifier
 ) {
-    Row {
-        val navigationRailContentDescription = stringResource(R.string.navigation_rail)
+    Row(modifier = modifier) {
+        val navigationRailContentDescription: String = stringResource(R.string.navigation_rail)
         ReplyNavigationRail(
             currentTab = replyUiState.currentMailbox,
             onTabPressed = onTabPressed,
@@ -152,10 +160,10 @@ fun ReplyMediumHomeScreen(
                 .testTag(navigationRailContentDescription)
                 .wrapContentWidth()
         )
-        ReplyAppContent(
+        ReplyListOnlyContent(
             replyUiState = replyUiState,
             onEmailCardPressed = onEmailCardPressed,
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.email_list_only_horizontal_padding))
         )
     }
 }
@@ -168,50 +176,33 @@ fun ReplyLargeHomeScreen(
     onEmailCardPressed: (Email) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    PermanentNavigationDrawer(
-        drawerContent = {
-            PermanentDrawerSheet(Modifier.width(dimensionResource(id = R.dimen.drawer_width))) {
-                NavigationDrawerContent(
-                    selectedDestination = replyUiState.currentMailbox,
-                    onTabPressed = onTabPressed,
-                    navigationItemContentList = navigationItemContentList,
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .fillMaxHeight()
-                        .background(MaterialTheme.colorScheme.inverseOnSurface)
-                        .padding(start = dimensionResource(id = R.dimen.drawer_padding_content))
-                )
+    Box {
+        PermanentNavigationDrawer(
+            drawerContent = {
+                PermanentDrawerSheet(
+                    Modifier.width(dimensionResource(id = R.dimen.drawer_width)),
+                    drawerContainerColor = MaterialTheme.colorScheme.inverseOnSurface
+                ) {
+                    NavigationDrawerContent(
+                        selectedDestination = replyUiState.currentMailbox,
+                        onTabPressed = onTabPressed,
+                        navigationItemContentList = navigationItemContentList,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .wrapContentWidth()
+                            .background(MaterialTheme.colorScheme.inverseOnSurface)
+                            .padding(start = dimensionResource(id = R.dimen.drawer_padding_content))
+                    )
+                }
             }
+        ) {
+            ReplyListAndDetailContent(
+                replyUiState = replyUiState,
+                onEmailCardPressed = onEmailCardPressed,
+                modifier = modifier
+            )
         }
-    ) {
-        ReplyAppContent(
-            replyUiState = replyUiState,
-            onEmailCardPressed = onEmailCardPressed,
-            modifier = modifier
-        )
     }
-}
-
-@Composable
-private fun ReplyAppContent(
-    replyUiState: ReplyUiState,
-    onEmailCardPressed: (Email) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.inverseOnSurface)
-    ) {
-        ReplyListOnlyContent(
-            replyUiState = replyUiState,
-            onEmailCardPressed = onEmailCardPressed,
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = dimensionResource(R.dimen.email_list_only_horizontal_padding))
-        )
-    }
-
 }
 
 @Composable
@@ -222,7 +213,7 @@ private fun ReplyNavigationRail(
     modifier: Modifier = Modifier,
 ) {
     NavigationRail(modifier = modifier) {
-        for (navItem in navigationItemContentList) {
+        for (navItem: NavigationItemContent in navigationItemContentList) {
             NavigationRailItem(
                 selected = currentTab == navItem.mailboxType,
                 onClick = { onTabPressed(navItem.mailboxType) },
@@ -245,7 +236,7 @@ private fun ReplyBottomNavigationBar(
     modifier: Modifier = Modifier,
 ) {
     NavigationBar(modifier = modifier) {
-        for (navItem in navigationItemContentList) {
+        for (navItem: NavigationItemContent in navigationItemContentList) {
             NavigationBarItem(
                 selected = currentTab == navItem.mailboxType,
                 onClick = { onTabPressed(navItem.mailboxType) },
@@ -268,7 +259,7 @@ private fun NavigationDrawerContent(
     navigationItemContentList: List<NavigationItemContent>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
         NavigationDrawerHeader(
             modifier = Modifier
                 .fillMaxWidth()

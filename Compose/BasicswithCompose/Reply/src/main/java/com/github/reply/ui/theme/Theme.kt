@@ -2,7 +2,7 @@ package com.github.reply.ui.theme
 
 import android.app.Activity
 import android.os.Build
-import android.view.Window
+import android.view.View
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -14,6 +14,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
@@ -97,10 +98,13 @@ fun ReplyTheme(
         else -> LightColorScheme
     }
 
+    val view: View = LocalView.current
     SideEffect {
-        val window: Window = (context as Activity).window
-        window.statusBarColor = Color.Transparent.toArgb()
-        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
+        if (!view.isInEditMode) {
+            val activity: Activity = view.context as Activity
+            activity.window.statusBarColor = Color.Transparent.toArgb()
+            WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars = true
+        }
     }
 
     MaterialTheme(
