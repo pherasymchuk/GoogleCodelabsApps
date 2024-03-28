@@ -12,28 +12,43 @@ class ReplyAppTest {
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun compactDevice_VerifyUsingBottomNavigation() {
+    @TestCompactWidth
+    fun compactDevice_VerifyUsingOnlyBottomNavigation() {
         composeTestRule.setContent {
             ReplyApp(windowSize = WindowWidthSizeClass.Compact)
         }
         composeTestRule.onNodeWithTagForStringId(R.string.navigation_bottom)
             .assertExists()
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_rail)
+            .assertDoesNotExist()
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_drawer)
+            .assertDoesNotExist()
     }
 
     @Test
+    @TestMediumWidth
     fun mediumDevice_VerifyUsingNavigationRail() {
         composeTestRule.setContent {
             ReplyApp(windowSize = WindowWidthSizeClass.Medium)
         }
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_bottom)
+            .assertDoesNotExist()
         composeTestRule.onNodeWithTagForStringId(R.string.navigation_rail)
             .assertExists()
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_drawer)
+            .assertDoesNotExist()
     }
 
     @Test
+    @TestExpandedWidth
     fun largeDevice_VerifyUsingNavigationDrawer() {
         composeTestRule.setContent {
             ReplyApp(windowSize = WindowWidthSizeClass.Expanded)
         }
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_bottom)
+            .assertDoesNotExist()
+        composeTestRule.onNodeWithTagForStringId(R.string.navigation_rail)
+            .assertDoesNotExist()
         composeTestRule.onNodeWithTagForStringId(R.string.navigation_drawer)
             .assertExists()
     }

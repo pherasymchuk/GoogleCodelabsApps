@@ -2,9 +2,13 @@ package com.github.reply
 
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.github.reply.data.local.LocalEmailsDataProvider
@@ -17,7 +21,8 @@ class ReplyAppStateRestorationTest {
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun compactDevice_SelectedEmailRetained_AfterConfigChange() {
+    @TestCompactWidth
+    fun compactDevice_PerformConfigChange_SelectedEmailRetained() {
         val stateRestorationTester = StateRestorationTester(composeTestRule)
         stateRestorationTester.setContent { ReplyApp(windowSize = WindowWidthSizeClass.Compact) }
 
@@ -42,6 +47,45 @@ class ReplyAppStateRestorationTest {
             .assertExists()
         composeTestRule.onNodeWithText(composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[2].body))
             .assertExists()
+    }
 
+    @Test
+    @TestExpandedWidth
+    fun expandedDevice_PerformConfigChange_SelectedEmailRetained() {
+        val stateRestorationTester = StateRestorationTester(composeTestRule)
+        stateRestorationTester.setContent { ReplyApp(windowSize = WindowWidthSizeClass.Expanded) }
+
+        // Given second
+        composeTestRule.onNodeWithText(
+            composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[1].body)
+        ).assertIsDisplayed()
+
+        // Select second email
+        composeTestRule.onNodeWithText(
+            composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[1].subject)
+        ).performClick()
+
+        // Verify that the second email is displayed on the details screen
+        // Here I checking on children of the details screen, because home screen also contains
+        // that item
+        composeTestRule.onNodeWithTagForStringId(R.string.details_screen).onChildren()
+            .assertAny(
+                hasAnyDescendant(
+                    hasText(
+                        composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[1].body)
+                    )
+                )
+            )
+
+        stateRestorationTester.emulateSavedInstanceStateRestore()
+
+        composeTestRule.onNodeWithTagForStringId(R.string.details_screen).onChildren()
+            .assertAny(
+                hasAnyDescendant(
+                    hasText(
+                        composeTestRule.activity.getString(LocalEmailsDataProvider.allEmails[1].body)
+                    )
+                )
+            )
     }
 }

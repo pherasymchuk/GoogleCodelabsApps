@@ -46,6 +46,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -67,8 +68,11 @@ fun ReplyDetailsScreen(
     Box(modifier = modifier) {
         LazyColumn(
             modifier = Modifier
+                .testTag(stringResource(id = R.string.details_screen))
                 .background(color = MaterialTheme.colorScheme.inverseOnSurface),
-            contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.detail_card_list_padding_top)) + WindowInsets.safeDrawing.asPaddingValues()
+            contentPadding = PaddingValues(
+                vertical = dimensionResource(R.dimen.detail_card_list_padding_top)
+            ) + WindowInsets.safeDrawing.asPaddingValues()
         ) {
 
             item {
@@ -178,7 +182,7 @@ private fun ReplyEmailDetailsCard(
 private fun DetailsScreenButtonBar(
     mailboxType: MailboxType,
     displayToast: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         when (mailboxType) {

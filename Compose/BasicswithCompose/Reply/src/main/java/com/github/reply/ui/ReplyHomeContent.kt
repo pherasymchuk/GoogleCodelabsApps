@@ -61,9 +61,9 @@ import com.github.reply.ui.theme.ReplyTheme
 @Composable
 fun ReplyListOnlyContent(
     replyUiState: ReplyUiState,
-    scrollState: LazyListState = LazyListState(),
     onEmailCardPressed: (Email) -> Unit,
     modifier: Modifier = Modifier,
+    scrollState: LazyListState = LazyListState(),
     innerPadding: PaddingValues = PaddingValues(),
 ) {
     val emails = replyUiState.currentMailboxEmails
@@ -74,8 +74,7 @@ fun ReplyListOnlyContent(
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(R.dimen.email_list_item_vertical_spacing)
             ),
-            contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.detail_card_list_padding_top))
-                    + innerPadding,
+            contentPadding = innerPadding,
             modifier = Modifier.safeDrawingPadding()
         ) {
             item {

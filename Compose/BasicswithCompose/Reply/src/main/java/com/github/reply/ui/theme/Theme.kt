@@ -85,8 +85,8 @@ private val DarkColorScheme = darkColorScheme(
 fun ReplyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
-    content: @Composable () -> Unit
+    dynamicColor: Boolean = true,
+    content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
     val colorScheme = when {
