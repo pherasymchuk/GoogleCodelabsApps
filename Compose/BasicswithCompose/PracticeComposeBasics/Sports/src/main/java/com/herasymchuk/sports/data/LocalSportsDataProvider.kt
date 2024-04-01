@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.example.sports.data
+package com.herasymchuk.sports.data
 
-import com.example.sports.R
-import com.example.sports.model.Sport
+import com.herasymchuk.sports.R
+import com.herasymchuk.sports.model.Sport
 
 /**
  * Sports data

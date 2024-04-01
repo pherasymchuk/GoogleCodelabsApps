@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.sports.model
+package com.herasymchuk.sports.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

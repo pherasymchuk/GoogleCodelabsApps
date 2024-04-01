@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.sports.ui
+package com.herasymchuk.sports.ui
 
 import androidx.lifecycle.ViewModel
-import com.example.sports.data.LocalSportsDataProvider
-import com.example.sports.model.Sport
+import com.herasymchuk.sports.data.LocalSportsDataProvider
+import com.herasymchuk.sports.model.Sport
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
