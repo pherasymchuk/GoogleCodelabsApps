@@ -36,6 +36,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -65,6 +66,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.kotlinutils.plus
 import com.herasymchuk.sports.R
 import com.herasymchuk.sports.data.LocalSportsDataProvider
 import com.herasymchuk.sports.model.Sport
@@ -72,7 +74,7 @@ import com.herasymchuk.sports.ui.theme.SportsTheme
 
 /**
  * Main composable that serves as container
- * which displays content according to [uiState] and [windowSize]
+ * which displays content according to `uiState` and [screenSize]
  */
 @Composable
 fun SportsApp(
@@ -132,7 +134,7 @@ private fun SportsAppCompact(
                 viewModel.navigateToDetailPage()
             },
             contentPadding = innerPadding,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(
                     top = dimensionResource(R.dimen.padding_medium),
@@ -144,7 +146,8 @@ private fun SportsAppCompact(
         SportsDetail(
             selectedSport = uiState.currentSport,
             onBackPressed = viewModel::navigateToListPage,
-            contentPadding = innerPadding
+            contentPadding = innerPadding,
+            modifier = Modifier
         )
     }
 }
@@ -164,7 +167,7 @@ private fun SportsAppMedium(
                 viewModel.navigateToDetailPage()
             },
             contentPadding = innerPadding,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(
                     top = dimensionResource(R.dimen.padding_medium),
@@ -176,7 +179,8 @@ private fun SportsAppMedium(
         SportsDetail(
             selectedSport = uiState.currentSport,
             onBackPressed = viewModel::navigateToListPage,
-            contentPadding = innerPadding
+            contentPadding = innerPadding,
+            modifier = modifier
         )
     }
 }
@@ -191,12 +195,17 @@ private fun SportsAppExpanded(
     Row(modifier = modifier) {
         SportsList(
             sports = uiState.sportsList,
-            onClick = { viewModel.updateCurrentSport(it) }
+            onClick = { viewModel.updateCurrentSport(it) },
+            contentPadding = innerPadding + PaddingValues(4.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 8.dp)
         )
         SportsDetail(
             selectedSport = uiState.currentSport,
             onBackPressed = { },
-            contentPadding = innerPadding
+            contentPadding = innerPadding,
+            modifier = Modifier.weight(1.5f)
         )
     }
 }
