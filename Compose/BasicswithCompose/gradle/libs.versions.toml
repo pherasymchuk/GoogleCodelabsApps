@@ -19,6 +19,10 @@ lifecycleViewmodelCompose = "2.7.0"
 navigationCompose = "2.7.7"
 navigationTesting = "2.7.7"
 espressoIntents = "3.5.1"
+jetbrainsKotlinJvm = "1.9.23"
+appcompat = "1.6.1"
+material = "1.11.0"
+foundationLayoutAndroid = "1.6.5"
 composeCompiler = "1.5.11"
 
 [libraries]
@@ -47,7 +51,12 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
 androidx-espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
 androidx-material3-window-size-classfix = { group = "androidx.compose.material3", name = "material3-window-size-class" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+android-library = { id = "com.android.library", version.ref = "agp" }
