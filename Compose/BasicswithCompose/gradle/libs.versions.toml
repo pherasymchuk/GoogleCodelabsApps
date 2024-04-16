@@ -1,5 +1,6 @@
 [versions]
 agp = "8.4.0-rc02"
+converterScalars = "2.11.0"
 firebaseBom = "32.8.1"
 firebaseAnalitics = "21.6.2"
 haze = "0.6.2"
@@ -12,6 +13,7 @@ material3 = "1.2.1"
 coreKtx = "1.12.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
+retrofit = "2.11.0"
 testManifest = "1.6.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
@@ -31,6 +33,7 @@ composeCompiler = "1.5.11"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalitics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
@@ -60,6 +63,7 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
