@@ -5,6 +5,7 @@ firebaseAnalitics = "21.6.2"
 haze = "0.6.2"
 junitJupiter = "5.10.2"
 kotlin = "1.9.23"
+kotlinxCoroutinesTest = "1.8.0"
 material3 = "1.2.1"
 coreKtx = "1.12.0"
 junit = "4.13.2"
@@ -52,6 +53,7 @@ androidx-navigation-testing = { group = "androidx.navigation", name = "navigatio
 androidx-espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
 androidx-material3-window-size-classfix = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 
