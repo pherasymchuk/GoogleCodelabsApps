@@ -16,8 +16,21 @@
 package com.example.racetracker.ui
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
+
+interface Runner {
+    val currentProgress: Int
+
+    suspend fun run()
+
+    /**
+     * Regardless of the value of [initialProgress] the reset function will reset the
+     * [currentProgress] to 0
+     */
+    fun reset()
+}
 
 /**
  * This class represents a state holder for race participant.
@@ -28,7 +41,7 @@ class RaceParticipant(
     val progressDelayMillis: Long = 500L,
     private val progressIncrement: Int = 1,
     private val initialProgress: Int = 0
-) {
+) : Runner {
     init {
         require(maxProgress > 0) { "maxProgress=$maxProgress; must be > 0" }
         require(progressIncrement > 0) { "progressIncrement=$progressIncrement; must be > 0" }
@@ -37,14 +50,17 @@ class RaceParticipant(
     /**
      * Indicates the race participant's current progress
      */
-    var currentProgress by mutableStateOf(initialProgress)
+    override var currentProgress by mutableIntStateOf(initialProgress)
         private set
 
-    /**
-     * Regardless of the value of [initialProgress] the reset function will reset the
-     * [currentProgress] to 0
-     */
-    fun reset() {
+    override suspend fun run() {
+        while (currentProgress < maxProgress) {
+            delay(progressDelayMillis)
+            currentProgress += progressIncrement
+        }
+    }
+
+    override fun reset() {
         currentProgress = 0
     }
 }
