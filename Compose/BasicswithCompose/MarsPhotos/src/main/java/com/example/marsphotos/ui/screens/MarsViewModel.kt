@@ -21,6 +21,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marsphotos.network.MarsApi
+import com.example.marsphotos.network.MarsPhoto
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -47,10 +49,10 @@ class MarsViewModel : ViewModel() {
      * [MarsPhoto] [List] [MutableList].
      */
     fun getMarsPhotos() {
-        viewModelScope.launch {
+        viewModelScope.launch(context = Dispatchers.IO) {
             marsUiState = try {
-                val listResult = MarsApi.retrofitService.getPhotos()
-                MarsUiState.Success(listResult)
+                val listResult: List<MarsPhoto> = MarsApi.retrofitService.getPhotos()
+                MarsUiState.Success("Success: ${listResult.size} Mars photos received")
             } catch (e: IOException) {
                 MarsUiState.Error
             }

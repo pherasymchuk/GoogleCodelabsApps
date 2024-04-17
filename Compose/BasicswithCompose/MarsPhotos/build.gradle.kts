@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.retrofit)
 //    implementation(libs.converter.scalars)
     implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
