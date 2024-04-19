@@ -1,5 +1,7 @@
-package com.example.marsphotos.data
+package com.example.marsphotos.di
 
+import com.example.marsphotos.data.MarsPhotosRepository
+import com.example.marsphotos.data.NetworkMarsPhotosRepository
 import com.example.marsphotos.network.MarsApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType

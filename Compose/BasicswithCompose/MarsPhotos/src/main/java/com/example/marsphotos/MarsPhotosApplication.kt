@@ -1,7 +1,7 @@
 package com.example.marsphotos
 
 import android.app.Application
-import com.example.marsphotos.data.AppContainer
+import com.example.marsphotos.di.AppContainer
 
 class MarsPhotosApplication : Application(), AppContainerProvider {
     private lateinit var appContainer: AppContainer

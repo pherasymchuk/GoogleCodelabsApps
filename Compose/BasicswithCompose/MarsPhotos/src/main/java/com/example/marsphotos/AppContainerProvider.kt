@@ -1,6 +1,6 @@
 package com.example.marsphotos
 
-import com.example.marsphotos.data.AppContainer
+import com.example.marsphotos.di.AppContainer
 
 interface AppContainerProvider {
     fun getAppContainer(): AppContainer
