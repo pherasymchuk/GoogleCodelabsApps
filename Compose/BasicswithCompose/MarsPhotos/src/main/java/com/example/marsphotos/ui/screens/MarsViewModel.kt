@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.marsphotos.MarsPhotosApplication
+import com.example.marsphotos.AppContainerProvider
 import com.example.marsphotos.data.MarsPhotosRepository
 import com.example.marsphotos.network.MarsPhoto
 import kotlinx.coroutines.Dispatchers
@@ -37,12 +37,9 @@ sealed interface MarsUiState {
 }
 
 class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : ViewModel() {
-    /**
-     *  The mutable State that stores the status of the most recent request
-     *  */
+    /** The mutable State that stores the status of the most recent request */
     var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
         private set
-
 
     /**
      * Call getMarsPhotos() on init so we can display status immediately.
@@ -69,10 +66,11 @@ class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : Vi
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MarsPhotosApplication)
-                val marsPhotosRepository = application.container.marsPhotosRepository
-                MarsViewModel(marsPhotosRepository)
+                val appContainer = (
+                        this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AppContainerProvider
+                        )
+                    .getAppContainer()
+                MarsViewModel(appContainer.marsPhotosRepository)
             }
         }
     }

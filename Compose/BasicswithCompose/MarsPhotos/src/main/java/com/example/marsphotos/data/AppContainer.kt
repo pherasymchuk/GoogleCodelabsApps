@@ -11,25 +11,20 @@ interface AppContainer {
 
     class Default : AppContainer {
 
-        /**
-         * Use the Retrofit builder to build a [retrofit] object using a kotlinx.serialization converter
-         */
         private val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
 
-        private val retrofitService: MarsApiService by lazy {
+        val marsApiService: MarsApiService by lazy {
             retrofit.create(MarsApiService::class.java)
         }
 
-        private companion object {
-            const val BASE_URL =
+        companion object {
+            private const val BASE_URL =
                 "https://android-kotlin-fun-mars-server.appspot.com"
         }
 
-        override val marsPhotosRepository: MarsPhotosRepository by lazy {
-            NetworkMarsPhotosRepository(retrofitService)
-        }
+        override val marsPhotosRepository: MarsPhotosRepository = NetworkMarsPhotosRepository(marsApiService)
     }
 }
