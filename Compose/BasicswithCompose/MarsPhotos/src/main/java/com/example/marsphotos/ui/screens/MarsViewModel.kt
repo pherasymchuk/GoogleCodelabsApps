@@ -26,7 +26,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.marsphotos.AppContainerProvider
 import com.example.marsphotos.data.MarsPhotosRepository
 import com.example.marsphotos.network.MarsPhoto
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -36,7 +35,9 @@ sealed interface MarsUiState {
     data object Loading : MarsUiState
 }
 
-class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : ViewModel() {
+class MarsViewModel(
+    private val marsPhotosRepository: MarsPhotosRepository
+) : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
         private set
@@ -53,7 +54,7 @@ class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : Vi
      * [MarsPhoto] [List] [MutableList].
      */
     private fun getMarsPhotos() {
-        viewModelScope.launch(context = Dispatchers.IO) {
+        viewModelScope.launch {
             marsUiState = try {
                 val listResult: List<MarsPhoto> = marsPhotosRepository.getMarsPhotos()
                 MarsUiState.Success("Success: ${listResult.size} Mars photos received")
@@ -66,10 +67,9 @@ class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : Vi
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val appContainer = (
-                        this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AppContainerProvider
-                        )
-                    .getAppContainer()
+                val appContainer =
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AppContainerProvider)
+                        .getAppContainer()
                 MarsViewModel(appContainer.marsPhotosRepository)
             }
         }
