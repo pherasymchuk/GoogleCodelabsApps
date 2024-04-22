@@ -70,7 +70,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit.jupiter.api)
     // https://mvnrepository.com/artifact/io.coil-kt/coil-compose
-    runtimeOnly(libs.coil.compose)
+    implementation(libs.coil.compose)
     testRuntimeOnly(libs.junit.jupiter.engine)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)

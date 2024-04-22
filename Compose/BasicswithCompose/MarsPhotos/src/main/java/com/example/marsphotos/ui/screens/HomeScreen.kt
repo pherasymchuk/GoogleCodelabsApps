@@ -35,11 +35,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.marsphotos.R
+import com.example.marsphotos.network.MarsPhoto
 import com.example.marsphotos.ui.theme.MarsPhotosTheme
 
 @Composable
@@ -50,12 +55,14 @@ fun HomeScreen(
 ) {
     when (marsUiState) {
         is MarsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is MarsUiState.Success -> ResultScreen(
-            marsUiState.photos,
-            modifier
-                .padding(top = contentPadding.calculateTopPadding())
-                .fillMaxWidth()
-        )
+        is MarsUiState.Success ->
+//            ResultScreen(
+//                marsUiState.photos,
+//                modifier
+//                    .padding(top = contentPadding.calculateTopPadding())
+//                    .fillMaxWidth()
+//            )
+            MarsPhotoCard(photo = marsUiState.photos, modifier = modifier.fillMaxSize())
 
         is MarsUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
     }
@@ -73,7 +80,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         ), label = "loadingData"
     )
     Image(
-        modifier = Modifier
+        modifier = modifier
             .size(200.dp)
             .graphicsLayer(rotationZ = angle.value),
         painter = painterResource(id = R.drawable.loading_img),
@@ -110,6 +117,19 @@ fun ResultScreen(photos: String, modifier: Modifier = Modifier) {
     ) {
         Text(text = photos)
     }
+}
+
+@Composable
+fun MarsPhotoCard(photo: MarsPhoto, modifier: Modifier = Modifier) {
+    AsyncImage(
+        model = ImageRequest.Builder(context = LocalContext.current)
+            .data(photo.imageSrc)
+            .crossfade(true)
+            .build(),
+        contentDescription = stringResource(id = R.string.mars_photo),
+        contentScale = ContentScale.Crop,
+        modifier = modifier.fillMaxWidth()
+    )
 }
 
 @Preview
