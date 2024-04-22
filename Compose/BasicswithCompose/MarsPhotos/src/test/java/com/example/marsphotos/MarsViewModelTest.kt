@@ -25,7 +25,7 @@ class MarsViewModelTest {
         Dispatchers.setMain(Dispatchers.Default)
         Assertions.assertEquals(
             MarsUiState.Success(
-                "Success: ${FakeDataSource.photosList.size} Mars photos received"
+                FakeDataSource.photosList
             ),
             marsViewModel.marsUiState
         )
