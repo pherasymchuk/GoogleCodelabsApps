@@ -18,7 +18,7 @@ interface AppContainer {
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
 
-        val marsApiService: MarsApiService by lazy {
+        private val marsApiService: MarsApiService by lazy {
             retrofit.create(MarsApiService::class.java)
         }
 
