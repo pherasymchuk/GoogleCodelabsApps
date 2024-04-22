@@ -3,19 +3,9 @@ package com.example.marsphotos.fake
 import com.example.marsphotos.network.MarsPhoto
 
 object FakeDataSource {
+    private val map = mapOf("img1" to "url.1", "1mg2" to "url.2")
 
-    const val idOne = "img1"
-    const val idTwo = "img2"
-    const val imgOne = "url.1"
-    const val imgTwo = "url.2"
-    val photosList = listOf(
-        MarsPhoto(
-            id = idOne,
-            imageSrc = imgOne
-        ),
-        MarsPhoto(
-            id = idTwo,
-            imageSrc = imgTwo
-        )
-    )
+    val photosList = map.map {
+        MarsPhoto(id = it.key, imageSrc = it.value)
+    }
 }
