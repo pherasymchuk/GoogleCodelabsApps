@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.practicecomposebasics"
+    namespace = "com.example.amphibians"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.practicecomposebasics"
+        applicationId = "com.example.amphibians"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
@@ -37,7 +37,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     packaging {
         resources {
@@ -60,7 +60,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
