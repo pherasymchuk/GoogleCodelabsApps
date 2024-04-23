@@ -43,6 +43,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+//            merges += "META-INF/LICENSE.md"
+//            merges += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -52,6 +54,8 @@ tasks.withType<Test> {
 }
 
 dependencies {
+
+    implementation(project(":KotlinUtils"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -66,6 +70,7 @@ dependencies {
     implementation(libs.converter.kotlinx.serialization)
     implementation(libs.coil.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)

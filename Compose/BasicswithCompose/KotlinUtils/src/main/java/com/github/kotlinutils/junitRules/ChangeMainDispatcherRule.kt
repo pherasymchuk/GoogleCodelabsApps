@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package com.example.marsphotos.rules
+package com.github.kotlinutils.junitRules
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.TestWatcher
 
-class TestDispatcherRule(
+class ChangeMainDispatcherRule(
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
 ) : BeforeTestExecutionCallback, AfterTestExecutionCallback, TestWatcher {
     override fun beforeTestExecution(context: ExtensionContext?) {

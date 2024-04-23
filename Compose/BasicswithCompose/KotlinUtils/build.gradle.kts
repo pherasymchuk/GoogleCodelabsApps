@@ -29,12 +29,19 @@ android {
     }
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.foundation.layout.android)
-    testImplementation(libs.junit)
+//    implementation(libs.kotlinx.coroutines)
+    compileOnly(libs.junit.jupiter)
+    compileOnly(libs.kotlinx.coroutines.test)
+    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
