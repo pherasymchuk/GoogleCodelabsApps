@@ -5,10 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.amphibians.R
 import com.example.amphibians.ui.screens.HomeScreen
 import com.example.amphibians.ui.screens.HomeViewModel
 import com.example.amphibians.ui.theme.AmphibiansTheme
@@ -34,7 +40,22 @@ fun AmphibiansApp(
         factory = HomeViewModel.Factory
     )
 ) {
-    Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
+    Scaffold(modifier = modifier.fillMaxSize(),
+        topBar = { AmphibiansToolbar() }) { innerPadding ->
         HomeScreen(uiState = viewModel.amphibiansUiState, contentPadding = innerPadding)
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AmphibiansToolbar(modifier: Modifier = Modifier) {
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium
+            )
+        },
+        modifier = modifier
+    )
 }

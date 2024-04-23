@@ -3,20 +3,27 @@ package com.example.amphibians.ui.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.amphibians.R
@@ -59,9 +66,18 @@ fun AmphibianSuccessScreen(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier, contentPadding = contentPadding) {
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = contentPadding,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         items(amphibians) {
-            AmphibianCard(it, modifier = Modifier.padding(8.dp))
+            AmphibianCard(
+                amphibian = it,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .widthIn(0.dp, 400.dp)
+            )
         }
     }
 }
@@ -69,10 +85,10 @@ fun AmphibianSuccessScreen(
 @Composable
 fun AmphibianCard(amphibian: Amphibian, modifier: Modifier = Modifier) {
     Card(modifier = modifier) {
-        Column(modifier = Modifier) {
-            AmphibianCaption(amphibian = amphibian, modifier = Modifier.padding(8.dp))
-            AmphibianImage(amphibian = amphibian)
-            AmphibianDescription(amphibian = amphibian, modifier = Modifier.padding(8.dp))
+        Column {
+            AmphibianCaption(amphibian = amphibian, modifier = Modifier.padding(16.dp))
+            AmphibianImage(amphibian = amphibian, modifier = Modifier.size(width = 400.dp, height = 200.dp))
+            AmphibianDescription(amphibian = amphibian, modifier = Modifier.padding(16.dp))
         }
     }
 }
@@ -82,7 +98,7 @@ fun AmphibianCaption(amphibian: Amphibian, modifier: Modifier = Modifier) {
     Text(
         text = "${amphibian.name} (${amphibian.type})",
         style = MaterialTheme.typography.titleLarge,
-        modifier = modifier.padding(8.dp)
+        modifier = modifier
     )
 }
 
@@ -95,7 +111,7 @@ fun AmphibianImage(amphibian: Amphibian, modifier: Modifier = Modifier) {
         contentDescription = stringResource(R.string.amphibian_image),
         error = painterResource(id = R.drawable.error_loading_img),
         contentScale = ContentScale.FillWidth,
-        placeholder = painterResource(id = R.drawable.error_loading_img),
+        placeholder = painterResource(id = R.drawable.img_placeholder),
         modifier = modifier.fillMaxWidth()
     )
 }
@@ -103,7 +119,7 @@ fun AmphibianImage(amphibian: Amphibian, modifier: Modifier = Modifier) {
 @Composable
 fun AmphibianDescription(amphibian: Amphibian, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
-        Text(text = amphibian.description)
+        Text(text = amphibian.description, fontSize = 16.sp)
     }
 }
 
@@ -116,7 +132,19 @@ fun ErrorScreen(contentPadding: PaddingValues, modifier: Modifier = Modifier) {
 
 @Composable
 fun LoadingScreen(contentPadding: PaddingValues, modifier: Modifier = Modifier) {
-    Box(modifier.padding(contentPadding)) {
-        Text(text = "Loading")
+    Box(
+        modifier
+            .padding(contentPadding)
+            .fillMaxSize()
+    ) {
+        Text(text = "Loading", modifier = Modifier.align(Alignment.TopCenter))
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(64.dp)
+                .align(Alignment.Center),
+            trackColor = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
     }
 }
+
