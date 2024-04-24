@@ -1,16 +1,21 @@
 package com.example.amphibians.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -22,17 +27,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.amphibians.R
 import com.example.amphibians.data.network.Amphibian
+import com.example.amphibians.ui.theme.AmphibiansTheme
 
 @Composable
 fun HomeScreen(
     uiState: AmphibiansUiState,
     contentPadding: PaddingValues,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (uiState) {
@@ -46,6 +54,7 @@ fun HomeScreen(
         is AmphibiansUiState.Error -> {
             ErrorScreen(
                 contentPadding = contentPadding,
+                onRetry = onRetry,
                 modifier = modifier
             )
         }
@@ -66,10 +75,10 @@ fun AmphibianSuccessScreen(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    LazyVerticalGrid(
         modifier = modifier.fillMaxWidth(),
         contentPadding = contentPadding,
-        horizontalAlignment = Alignment.CenterHorizontally
+        columns = GridCells.Adaptive(minSize = 400.dp)
     ) {
         items(amphibians) {
             AmphibianCard(
@@ -104,29 +113,92 @@ fun AmphibianCaption(amphibian: Amphibian, modifier: Modifier = Modifier) {
 
 @Composable
 fun AmphibianImage(amphibian: Amphibian, modifier: Modifier = Modifier) {
-    AsyncImage(
+    SubcomposeAsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
+            .crossfade(true)
             .data(amphibian.imgSrc)
+            .error(R.drawable.error_loading_img)
             .build(),
+
         contentDescription = stringResource(R.string.amphibian_image),
-        error = painterResource(id = R.drawable.error_loading_img),
         contentScale = ContentScale.FillWidth,
-        placeholder = painterResource(id = R.drawable.img_placeholder),
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        loading = {
+            Box(modifier = Modifier) {
+                Image(
+                    painter = painterResource(id = R.drawable.img_placeholder),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(64.dp)
+                        .align(Alignment.Center),
+                    trackColor = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        },
+        error = {
+            Box {
+                Image(
+                    painter = painterResource(id = R.drawable.error_loading_img),
+                    contentDescription = stringResource(R.string.error_loading_image),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentScale = ContentScale.FillWidth
+                )
+            }
+        }
     )
 }
 
 @Composable
-fun AmphibianDescription(amphibian: Amphibian, modifier: Modifier = Modifier) {
+fun AmphibianDescription(
+    amphibian: Amphibian,
+    modifier: Modifier = Modifier
+) {
     Box(modifier = modifier) {
         Text(text = amphibian.description, fontSize = 16.sp)
     }
 }
 
 @Composable
-fun ErrorScreen(contentPadding: PaddingValues, modifier: Modifier = Modifier) {
-    Box(modifier = modifier.padding(contentPadding)) {
-        painterResource(id = R.drawable.error_img)
+fun ErrorScreen(
+    contentPadding: PaddingValues,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .padding(contentPadding)
+            .fillMaxSize()
+            .wrapContentSize()
+    ) {
+        Column(modifier = Modifier.align(Alignment.Center)) {
+            Image(
+                painter = painterResource(id = R.drawable.img_placeholder),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .height(200.dp)
+            )
+            Text(
+                text = "Error occurred while loading data",
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+            )
+            Button(onClick = onRetry,
+                Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterHorizontally)) {
+                Text(text = "Retry")
+            }
+        }
     }
 }
 
@@ -148,3 +220,10 @@ fun LoadingScreen(contentPadding: PaddingValues, modifier: Modifier = Modifier) 
     }
 }
 
+@Preview
+@Composable
+private fun ErrorScreenPreview() {
+    AmphibiansTheme {
+        ErrorScreen(contentPadding = PaddingValues(0.dp), onRetry = {})
+    }
+}

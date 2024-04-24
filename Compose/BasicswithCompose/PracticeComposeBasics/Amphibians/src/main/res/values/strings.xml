@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Amphibians</string>
     <string name="amphibian_image">Amphibian image</string>
+    <string name="error_loading_image">Error loading image</string>
 </resources>

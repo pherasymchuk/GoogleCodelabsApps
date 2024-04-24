@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 class HomeViewModelTest {
     @Test
     fun homeViewModel_getAmphibians_updatesUiStateCorrectly() {
-        val homeViewModel: HomeViewModel = HomeViewModel(FakeAmphibiansRepository())
+        val homeViewModel: HomeViewModel = HomeViewModel.Default(FakeAmphibiansRepository())
         Assertions.assertEquals(
             AmphibiansUiState.Success(FakeDatasource.fakeAmphibians),
             homeViewModel.amphibiansUiState

@@ -10,8 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.amphibians.R
@@ -32,6 +35,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AmphibiansApp(
     modifier: Modifier = Modifier,
@@ -40,15 +44,25 @@ fun AmphibiansApp(
         factory = HomeViewModel.Factory
     )
 ) {
-    Scaffold(modifier = modifier.fillMaxSize(),
-        topBar = { AmphibiansToolbar() }) { innerPadding ->
-        HomeScreen(uiState = viewModel.amphibiansUiState, contentPadding = innerPadding)
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        topBar = { AmphibiansToolbar(scrollBehavior) },
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) { innerPadding ->
+        HomeScreen(
+            uiState = viewModel.amphibiansUiState,
+            contentPadding = innerPadding,
+            onRetry = viewModel::fetchAmphibians,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AmphibiansToolbar(modifier: Modifier = Modifier) {
+fun AmphibiansToolbar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifier = Modifier) {
     TopAppBar(
         title = {
             Text(
@@ -56,6 +70,7 @@ fun AmphibiansToolbar(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.headlineMedium
             )
         },
+        scrollBehavior = scrollBehavior,
         modifier = modifier
     )
 }

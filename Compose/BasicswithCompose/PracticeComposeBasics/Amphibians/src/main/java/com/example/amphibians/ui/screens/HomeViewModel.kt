@@ -12,7 +12,6 @@ import com.example.amphibians.AppContainerProvider
 import com.example.amphibians.data.network.Amphibian
 import com.example.amphibians.data.repositories.AmphibiansRepository
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 sealed interface AmphibiansUiState {
     data class Success(val amphibians: List<Amphibian>) : AmphibiansUiState
@@ -22,6 +21,8 @@ sealed interface AmphibiansUiState {
 
 abstract class HomeViewModel(protected val repository: AmphibiansRepository) : ViewModel() {
     abstract val amphibiansUiState: AmphibiansUiState
+
+    abstract fun fetchAmphibians()
 
     companion object {
         val Factory = viewModelFactory {
@@ -41,15 +42,15 @@ abstract class HomeViewModel(protected val repository: AmphibiansRepository) : V
             fetchAmphibians()
         }
 
-        private fun fetchAmphibians() {
+        override fun fetchAmphibians() {
             amphibiansUiState = AmphibiansUiState.Loading
-            try {
-                viewModelScope.launch {
+            viewModelScope.launch {
+                try {
                     val amphibians = repository.getAmphibians()
                     amphibiansUiState = AmphibiansUiState.Success(amphibians)
+                } catch (e: Exception) {
+                    amphibiansUiState = AmphibiansUiState.Error
                 }
-            } catch (e: IOException) {
-                amphibiansUiState = AmphibiansUiState.Error
             }
         }
     }
