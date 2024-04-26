@@ -12,11 +12,11 @@ interface AppContainer {
     val booksRepository: BooksRepository
 
     class Default : AppContainer {
-
+        private val json: Json = Json { this.ignoreUnknownKeys = true }
         private val retrofit: Retrofit by lazy {
             Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(Json.asConverterFactory("application/json; charset=UTF8".toMediaType()))
+                .addConverterFactory(json.asConverterFactory("application/json; charset=UTF8".toMediaType()))
                 .build()
         }
         private val apiService: GoogleBooksApiService by lazy {

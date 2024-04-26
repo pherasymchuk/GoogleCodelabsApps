@@ -15,8 +15,6 @@ data class Item(
     val etag: String,
     val id: String,
     val kind: String,
-    val saleInfo: SaleInfo,
-    val searchInfo: SearchInfo? = null,
     val selfLink: String,
     val volumeInfo: VolumeInfo,
 )
@@ -46,35 +44,35 @@ data class SaleInfo(
     val saleability: String,
 )
 
-@Serializable
-data class SearchInfo(
-    val textSnippet: String,
-)
+//@Serializable
+//data class SearchInfo(
+//    val textSnippet: String,
+//)
 
 @Serializable
 data class VolumeInfo(
-    val allowAnonLogging: Boolean,
-    val authors: List<String>,
-    val averageRating: Int? = null,
-    val canonicalVolumeLink: String,
+    val allowAnonLogging: Boolean = false,
+    val authors: List<String>? = null,
+    val averageRating: Int = -1,
+    val canonicalVolumeLink: String = "",
     val categories: List<String>? = null,
-    val contentVersion: String,
+    val contentVersion: String = "",
     val description: String? = null,
-    val imageLinks: ImageLinks,
-    val industryIdentifiers: List<IndustryIdentifier>,
-    val infoLink: String,
-    val language: String,
-    val maturityRating: String,
-    val pageCount: Int,
-    val panelizationSummary: PanelizationSummary,
-    val previewLink: String,
-    val printType: String,
-    val publishedDate: String? = null,
-    val publisher: String? = null,
-    val ratingsCount: Int? = null,
+    val imageLinks: ImageLinks? = null,
+    val industryIdentifiers: List<IndustryIdentifier>? = null,
+    val infoLink: String = "",
+    val language: String = "",
+    val maturityRating: String = "",
+    val pageCount: Int = -1,
+    val panelizationSummary: PanelizationSummary? = null,
+    val previewLink: String = "",
+    val printType: String = "",
+    val publishedDate: String = "",
+    val publisher: String = "",
+    val ratingsCount: Int = -1,
     val readingModes: ReadingModes? = null,
-    val subtitle: String? = null,
-    val title: String,
+    val subtitle: String = "",
+    val title: String = "",
 )
 
 @Serializable
