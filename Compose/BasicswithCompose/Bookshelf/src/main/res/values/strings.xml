@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Bookshelf</string>
+    <string name="error_loading_books">Error loading books</string>
+    <string name="try_again">Try again</string>
+</resources>
