@@ -2,8 +2,8 @@
 agp = "8.4.0"
 coilCompose = "2.6.0"
 converterScalars = "2.11.0"
-firebaseBom = "32.8.1"
-firebaseAnalitics = "21.6.2"
+firebaseBom = "33.0.0"
+firebaseAnalitics = "22.0.0"
 haze = "0.6.2"
 junitJupiter = "5.10.2"
 junitJupiterApi = "5.10.2"
@@ -30,13 +30,14 @@ navigationTesting = "2.7.7"
 espressoIntents = "3.5.1"
 jetbrainsKotlinJvm = "1.9.23"
 appcompat = "1.6.1"
-material = "1.11.0"
+material = "1.12.0"
 foundationLayoutAndroid = "1.6.7"
-composeCompiler = "1.5.13"
 kotlinxSerialization = "1.9.22"
 retrofitKotlinxSerializationConverter = "2.11.0"
 ksp = "1.9.23-1.0.20"
 navigationRuntimeKtx = "2.7.7"
+
+composeCompiler = "1.5.13"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
