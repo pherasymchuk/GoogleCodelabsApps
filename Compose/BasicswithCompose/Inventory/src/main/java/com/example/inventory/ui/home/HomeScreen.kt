@@ -184,6 +184,14 @@ private fun InventoryItem(
     }
 }
 
+@Preview
+@Composable
+private fun HomeScreenPreview() {
+    InventoryTheme {
+        HomeScreen(navigateToItemEntry = { /*TODO*/ }, navigateToItemUpdate = {})
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun HomeBodyPreview() {
