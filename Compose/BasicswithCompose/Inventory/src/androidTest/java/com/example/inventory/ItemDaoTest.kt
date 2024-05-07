@@ -64,4 +64,16 @@ class ItemDaoTest {
         assertEquals(allItems[0], item1)
         assertEquals(allItems[1], item2)
     }
+
+    @Test
+    fun daoUpdateItems_UpdatesItemsInDb() = runTest {
+        addTwoItemsToDb()
+        val item1 = Item(1, "Apples", 15.0, 25)
+        val item2 = Item(2, "Bananas", 5.0, 50)
+        itemDao.update(item1)
+        itemDao.update(item2)
+        val allItems = itemDao.getAllItems().first()
+        assertEquals(item1, allItems.first())
+        assertEquals(item2, allItems.last())
+    }
 }
