@@ -16,6 +16,7 @@
 
 package com.example.inventory.ui.item
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -66,8 +67,8 @@ import kotlinx.coroutines.launch
 object ItemDetailsDestination : NavigationDestination {
     override val route = "item_details"
     override val titleRes = R.string.item_detail_title
-    const val ITEM_ID_ARG = "itemId"
-    val routeWithArgs = "$route/{$ITEM_ID_ARG}"
+    const val itemIdArg = "itemId"
+    val routeWithArgs = "$route/{$itemIdArg}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,7 +91,11 @@ fun ItemDetailsScreen(
             )
         }, floatingActionButton = {
             FloatingActionButton(
-                onClick = { navigateToEditItem(0) },
+                onClick = {
+                    val id = uiState.itemDetails.id
+                    Log.d(TAG, "ItemDetailsScreen: navigateToEditItem passed id = $id")
+                    navigateToEditItem(id)
+                },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
 

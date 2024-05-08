@@ -61,12 +61,12 @@ fun InventoryNavHost(
         }
         composable(
             route = ItemDetailsDestination.routeWithArgs,
-            arguments = listOf(navArgument(ItemDetailsDestination.ITEM_ID_ARG) {
+            arguments = listOf(navArgument(ItemDetailsDestination.itemIdArg) {
                 type = NavType.IntType
             })
         ) {
             ItemDetailsScreen(
-                navigateToEditItem = { navController.navigate("${ItemEditDestination.route}/$it") },
+                navigateToEditItem = { navController.navigate("${ItemEditDestination.route}/${it}") },
                 navigateBack = { navController.navigateUp() }
             )
         }

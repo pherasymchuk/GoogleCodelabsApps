@@ -86,4 +86,11 @@ class ItemDaoTest {
         val allItems = itemDao.getAllItems().first()
         assertTrue(allItems.isEmpty())
     }
+
+    @Test
+    fun daoGetItem_ReturnsItemFromDb() = runTest {
+        addOneItemToDb()
+        val item = itemDao.getItem(1)
+        assertEquals(item.first(), item1)
+    }
 }

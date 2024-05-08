@@ -34,7 +34,7 @@ class ItemDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val itemsRepository: ItemsRepository,
 ) : ViewModel() {
-    private val itemId: Int = checkNotNull(savedStateHandle[ItemDetailsDestination.ITEM_ID_ARG])
+    private val itemId: Int = checkNotNull(savedStateHandle[ItemDetailsDestination.itemIdArg])
     val uiState: StateFlow<ItemDetailsUiState> = itemsRepository.getItemStream(itemId)
         .filterNotNull()
         .map { ItemDetailsUiState(itemDetails = it.toItemDetails(), outOfStock = it.quantity <= 0) }
