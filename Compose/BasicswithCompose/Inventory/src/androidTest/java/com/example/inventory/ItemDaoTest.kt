@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -75,5 +76,14 @@ class ItemDaoTest {
         val allItems = itemDao.getAllItems().first()
         assertEquals(item1, allItems.first())
         assertEquals(item2, allItems.last())
+    }
+
+    @Test
+    fun daoDeleteItems_DeletesAllItemsFromDb() = runTest {
+        addTwoItemsToDb()
+        itemDao.delete(item1)
+        itemDao.delete(item2)
+        val allItems = itemDao.getAllItems().first()
+        assertTrue(allItems.isEmpty())
     }
 }
