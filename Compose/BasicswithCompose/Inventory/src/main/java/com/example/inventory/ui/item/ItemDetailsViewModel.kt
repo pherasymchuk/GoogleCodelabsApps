@@ -37,7 +37,7 @@ class ItemDetailsViewModel(
     private val itemId: Int = checkNotNull(savedStateHandle[ItemDetailsDestination.ITEM_ID_ARG])
     val uiState: StateFlow<ItemDetailsUiState> = itemsRepository.getItemStream(itemId)
         .filterNotNull()
-        .map { ItemDetailsUiState(itemDetails = it.toItemDetails()) }
+        .map { ItemDetailsUiState(itemDetails = it.toItemDetails(), outOfStock = it.quantity <= 0) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
