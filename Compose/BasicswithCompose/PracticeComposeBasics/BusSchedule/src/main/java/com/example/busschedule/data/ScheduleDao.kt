@@ -9,18 +9,21 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ScheduleDao {
-    @Query("SELECT * FROM BusSchedule ORDER BY arrivalTimeInMillis DESC")
-    fun getAllSchedules(): Flow<List<BusSchedule>>
+    @Query("SELECT * FROM Schedule ORDER BY arrival_time ASC")
+    fun getAll(): Flow<List<Schedule>>
 
-    @Query("SELECT * FROM BUSSCHEDULE WHERE id = :id")
-    fun getOneSchedule(id: Int): Flow<BusSchedule>
+    @Query("SELECT * FROM Schedule WHERE id = :id")
+    fun getOneSchedule(id: Int): Flow<Schedule>
+
+    @Query("SELECT * FROM Schedule WHERE stop_name = :stopName")
+    fun getSchedulesFor(stopName: String): Flow<List<Schedule>>
 
     @Insert
-    fun insert(schedule: BusSchedule)
+    suspend fun insert(schedule: Schedule)
 
     @Update
-    fun update(schedule: BusSchedule)
+    suspend fun update(schedule: Schedule)
 
     @Delete
-    fun delete(schedule: BusSchedule)
+    suspend fun delete(schedule: Schedule)
 }
