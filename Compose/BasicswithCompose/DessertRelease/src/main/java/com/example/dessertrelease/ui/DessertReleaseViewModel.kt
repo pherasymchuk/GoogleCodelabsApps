@@ -24,8 +24,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.dessertrelease.DessertReleaseApplication
 import com.example.dessertrelease.R
 import com.example.dessertrelease.data.local.UserPreferencesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /*
@@ -35,10 +37,15 @@ class DessertReleaseViewModel(
     private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DessertReleaseUiState())
-
     // UI states access for various [DessertReleaseUiState]
-    val uiState: StateFlow<DessertReleaseUiState> = _uiState
+    val uiState: StateFlow<DessertReleaseUiState> = userPreferencesRepository.isLinearLayout.map { isLinearLayout ->
+        DessertReleaseUiState(isLinearLayout = isLinearLayout)
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = DessertReleaseUiState()
+        )
 
     /*
      * [selectLayout] change the layout and icons accordingly and
