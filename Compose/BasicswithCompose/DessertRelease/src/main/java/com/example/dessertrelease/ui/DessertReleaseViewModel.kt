@@ -17,16 +17,21 @@ package com.example.dessertrelease.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.dessertrelease.DessertReleaseApplication
 import com.example.dessertrelease.R
+import com.example.dessertrelease.data.local.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /*
  * View model of Dessert Release components
  */
-class DessertReleaseViewModel : ViewModel() {
+class DessertReleaseViewModel(
+    private val userPreferencesRepository: UserPreferencesRepository,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DessertReleaseUiState())
 
@@ -44,7 +49,8 @@ class DessertReleaseViewModel : ViewModel() {
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                DessertReleaseViewModel()
+                val application: DessertReleaseApplication = this[APPLICATION_KEY] as DessertReleaseApplication
+                DessertReleaseViewModel(application.userPreferencesRepository)
             }
         }
     }
