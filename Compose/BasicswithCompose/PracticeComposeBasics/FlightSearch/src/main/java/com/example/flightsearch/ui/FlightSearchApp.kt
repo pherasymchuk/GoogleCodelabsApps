@@ -18,9 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -38,8 +35,7 @@ fun FlightSearchApp(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel<HomeViewModel.Default>(factory = HomeViewModel.Factory),
 ) {
-    val uiState: FlightSearchUiState by viewModel.uiState.collectAsState()
-    var input by rememberSaveable { mutableStateOf("") }
+    val uiState: HomeViewModel.FlightSearchUiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -60,8 +56,8 @@ fun FlightSearchApp(
         }
         Column(modifier = modifier.padding(innerPadding)) {
             SearchTextField(
-                input = input,
-                onValueChange = { input = it },
+                uiState = uiState,
+                onValueChange = viewModel::updateUserInput,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -89,12 +85,12 @@ fun FlightSearchAppBar(
 
 @Composable
 fun SearchTextField(
-    input: String,
+    uiState: HomeViewModel.FlightSearchUiState,
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit,
 ) {
     com.github.compose.InputTextField(
-        value = input,
+        value = uiState.searchInput,
         leadingIcon = {
             Image(
                 painter = painterResource(R.drawable.ic_search),
@@ -124,9 +120,8 @@ private fun FlightSearchAppBarPreview() {
 @Composable
 private fun SearchBarPreview() {
     SearchTextField(
-//        uiState = FlightSearchUiState("input here"),
+        uiState = HomeViewModel.FlightSearchUiState("input here"),
         modifier = Modifier.padding(4.dp),
-        onValueChange = {},
-        input = "Text input"
+        onValueChange = {}
     )
 }

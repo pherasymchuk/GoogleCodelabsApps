@@ -10,9 +10,12 @@ import com.example.flightsearch.data.di.AppContainer
 import com.example.flightsearch.data.repository.FlightsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+
 
 abstract class HomeViewModel : ViewModel() {
     abstract val uiState: StateFlow<FlightSearchUiState>
+    abstract fun updateUserInput(input: String)
 
 
     class Default(
@@ -20,6 +23,10 @@ abstract class HomeViewModel : ViewModel() {
     ) : HomeViewModel() {
         override val uiState: MutableStateFlow<FlightSearchUiState> =
             MutableStateFlow(FlightSearchUiState(""))
+
+        override fun updateUserInput(input: String) {
+            uiState.update { it.copy(searchInput = input) }
+        }
     }
 
     companion object {
@@ -30,6 +37,7 @@ abstract class HomeViewModel : ViewModel() {
             }
         }
     }
+
+    data class FlightSearchUiState(val searchInput: String)
 }
 
-data class FlightSearchUiState(val searchInput: String)
