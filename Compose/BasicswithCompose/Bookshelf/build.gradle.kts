@@ -53,7 +53,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":KotlinUtils"))
+    implementation(project(":DevUtils"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

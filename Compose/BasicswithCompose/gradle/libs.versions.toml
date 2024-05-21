@@ -1,5 +1,5 @@
 [versions]
-agp = "8.4.0"
+agp = "8.4.1"
 coilCompose = "2.6.0"
 converterScalars = "2.11.0"
 datastorePreferences = "1.1.1"
@@ -49,7 +49,6 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofitKotlinxSerializationConverter" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalitics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
