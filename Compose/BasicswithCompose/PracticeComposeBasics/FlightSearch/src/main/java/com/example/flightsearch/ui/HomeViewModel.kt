@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 abstract class HomeViewModel : ViewModel() {
     abstract val uiState: StateFlow<FlightSearchUiState>
     abstract fun updateUserInput(input: String)
-    abstract fun searchFlight(text: String)
+    abstract suspend fun searchFlight(text: String)
 
 
     class Default(
@@ -36,15 +36,19 @@ abstract class HomeViewModel : ViewModel() {
             uiState.update { it.copy(searchInput = input) }
         }
 
-        override fun searchFlight(text: String) {
-//            repository.getFlights()
+        override suspend fun searchFlight(text: String) {
+            repository.searchFlights(text).collect { airports ->
+                uiState.update { oldState ->
+                    oldState.copy(searchResult = airports)
+                }
+            }
         }
 
         private fun fetchData() {
             viewModelScope.launch {
                 repository.getAllFlights().collect { airports ->
-                    uiState.update { uiState ->
-                        uiState.copy(searchResult = airports)
+                    uiState.update { oldState ->
+                        oldState.copy(searchResult = airports)
                     }
                 }
             }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -25,6 +26,8 @@ import com.example.flightsearch.R
 import com.example.flightsearch.ui.screens.FlightSearchAppBar
 import com.example.flightsearch.ui.screens.Home
 import com.example.flightsearch.ui.screens.HomeScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun FlightSearchApp(
@@ -45,6 +48,8 @@ fun FlightSearchApp(
         }
     ) { innerPadding ->
 
+        val coroutineScope: CoroutineScope = rememberCoroutineScope()
+
         val window: Window? = (LocalContext.current as? Activity)?.window
         val view: View = LocalView.current
         if (window != null && !view.isInEditMode) {
@@ -57,7 +62,12 @@ fun FlightSearchApp(
             composable<Home> {
                 HomeScreen(
                     uiState = uiState,
-                    onValueChange = viewModel::updateUserInput,
+                    onValueChange = { input: String ->
+                        coroutineScope.launch {
+                            viewModel.updateUserInput(input)
+                            viewModel.searchFlight(text = input)
+                        }
+                    },
                     innerPadding = innerPadding,
                     modifier = Modifier,
                 )

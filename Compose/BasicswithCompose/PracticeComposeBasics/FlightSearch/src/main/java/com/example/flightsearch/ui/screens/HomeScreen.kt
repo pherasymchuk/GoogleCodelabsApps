@@ -33,7 +33,7 @@ fun HomeScreen(
     Column(modifier = modifier) {
         SearchTextField(
             uiState = uiState,
-            onValueChange = onValueChange,
+            onInput = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(

@@ -86,7 +86,7 @@ fun AirportItem(
 fun SearchTextField(
     uiState: HomeViewModel.FlightSearchUiState,
     modifier: Modifier = Modifier,
-    onValueChange: (String) -> Unit,
+    onInput: (String) -> Unit,
 ) {
     InputTextField(
         value = uiState.searchInput,
@@ -103,7 +103,7 @@ fun SearchTextField(
             )
         },
 
-        onValueChange = onValueChange,
+        onValueChange = onInput,
         shape = MaterialTheme.shapes.extraLarge,
         modifier = modifier
     )
@@ -142,6 +142,6 @@ private fun SearchBarPreview() {
             )
         ),
         modifier = Modifier.padding(4.dp),
-        onValueChange = {}
+        onInput = {}
     )
 }
