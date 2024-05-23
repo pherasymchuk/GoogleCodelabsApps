@@ -5,11 +5,12 @@ import com.example.flightsearch.data.database.FlightSearchDao
 import kotlinx.coroutines.flow.Flow
 
 interface FlightsRepository {
-    fun getFlights(name: String): Flow<List<Airport>>
+    fun getAllFlights(): Flow<List<Airport>>
+    fun searchFlights(name: String): Flow<List<Airport>>
 
     class Default(private val dao: FlightSearchDao) : FlightsRepository {
-        override fun getFlights(name: String): Flow<List<Airport>> {
-            return dao.getFlights(name)
-        }
+        override fun getAllFlights(): Flow<List<Airport>> = dao.getAllFlights()
+
+        override fun searchFlights(name: String): Flow<List<Airport>> = dao.searchFlights(name)
     }
 }
