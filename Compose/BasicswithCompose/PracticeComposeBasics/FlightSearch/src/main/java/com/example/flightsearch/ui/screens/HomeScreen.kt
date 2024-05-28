@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.runtime.Composable
@@ -25,7 +26,7 @@ object Home : Destination
 
 @Composable
 fun HomeScreen(
-    uiState: HomeViewModel.FlightSearchUiState,
+    uiState: HomeViewModel.HomeUiState,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues = PaddingValues(0.dp),
@@ -54,6 +55,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
+                .imePadding()
         )
     }
 }
@@ -63,7 +65,7 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     FlightSearchTheme {
         HomeScreen(
-            uiState = HomeViewModel.FlightSearchUiState(
+            uiState = HomeViewModel.HomeUiState(
                 "",
                 searchResult = listOf(
                     Airport(

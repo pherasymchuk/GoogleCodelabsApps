@@ -48,7 +48,7 @@ fun FlightSearchAppBar(
 
 @Composable
 fun SearchResult(
-    uiState: HomeViewModel.FlightSearchUiState,
+    uiState: HomeViewModel.HomeUiState,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 0.dp,
     innerPadding: PaddingValues = PaddingValues(0.dp),
@@ -84,7 +84,7 @@ fun AirportItem(
 
 @Composable
 fun SearchTextField(
-    uiState: HomeViewModel.FlightSearchUiState,
+    uiState: HomeViewModel.HomeUiState,
     modifier: Modifier = Modifier,
     onInput: (String) -> Unit,
 ) {
@@ -131,7 +131,7 @@ private fun FlightSearchAppBarPreview() {
 @Composable
 private fun SearchBarPreview() {
     SearchTextField(
-        uiState = HomeViewModel.FlightSearchUiState(
+        uiState = HomeViewModel.HomeUiState(
             "input here", searchResult = listOf(
                 Airport(
                     1,
