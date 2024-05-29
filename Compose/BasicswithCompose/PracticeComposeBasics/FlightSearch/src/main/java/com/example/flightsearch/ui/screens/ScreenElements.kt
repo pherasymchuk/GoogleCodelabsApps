@@ -1,12 +1,14 @@
 package com.example.flightsearch.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,10 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.flightsearch.R
-import com.example.flightsearch.data.database.Airport
-import com.example.flightsearch.ui.HomeViewModel
+import com.example.flightsearch.data.database.model.Airport
 import com.example.flightsearch.ui.theme.FlightSearchTheme
 import com.github.compose.InputTextField
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,6 +54,7 @@ fun SearchResult(
     modifier: Modifier = Modifier,
     itemPadding: Dp = 0.dp,
     innerPadding: PaddingValues = PaddingValues(0.dp),
+    onItemClick: (airport: Airport) -> Unit = {},
 ) {
     LazyColumn(
         contentPadding = PaddingValues(
@@ -60,8 +63,14 @@ fun SearchResult(
         ),
         modifier = modifier.consumeWindowInsets(innerPadding)
     ) {
-        items(uiState.searchResult) {
-            AirportItem(identifier = it.iataCode, name = it.name, modifier = Modifier.padding(itemPadding))
+        items(uiState.searchResult) { airport ->
+            AirportItem(
+                airport = airport,
+                onClick = { onItemClick(airport) },
+                modifier = Modifier
+                    .padding(itemPadding)
+                    .fillMaxWidth()
+            )
         }
         item {
             Spacer(modifier = Modifier.size(innerPadding.calculateBottomPadding()))
@@ -71,14 +80,25 @@ fun SearchResult(
 
 @Composable
 fun AirportItem(
-    identifier: String,
-    name: String,
+    airport: Airport,
     modifier: Modifier = Modifier,
+    onClick: (id: Int) -> Unit = {},
 ) {
-    Row(modifier = modifier) {
-        Text(text = identifier, fontWeight = FontWeight.Bold)
+    Row(
+        modifier = modifier.clickable(onClick = { onClick(airport.id) })
+    ) {
+        Text(
+            text = airport.iataCode,
+            fontWeight = FontWeight.ExtraBold,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.alignByBaseline()
+        )
         Spacer(modifier = Modifier.size(8.dp))
-        Text(text = name, style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = airport.name,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.alignByBaseline()
+        )
     }
 }
 
@@ -115,8 +135,33 @@ fun SearchTextField(
 private fun AirportItemPreview() {
     FlightSearchTheme {
         AirportItem(
-            identifier = "FCO",
-            name = "Leonardo da Vinci International Airport"
+            airport = Airport(
+                id = 0,
+                name = "Leonardo da Vinci International Airport",
+                iataCode = "FCO",
+                passengers = 1
+            )
+        )
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun SearchResultPreview() {
+    FlightSearchTheme {
+        val fakeAirports = List(7) {
+            Airport(
+                id = it,
+                name = "Airport ${it + 1}",
+                iataCode = "IATA${it + 1}",
+                passengers = Random.nextInt(30, 200)
+            )
+        }
+        SearchResult(
+            uiState = HomeViewModel.HomeUiState(
+                searchInput = "",
+                searchResult = fakeAirports
+            )
         )
     }
 }
@@ -132,9 +177,10 @@ private fun FlightSearchAppBarPreview() {
 private fun SearchBarPreview() {
     SearchTextField(
         uiState = HomeViewModel.HomeUiState(
-            "input here", searchResult = listOf(
+            searchInput = "input here",
+            searchResult = listOf(
                 Airport(
-                    1,
+                    id = 1,
                     name = "Airport name",
                     iataCode = "code",
                     passengers = 9

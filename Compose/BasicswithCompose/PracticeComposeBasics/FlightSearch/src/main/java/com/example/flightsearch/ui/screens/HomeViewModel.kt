@@ -1,4 +1,4 @@
-package com.example.flightsearch.ui
+package com.example.flightsearch.ui.screens
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.flightsearch.AppContainerProvider
-import com.example.flightsearch.data.database.Airport
+import com.example.flightsearch.data.database.model.Airport
 import com.example.flightsearch.data.di.AppContainer
-import com.example.flightsearch.data.repository.FlightsRepository
+import com.example.flightsearch.data.repository.AirportsRepository
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +32,7 @@ abstract class HomeViewModel : ViewModel() {
     data class HomeUiState(val searchInput: String, val searchResult: List<Airport>)
 
     class Default(
-        private val repository: FlightsRepository,
+        private val repository: AirportsRepository,
     ) : HomeViewModel() {
         override val uiState: MutableStateFlow<HomeUiState> =
             MutableStateFlow(HomeUiState("", searchResult = emptyList()))
@@ -71,7 +71,7 @@ abstract class HomeViewModel : ViewModel() {
             val input = uiState.value.searchInput
 
             searchJob = viewModelScope.launch {
-                repository.searchFlights(input)
+                repository.searchAirports(input)
                     .collect { airports ->
                         Log.d(TAG, "searchFlights: Collecting")
                         uiState.update { oldState ->
@@ -83,7 +83,7 @@ abstract class HomeViewModel : ViewModel() {
 
         private fun fetchData() {
             viewModelScope.launch {
-                repository.getAllFlights().collect { airports ->
+                repository.getAllAirports().collect { airports ->
                     uiState.update { oldState ->
                         oldState.copy(searchResult = airports)
                     }
@@ -96,7 +96,7 @@ abstract class HomeViewModel : ViewModel() {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             this.initializer {
                 val appContainer: AppContainer = (this[APPLICATION_KEY] as AppContainerProvider).appContainer
-                Default(appContainer.repository)
+                Default(appContainer.airportsRepository)
             }
         }
     }

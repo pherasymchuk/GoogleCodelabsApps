@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.jetbrains.kotlinx.serialization)
+    alias(libs.plugins.parcelize)
 }
 
 ksp {
