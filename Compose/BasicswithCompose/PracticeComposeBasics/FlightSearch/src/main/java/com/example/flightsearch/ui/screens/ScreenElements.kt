@@ -82,10 +82,11 @@ fun SearchResult(
 fun AirportItem(
     airport: Airport,
     modifier: Modifier = Modifier,
+    clickable: Boolean = true,
     onClick: (id: Int) -> Unit = {},
 ) {
     Row(
-        modifier = modifier.clickable(onClick = { onClick(airport.id) })
+        modifier = modifier.clickable(onClick = { onClick(airport.id) }, enabled = clickable)
     ) {
         Text(
             text = airport.iataCode,

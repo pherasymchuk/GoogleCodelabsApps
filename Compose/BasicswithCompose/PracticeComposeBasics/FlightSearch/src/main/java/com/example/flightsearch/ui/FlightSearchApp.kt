@@ -1,10 +1,13 @@
 package com.example.flightsearch.ui
 
 import android.app.Activity
-import android.os.Build
-import android.os.Bundle
 import android.view.View
 import android.view.Window
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -21,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,7 +36,6 @@ import com.example.flightsearch.ui.screens.FlightSearchAppBar
 import com.example.flightsearch.ui.screens.Home
 import com.example.flightsearch.ui.screens.HomeScreen
 import com.example.flightsearch.ui.screens.HomeViewModel
-import kotlinx.serialization.json.Json
 import kotlin.reflect.typeOf
 
 @Composable
@@ -64,37 +65,34 @@ fun FlightSearchApp(
             }
         }
 
-        NavHost(navController = navController, startDestination = Home) {
+        NavHost(navController = navController,
+            startDestination = Home,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(300, easing = LinearEasing)
+                ) + slideIntoContainer(
+                    animationSpec = tween(300, easing = EaseIn),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            },
+            popEnterTransition = {
+                this.slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left)
+            }
+        ) {
             composable<Home> {
                 HomeScreen(
                     uiState = uiState,
                     innerPadding = innerPadding,
                     onUserSearchInput = viewModel::onSearchInputChange,
-                    onAirportClick = { navController.navigate(Details) },
+                    onAirportClick = { navController.navigate(Details(it)) },
                     modifier = Modifier,
                 )
             }
 
-            val airportParameterType = object : NavType<Airport>(false) {
-                override fun get(bundle: Bundle, key: String): Airport? =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        bundle.getParcelable(key, Airport::class.java)
-                    } else {
-                        bundle.getParcelable(key)
-                    }
-
-                override fun parseValue(value: String): Airport {
-                    return Json.decodeFromString(value)
-                }
-
-                override fun put(bundle: Bundle, key: String, value: Airport) {
-                    bundle.putParcelable(key, value)
-                }
-
-            }
-
-            composable<Details>(typeMap = mapOf(typeOf<Airport>() to airportParameterType)) {
-                val airport = it.toRoute<Details>().airport
+            composable<Details>(
+                typeMap = mapOf(typeOf<Airport>() to Airport.NavType())
+            ) { navBackStackEntry ->
+                val airport: Airport = navBackStackEntry.toRoute<Details>().airport
                 FlightDetails(
                     airport = airport,
                     modifier = Modifier.padding(innerPadding)
@@ -103,5 +101,3 @@ fun FlightSearchApp(
         }
     }
 }
-
-

@@ -17,8 +17,7 @@ import kotlinx.coroutines.launch
 
 abstract class DetailsViewModel : ViewModel() {
     abstract val uiState: StateFlow<DetailsUiState>
-
-    abstract fun fetchFlights(airportId: Int)
+    abstract fun fetchFlights()
 
     data class DetailsUiState(
         val selectedAirport: Airport,
@@ -28,15 +27,19 @@ abstract class DetailsViewModel : ViewModel() {
     class Default(
         private val flightsRepository: FlightsRepository,
         private val airportsRepository: AirportsRepository,
-        airport: Airport,
+        private val airport: Airport,
     ) : DetailsViewModel() {
         override val uiState: MutableStateFlow<DetailsUiState> = MutableStateFlow(
             DetailsUiState(airport, emptyList())
         )
 
-        override fun fetchFlights(airportId: Int) {
+        init {
+            fetchFlights()
+        }
+
+        override fun fetchFlights() {
             viewModelScope.launch {
-                flightsRepository.getFlightsForAirport(airportId).collect { newFlights: List<Flight> ->
+                flightsRepository.getFlightsForAirport(airport.id).collect { newFlights: List<Flight> ->
                     val arrivals = newFlights.map {
                         airportsRepository.getAirportById(id = it.arrivalAirportId)
                     }

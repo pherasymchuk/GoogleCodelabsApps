@@ -66,9 +66,9 @@ fun FlightCard(
         Row(modifier = Modifier.padding(16.dp)) {
             Column(modifier = Modifier) {
                 Text(stringResource(R.string.depart), style = MaterialTheme.typography.labelMedium)
-                AirportItem(airport = departureAirport)
+                AirportItem(airport = departureAirport, clickable = false)
                 Text(stringResource(R.string.arrive), style = MaterialTheme.typography.labelMedium)
-                AirportItem(airport = arrivalAirport)
+                AirportItem(airport = arrivalAirport, clickable = false)
             }
             Image(
                 painter = painterResource(
