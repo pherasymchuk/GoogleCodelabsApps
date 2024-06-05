@@ -51,7 +51,7 @@ fun InputTextField(
             singleLine = singleLine,
             enabled = enabled,
             interactionSource = interactionSource,
-            contentPadding = PaddingValues(0.dp), // this is how you can remove the padding
+            contentPadding = PaddingValues(0.dp), // this is to remove the padding
             trailingIcon = trailingIcon,
             placeholder = placeHolder,
             leadingIcon = leadingIcon,

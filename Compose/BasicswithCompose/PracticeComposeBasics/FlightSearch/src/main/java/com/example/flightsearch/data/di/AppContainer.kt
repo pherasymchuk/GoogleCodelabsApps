@@ -13,6 +13,9 @@ interface AppContainer {
         override val airportsRepository: AirportsRepository =
             AirportsRepository.Default(FlightSearchDatabase.getInstance(context).airportSearchDao())
         override val flightsRepository: FlightsRepository =
-            FlightsRepository.Default(FlightSearchDatabase.getInstance(context).flightSearchDao())
+            FlightsRepository.Default(
+                FlightSearchDatabase.getInstance(context).flightSearchDao(),
+                FlightSearchDatabase.getInstance(context).favoritesDao()
+            )
     }
 }

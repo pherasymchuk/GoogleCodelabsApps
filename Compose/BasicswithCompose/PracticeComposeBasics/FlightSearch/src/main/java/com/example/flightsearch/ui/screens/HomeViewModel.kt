@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.flightsearch.AppContainerProvider
-import com.example.flightsearch.data.database.model.Airport
+import com.example.flightsearch.data.database.model.DatabaseAirport
 import com.example.flightsearch.data.di.AppContainer
 import com.example.flightsearch.data.repository.AirportsRepository
+import com.example.flightsearch.ui.mapper.toUiModel
+import com.example.flightsearch.ui.model.UiAirport
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +31,7 @@ abstract class HomeViewModel : ViewModel() {
     abstract val uiState: StateFlow<HomeUiState>
     abstract fun onSearchInputChange(input: String)
 
-    data class HomeUiState(val searchInput: String, val searchResult: List<Airport>)
+    data class HomeUiState(val searchInput: String, val searchResult: List<UiAirport>)
 
     class Default(
         private val repository: AirportsRepository,
@@ -72,10 +74,12 @@ abstract class HomeViewModel : ViewModel() {
 
             searchJob = viewModelScope.launch {
                 repository.searchAirports(input)
-                    .collect { airports ->
+                    .collect { airports: List<DatabaseAirport> ->
                         Log.d(TAG, "searchFlights: Collecting")
                         uiState.update { oldState ->
-                            oldState.copy(searchResult = airports)
+                            oldState.copy(searchResult = airports.map {
+                                it.toUiModel()
+                            })
                         }
                     }
             }
@@ -83,9 +87,11 @@ abstract class HomeViewModel : ViewModel() {
 
         private fun fetchData() {
             viewModelScope.launch {
-                repository.getAllAirports().collect { airports ->
+                repository.getAllAirports().collect { airports: List<DatabaseAirport> ->
                     uiState.update { oldState ->
-                        oldState.copy(searchResult = airports)
+                        oldState.copy(searchResult = airports.map {
+                            it.toUiModel()
+                        })
                     }
                 }
             }

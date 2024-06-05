@@ -28,10 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.flightsearch.R
-import com.example.flightsearch.data.database.model.Airport
+import com.example.flightsearch.ui.model.UiAirport
 import com.example.flightsearch.ui.theme.FlightSearchTheme
 import com.github.compose.InputTextField
-import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +53,7 @@ fun SearchResult(
     modifier: Modifier = Modifier,
     itemPadding: Dp = 0.dp,
     innerPadding: PaddingValues = PaddingValues(0.dp),
-    onItemClick: (airport: Airport) -> Unit = {},
+    onAirportClick: (airport: UiAirport) -> Unit = {},
 ) {
     LazyColumn(
         contentPadding = PaddingValues(
@@ -66,7 +65,7 @@ fun SearchResult(
         items(uiState.searchResult) { airport ->
             AirportItem(
                 airport = airport,
-                onClick = { onItemClick(airport) },
+                onClick = { onAirportClick(airport) },
                 modifier = Modifier
                     .padding(itemPadding)
                     .fillMaxWidth()
@@ -80,7 +79,7 @@ fun SearchResult(
 
 @Composable
 fun AirportItem(
-    airport: Airport,
+    airport: UiAirport,
     modifier: Modifier = Modifier,
     clickable: Boolean = true,
     onClick: (id: Int) -> Unit = {},
@@ -136,11 +135,10 @@ fun SearchTextField(
 private fun AirportItemPreview() {
     FlightSearchTheme {
         AirportItem(
-            airport = Airport(
+            airport = UiAirport(
                 id = 0,
                 name = "Leonardo da Vinci International Airport",
-                iataCode = "FCO",
-                passengers = 1
+                iataCode = "FCO"
             )
         )
     }
@@ -151,11 +149,10 @@ private fun AirportItemPreview() {
 private fun SearchResultPreview() {
     FlightSearchTheme {
         val fakeAirports = List(7) {
-            Airport(
+            UiAirport(
                 id = it,
                 name = "Airport ${it + 1}",
                 iataCode = "IATA${it + 1}",
-                passengers = Random.nextInt(30, 200)
             )
         }
         SearchResult(
@@ -180,11 +177,10 @@ private fun SearchBarPreview() {
         uiState = HomeViewModel.HomeUiState(
             searchInput = "input here",
             searchResult = listOf(
-                Airport(
+                UiAirport(
                     id = 1,
                     name = "Airport name",
                     iataCode = "code",
-                    passengers = 9
                 )
             )
         ),

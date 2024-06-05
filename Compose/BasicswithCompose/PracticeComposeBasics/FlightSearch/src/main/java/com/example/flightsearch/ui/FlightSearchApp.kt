@@ -33,7 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.flightsearch.R
-import com.example.flightsearch.data.database.model.Airport
+import com.example.flightsearch.ui.model.UiAirport
 import com.example.flightsearch.ui.screens.Details
 import com.example.flightsearch.ui.screens.FlightDetails
 import com.example.flightsearch.ui.screens.FlightSearchAppBar
@@ -77,10 +77,14 @@ fun FlightSearchApp(
         ) {
             composable<Home>(
                 enterTransition = {
-                    scaleIn(tween(durationMillis = 500, easing = LinearEasing), initialScale = 0.8f)
+                    fadeIn(
+                        animationSpec = tween(500, easing = LinearEasing)
+                    ) + scaleIn(tween(durationMillis = 500, easing = LinearEasing), initialScale = 0.8f)
                 },
                 exitTransition = {
-                    scaleOut(tween(durationMillis = 500, easing = LinearEasing), targetScale = 0.8f)
+                    fadeOut(
+                        animationSpec = tween(500, easing = LinearEasing)
+                    ) + scaleOut(tween(durationMillis = 500, easing = LinearEasing), targetScale = 0.8f)
                 },
             ) {
                 HomeScreen(
@@ -93,7 +97,7 @@ fun FlightSearchApp(
             }
 
             composable<Details>(
-                typeMap = mapOf(typeOf<Airport>() to Airport.NavType()),
+                typeMap = mapOf(typeOf<UiAirport>() to UiAirport.NavType()),
                 enterTransition = {
                     fadeIn(
                         animationSpec = tween(500, easing = LinearEasing)
@@ -111,10 +115,12 @@ fun FlightSearchApp(
                     )
                 }
             ) { navBackStackEntry ->
-                val airport: Airport = navBackStackEntry.toRoute<Details>().airport
+                val airport: UiAirport = navBackStackEntry.toRoute<Details>().airport
                 FlightDetails(
                     airport = airport,
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(top = 12.dp),
                 )
             }
         }

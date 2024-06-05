@@ -5,15 +5,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.flightsearch.data.database.dao.AirportSearchDao
+import com.example.flightsearch.data.database.dao.FavoritesDao
 import com.example.flightsearch.data.database.dao.FlightSearchDao
-import com.example.flightsearch.data.database.model.Airport
-import com.example.flightsearch.data.database.model.Favorite
-import com.example.flightsearch.data.database.model.Flight
+import com.example.flightsearch.data.database.model.DatabaseAirport
+import com.example.flightsearch.data.database.model.DatabaseFlight
+import com.example.flightsearch.data.database.model.FavoriteFlight
 
-@Database(entities = [Airport::class, Favorite::class, Flight::class], version = 2)
+@Database(entities = [DatabaseAirport::class, FavoriteFlight::class, DatabaseFlight::class], version = 2)
 abstract class FlightSearchDatabase : RoomDatabase() {
     abstract fun airportSearchDao(): AirportSearchDao
     abstract fun flightSearchDao(): FlightSearchDao
+    abstract fun favoritesDao(): FavoritesDao
 
     companion object {
         @Volatile
