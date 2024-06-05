@@ -5,9 +5,13 @@ import android.view.View
 import android.view.Window
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -67,19 +71,18 @@ fun FlightSearchApp(
 
         NavHost(navController = navController,
             startDestination = Home,
-            enterTransition = {
-                fadeIn(
-                    animationSpec = tween(300, easing = LinearEasing)
-                ) + slideIntoContainer(
-                    animationSpec = tween(300, easing = EaseIn),
-                    towards = AnimatedContentTransitionScope.SlideDirection.Start
-                )
-            },
             popEnterTransition = {
                 this.slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left)
             }
         ) {
-            composable<Home> {
+            composable<Home>(
+                enterTransition = {
+                    scaleIn(tween(durationMillis = 500, easing = LinearEasing), initialScale = 0.8f)
+                },
+                exitTransition = {
+                    scaleOut(tween(durationMillis = 500, easing = LinearEasing), targetScale = 0.8f)
+                },
+            ) {
                 HomeScreen(
                     uiState = uiState,
                     innerPadding = innerPadding,
@@ -90,7 +93,23 @@ fun FlightSearchApp(
             }
 
             composable<Details>(
-                typeMap = mapOf(typeOf<Airport>() to Airport.NavType())
+                typeMap = mapOf(typeOf<Airport>() to Airport.NavType()),
+                enterTransition = {
+                    fadeIn(
+                        animationSpec = tween(500, easing = LinearEasing)
+                    ) + slideIntoContainer(
+                        animationSpec = tween(500, easing = EaseIn),
+                        towards = AnimatedContentTransitionScope.SlideDirection.Up
+                    )
+                },
+                exitTransition = {
+                    fadeOut(
+                        animationSpec = tween(500, easing = LinearEasing)
+                    ) + slideOutOfContainer(
+                        animationSpec = tween(500, easing = EaseOut),
+                        towards = AnimatedContentTransitionScope.SlideDirection.Down
+                    )
+                }
             ) { navBackStackEntry ->
                 val airport: Airport = navBackStackEntry.toRoute<Details>().airport
                 FlightDetails(
