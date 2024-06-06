@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.flightsearch.AppContainerProvider
 import com.example.flightsearch.data.database.model.DatabaseFlight
+import com.example.flightsearch.data.database.model.FavoriteFlight
 import com.example.flightsearch.data.di.AppContainer
 import com.example.flightsearch.data.repository.AirportsRepository
 import com.example.flightsearch.data.repository.FlightsRepository
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 abstract class DetailsViewModel : ViewModel() {
     abstract val uiState: StateFlow<DetailsUiState>
     abstract fun fetchFlights()
-    abstract fun saveFlightToFavorites(flight: UiFlight)
+    abstract fun saveOrRemoveFlightFromFavorites(flight: UiFlight)
 
     data class DetailsUiState(
         val flights: List<UiFlight>,
@@ -33,6 +34,7 @@ abstract class DetailsViewModel : ViewModel() {
         private val airport: UiAirport,
     ) : DetailsViewModel() {
         override val uiState: MutableStateFlow<DetailsUiState> = MutableStateFlow(DetailsUiState(emptyList()))
+        private var favoriteFlights: List<FavoriteFlight> = emptyList()
 
         init {
             fetchFlights()
@@ -40,23 +42,38 @@ abstract class DetailsViewModel : ViewModel() {
 
         override fun fetchFlights() {
             viewModelScope.launch {
+                fetchAllFavoriteFlights()
                 flightsRepository.getFlightsForAirport(airport.id).collect { newFlights: List<DatabaseFlight> ->
-                    val newFlightsAsUi = newFlights.map {
-                        val uiFlight = it.toUiModel(airportsRepository)
-                        uiFlight.copy(isFavorite = checkIfFlightIsFavorite(uiFlight))
+                    val newFlightsAsUi: List<UiFlight> = newFlights.map { databaseFlight ->
+                        val uiFlight: UiFlight = databaseFlight.toUiModel(airportsRepository)
+                        uiFlight.copy(isFavorite = checkIfFlightIsFavorite(uiFlight.id))
                     }
                     uiState.update { it.copy(flights = newFlightsAsUi) }
                 }
             }
         }
 
-        private suspend fun checkIfFlightIsFavorite(flight: UiFlight): Boolean =
-            flightsRepository.findFavoriteFlight(flight.departureAirport, flight.arrivalAirport).isNotEmpty()
-
-        override fun saveFlightToFavorites(flight: UiFlight) {
+        private suspend fun fetchAllFavoriteFlights() {
             viewModelScope.launch {
-                flightsRepository.saveFlightToFavorites(flight.toFavoriteModel())
-                fetchFlights()
+                flightsRepository.getAllFavoriteFlights().collect {
+                    favoriteFlights = it
+                }
+            }
+        }
+
+        private fun checkIfFlightIsFavorite(id: Int): Boolean =
+            favoriteFlights.any { it.id == id }
+
+        override fun saveOrRemoveFlightFromFavorites(flight: UiFlight) {
+            if (flight.isFavorite) {
+                viewModelScope.launch {
+                    flightsRepository.removeFlightFromFavorites(flight.toFavoriteModel())
+                }
+            } else {
+                viewModelScope.launch {
+                    flightsRepository.saveFlightToFavorites(flight.toFavoriteModel())
+                    fetchFlights()
+                }
             }
         }
 

@@ -4,13 +4,14 @@ import com.example.flightsearch.data.database.dao.FavoritesDao
 import com.example.flightsearch.data.database.dao.FlightSearchDao
 import com.example.flightsearch.data.database.model.DatabaseFlight
 import com.example.flightsearch.data.database.model.FavoriteFlight
-import com.example.flightsearch.ui.model.UiAirport
 import kotlinx.coroutines.flow.Flow
 
 interface FlightsRepository {
     fun getFlightsForAirport(airportId: Int): Flow<List<DatabaseFlight>>
+    fun getAllFavoriteFlights(): Flow<List<FavoriteFlight>>
     suspend fun saveFlightToFavorites(flight: FavoriteFlight)
-    suspend fun findFavoriteFlight(depart: UiAirport, arrival: UiAirport): List<FavoriteFlight>
+    suspend fun removeFlightFromFavorites(flight: FavoriteFlight)
+    suspend fun findFavoriteFlight(id: Int): List<FavoriteFlight>
 
     class Default(
         private val flightSearchDao: FlightSearchDao,
@@ -20,36 +21,16 @@ interface FlightsRepository {
         override fun getFlightsForAirport(airportId: Int): Flow<List<DatabaseFlight>> =
             flightSearchDao.getFlightsForAirport(airportId)
 
+        override fun getAllFavoriteFlights(): Flow<List<FavoriteFlight>> = favoritesDao.getAllFavoriteFlights()
+
         override suspend fun saveFlightToFavorites(flight: FavoriteFlight) {
             favoritesDao.saveFlightToFavorites(flight)
         }
 
-        override suspend fun findFavoriteFlight(depart: UiAirport, arrival: UiAirport): List<FavoriteFlight> {
-            return favoritesDao.findFavoriteFlight(depart.iataCode, arrival.iataCode)
+        override suspend fun removeFlightFromFavorites(flight: FavoriteFlight) {
+            favoritesDao.removeFlightFromFavorites(flight)
         }
 
-//        override suspend fun generateRandomFlights() {
-//            flightSearchDao.clearFlights()
-//            val airports = airportSearchDao.getAllAirports().first()
-//            val flights = mutableListOf<Flight>()
-//
-//            airports.forEach { departureAirport ->
-//                val potentialDestinations = airports
-//                    .filter { it.id != departureAirport.id }
-//                    .shuffled()
-//                    .take(5)
-//
-//                potentialDestinations.forEach { arrivalAirport ->
-//                    flights.add(
-//                        Flight(
-//                            departureAirportId = departureAirport.id,
-//                            arrivalAirportId = arrivalAirport.id
-//                        )
-//                    )
-//                }
-//            }
-//
-//            flightSearchDao.insertAll(flights)
-//        }
+        override suspend fun findFavoriteFlight(id: Int): List<FavoriteFlight> = favoritesDao.findFavoriteFlight(id)
     }
 }

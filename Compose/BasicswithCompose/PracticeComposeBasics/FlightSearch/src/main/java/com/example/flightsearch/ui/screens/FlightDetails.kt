@@ -21,13 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flightsearch.R
-import com.example.flightsearch.data.database.model.DatabaseAirport
 import com.example.flightsearch.ui.Destination
 import com.example.flightsearch.ui.model.UiAirport
 import com.example.flightsearch.ui.model.UiFlight
@@ -55,7 +55,7 @@ fun FlightDetails(
         FlightList(
             modifier = modifier,
             flights = flights,
-            onFavoriteClick = viewModel::saveFlightToFavorites
+            onFavoriteClick = viewModel::saveOrRemoveFlightFromFavorites
         )
     }
 }
@@ -89,6 +89,14 @@ fun FlightList(
     onFavoriteClick: (flight: UiFlight) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
+        item {
+            Text(
+                stringResource(R.string.flights_from, flights.first().departureAirport.iataCode),
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
         this.items(items = flights) { flight: UiFlight ->
             FlightCard(
                 flight = flight,
@@ -107,7 +115,7 @@ fun FlightCard(
 ) {
     Card(modifier = modifier) {
         Row(modifier = Modifier.padding(16.dp)) {
-            Column(modifier = Modifier) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(stringResource(R.string.depart), style = MaterialTheme.typography.labelMedium)
                 AirportItem(airport = flight.departureAirport, clickable = false)
                 Text(stringResource(R.string.arrive), style = MaterialTheme.typography.labelMedium)
@@ -123,7 +131,6 @@ fun FlightCard(
                 ),
                 contentDescription = "Is in favorite",
                 modifier = Modifier
-                    .weight(1f)
                     .size(30.dp)
                     .clickable {
                         onFavoriteClick(flight)
@@ -172,13 +179,21 @@ class FlightCardParameters : PreviewParameterProvider<Boolean> {
 private fun FlightDetailsPreview() {
     FlightSearchTheme {
         val fakeFlights = List(5) {
-            DatabaseAirport(
-                id = it + 1,
-                name = "Arrive Airport 1",
-                iataCode = "AA${it + 1}",
-                passengers = Random.nextInt(30, 200)
+            UiFlight(
+                id = 0,
+                departureAirport = UiAirport(
+                    id = 0,
+                    name = "Leonardo da Vinci International Airport",
+                    iataCode = "FCO",
+                ),
+                arrivalAirport = UiAirport(
+                    id = 1,
+                    name = "Dublin Airport",
+                    iataCode = "DUB",
+                ),
+                isFavorite = Random.nextBoolean()
             )
         }
-
+        FlightList(flights = fakeFlights, onFavoriteClick = {})
     }
 }
