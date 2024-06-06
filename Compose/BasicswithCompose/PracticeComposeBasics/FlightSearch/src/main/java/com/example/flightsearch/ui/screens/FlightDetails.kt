@@ -50,9 +50,10 @@ fun FlightDetails(
         StubFlights(modifier = modifier)
     } else {
         FlightList(
-            modifier = modifier,
+            heading = stringResource(R.string.flights_from, flights.first().departureAirport.iataCode),
             flights = flights,
-            onFavoriteClick = viewModel::saveOrRemoveFlightFromFavorites
+            onFavoriteClick = viewModel::saveOrRemoveFlightFromFavorites,
+            modifier = modifier
         )
     }
 }
@@ -73,6 +74,7 @@ fun StubFlights(modifier: Modifier = Modifier) {
         }
     }
     FlightList(
+        heading = stringResource(R.string.loading),
         modifier = modifier,
         flights = flights,
         onFavoriteClick = {}
@@ -166,6 +168,6 @@ private fun FlightDetailsPreview() {
                 isFavorite = Random.nextBoolean()
             )
         }
-        FlightList(flights = fakeFlights, onFavoriteClick = {})
+        FlightList(heading = "Heading", flights = fakeFlights, onFavoriteClick = {})
     }
 }

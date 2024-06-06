@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -81,6 +80,7 @@ fun SearchResult(
 
 @Composable
 fun FlightList(
+    heading: String,
     modifier: Modifier = Modifier,
     flights: List<UiFlight>,
     onFavoriteClick: (flight: UiFlight) -> Unit,
@@ -88,7 +88,7 @@ fun FlightList(
     LazyColumn(modifier = modifier) {
         item {
             Text(
-                stringResource(R.string.flights_from, flights.first().departureAirport.iataCode),
+                text = heading,
                 modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.ExtraBold

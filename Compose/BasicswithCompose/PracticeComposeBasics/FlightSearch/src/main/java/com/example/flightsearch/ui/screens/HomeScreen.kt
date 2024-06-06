@@ -17,8 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flightsearch.ui.Destination
 import com.example.flightsearch.ui.model.UiAirport
+import com.example.flightsearch.ui.model.UiFlight
 import com.example.flightsearch.ui.theme.FlightSearchTheme
 import kotlinx.serialization.Serializable
+import kotlin.random.Random
 
 @Serializable
 object Home : Destination
@@ -75,6 +77,20 @@ private fun HomeScreenPreview() {
         HomeScreen(
             uiState = HomeViewModel.HomeUiState(
                 "",
+                favoriteFlights = List(2) {
+                    UiFlight(
+                        id = it,
+                        departureAirport = UiAirport(
+                            id = it * 2,
+                            name = "Departure airport ${it + 1}", iataCode = "DAI${it + 1}",
+                        ),
+                        arrivalAirport = UiAirport(
+                            id = it * 3,
+                            name = "Arrival airport ${it + 1}", iataCode = "AAI${it + 1}"
+                        ),
+                        isFavorite = Random.nextBoolean()
+                    )
+                },
                 searchResult = fakeAirports
             )
         )
