@@ -2,7 +2,6 @@ package com.example.flightsearch.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,12 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.flightsearch.R
 import com.example.flightsearch.ui.model.UiAirport
+import com.example.flightsearch.ui.model.UiFlight
 import com.example.flightsearch.ui.theme.FlightSearchTheme
 import com.github.compose.InputTextField
 
@@ -79,6 +80,31 @@ fun SearchResult(
 }
 
 @Composable
+fun FlightList(
+    modifier: Modifier = Modifier,
+    flights: List<UiFlight>,
+    onFavoriteClick: (flight: UiFlight) -> Unit,
+) {
+    LazyColumn(modifier = modifier) {
+        item {
+            Text(
+                stringResource(R.string.flights_from, flights.first().departureAirport.iataCode),
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
+        this.items(items = flights) { flight: UiFlight ->
+            FlightCard(
+                flight = flight,
+                modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp),
+                onFavoriteClick = onFavoriteClick
+            )
+        }
+    }
+}
+
+@Composable
 fun AirportItem(
     airport: UiAirport,
     modifier: Modifier = Modifier,
@@ -100,13 +126,6 @@ fun AirportItem(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.alignByBaseline()
         )
-    }
-}
-
-@Composable
-fun FavoriteFlights(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-
     }
 }
 

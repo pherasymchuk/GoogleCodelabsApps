@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -80,31 +77,6 @@ fun StubFlights(modifier: Modifier = Modifier) {
         flights = flights,
         onFavoriteClick = {}
     )
-}
-
-@Composable
-fun FlightList(
-    modifier: Modifier = Modifier,
-    flights: List<UiFlight>,
-    onFavoriteClick: (flight: UiFlight) -> Unit,
-) {
-    LazyColumn(modifier = modifier) {
-        item {
-            Text(
-                stringResource(R.string.flights_from, flights.first().departureAirport.iataCode),
-                modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.ExtraBold
-            )
-        }
-        this.items(items = flights) { flight: UiFlight ->
-            FlightCard(
-                flight = flight,
-                modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp),
-                onFavoriteClick = onFavoriteClick
-            )
-        }
-    }
 }
 
 @Composable
