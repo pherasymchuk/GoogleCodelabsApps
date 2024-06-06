@@ -13,6 +13,7 @@ import com.example.flightsearch.data.di.AppContainer
 import com.example.flightsearch.data.repository.AirportsRepository
 import com.example.flightsearch.ui.mapper.toUiModel
 import com.example.flightsearch.ui.model.UiAirport
+import com.example.flightsearch.ui.model.UiFlight
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,13 +32,23 @@ abstract class HomeViewModel : ViewModel() {
     abstract val uiState: StateFlow<HomeUiState>
     abstract fun onSearchInputChange(input: String)
 
-    data class HomeUiState(val searchInput: String, val searchResult: List<UiAirport>)
+    data class HomeUiState(
+        val searchInput: String,
+        val searchResult: List<UiAirport>,
+        val favoriteFlights: List<UiFlight>,
+    )
 
     class Default(
         private val repository: AirportsRepository,
     ) : HomeViewModel() {
         override val uiState: MutableStateFlow<HomeUiState> =
-            MutableStateFlow(HomeUiState("", searchResult = emptyList()))
+            MutableStateFlow(
+                HomeUiState(
+                    searchInput = "",
+                    searchResult = emptyList(),
+                    favoriteFlights = emptyList()
+                )
+            )
         private var searchJob: Job? = null
 
         init {

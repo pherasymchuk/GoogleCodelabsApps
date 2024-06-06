@@ -2,6 +2,7 @@ package com.example.flightsearch.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -103,6 +104,13 @@ fun AirportItem(
 }
 
 @Composable
+fun FavoriteFlights(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+
+    }
+}
+
+@Composable
 fun SearchTextField(
     uiState: HomeViewModel.HomeUiState,
     modifier: Modifier = Modifier,
@@ -158,7 +166,8 @@ private fun SearchResultPreview() {
         SearchResult(
             uiState = HomeViewModel.HomeUiState(
                 searchInput = "",
-                searchResult = fakeAirports
+                searchResult = fakeAirports,
+                favoriteFlights = emptyList()
             )
         )
     }
@@ -182,7 +191,8 @@ private fun SearchBarPreview() {
                     name = "Airport name",
                     iataCode = "code",
                 )
-            )
+            ),
+            favoriteFlights = emptyList()
         ),
         modifier = Modifier.padding(4.dp),
         onInput = {}
