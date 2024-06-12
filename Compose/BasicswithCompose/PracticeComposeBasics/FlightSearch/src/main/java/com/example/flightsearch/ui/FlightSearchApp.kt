@@ -18,15 +18,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,15 +36,10 @@ import com.example.flightsearch.ui.screens.FlightDetails
 import com.example.flightsearch.ui.screens.FlightSearchAppBar
 import com.example.flightsearch.ui.screens.Home
 import com.example.flightsearch.ui.screens.HomeScreen
-import com.example.flightsearch.ui.screens.HomeViewModel
 import kotlin.reflect.typeOf
 
 @Composable
-fun FlightSearchApp(
-    viewModel: HomeViewModel = viewModel<HomeViewModel.Default>(factory = HomeViewModel.Factory),
-) {
-    val uiState: HomeViewModel.HomeUiState by viewModel.uiState.collectAsState()
-
+fun FlightSearchApp() {
     val navController: NavHostController = rememberNavController()
 
     Scaffold(
@@ -88,9 +80,7 @@ fun FlightSearchApp(
                 },
             ) {
                 HomeScreen(
-                    uiState = uiState,
                     innerPadding = innerPadding,
-                    onUserSearchInput = viewModel::onSearchInputChange,
                     onAirportClick = { navController.navigate(Details(it)) },
                     modifier = Modifier,
                 )

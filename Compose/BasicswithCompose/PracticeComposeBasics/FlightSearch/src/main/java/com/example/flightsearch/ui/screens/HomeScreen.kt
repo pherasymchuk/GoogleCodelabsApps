@@ -15,12 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flightsearch.ui.Destination
 import com.example.flightsearch.ui.model.UiAirport
-import com.example.flightsearch.ui.model.UiFlight
 import com.example.flightsearch.ui.theme.FlightSearchTheme
 import kotlinx.serialization.Serializable
-import kotlin.random.Random
 
 @Serializable
 object Home : Destination
@@ -28,15 +27,16 @@ object Home : Destination
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    uiState: HomeViewModel.HomeUiState,
-    onUserSearchInput: (String) -> Unit = {},
+    viewModel: HomeViewModel = viewModel<HomeViewModel.Default>(factory = HomeViewModel.Factory),
     onAirportClick: (UiAirport) -> Unit = {},
     innerPadding: PaddingValues = PaddingValues(0.dp),
 ) {
+    val uiState: HomeViewModel.HomeUiState by androidx.lifecycle.viewmodel.compose.viewModel.uiState.collectAsState()
+
     Column(modifier = modifier) {
         SearchTextField(
             uiState = uiState,
-            onInput = onUserSearchInput,
+            onInput = viewModel::onSearchInputChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -49,6 +49,11 @@ fun HomeScreen(
                 )
                 .height(45.dp)
                 .requiredHeight(45.dp)
+        )
+        FlightList(
+            heading = "Favorite routes",
+            flights = uiState.favoriteFlights,
+            onFavoriteClick = viewModel
         )
         SearchResult(
             uiState = uiState,
@@ -74,25 +79,5 @@ private fun HomeScreenPreview() {
                 iataCode = "IATA${it + 1}",
             )
         }
-        HomeScreen(
-            uiState = HomeViewModel.HomeUiState(
-                "",
-                favoriteFlights = List(2) {
-                    UiFlight(
-                        id = it,
-                        departureAirport = UiAirport(
-                            id = it * 2,
-                            name = "Departure airport ${it + 1}", iataCode = "DAI${it + 1}",
-                        ),
-                        arrivalAirport = UiAirport(
-                            id = it * 3,
-                            name = "Arrival airport ${it + 1}", iataCode = "AAI${it + 1}"
-                        ),
-                        isFavorite = Random.nextBoolean()
-                    )
-                },
-                searchResult = fakeAirports
-            )
-        )
     }
 }

@@ -19,5 +19,5 @@ interface FavoritesDao {
     fun getAllFavoriteFlights(): Flow<List<FavoriteFlight>>
 
     @androidx.room.Delete
-    fun removeFlightFromFavorites(flight: FavoriteFlight)
+    suspend fun removeFlightFromFavorites(flight: FavoriteFlight)
 }

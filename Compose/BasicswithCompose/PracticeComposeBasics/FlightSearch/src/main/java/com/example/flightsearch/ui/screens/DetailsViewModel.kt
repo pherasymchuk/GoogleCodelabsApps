@@ -10,7 +10,7 @@ import com.example.flightsearch.data.database.model.FavoriteFlight
 import com.example.flightsearch.data.di.AppContainer
 import com.example.flightsearch.data.repository.AirportsRepository
 import com.example.flightsearch.data.repository.FlightsRepository
-import com.example.flightsearch.ui.mapper.toFavoriteModel
+import com.example.flightsearch.ui.FavoritesManager
 import com.example.flightsearch.ui.mapper.toUiModel
 import com.example.flightsearch.ui.model.UiAirport
 import com.example.flightsearch.ui.model.UiFlight
@@ -21,18 +21,20 @@ import kotlinx.coroutines.launch
 
 abstract class DetailsViewModel : ViewModel() {
     abstract val uiState: StateFlow<DetailsUiState>
-    abstract fun fetchFlights()
-    abstract fun saveOrRemoveFlightFromFavorites(flight: UiFlight)
+    abstract suspend fun saveOrRemoveFlightFromFavorites(flight: UiFlight)
+
+    protected abstract fun fetchFlights()
 
     data class DetailsUiState(
         val flights: List<UiFlight>,
     )
 
     class Default(
+        private val favoritesManager: FavoritesManager,
         private val flightsRepository: FlightsRepository,
         private val airportsRepository: AirportsRepository,
         private val airport: UiAirport,
-    ) : DetailsViewModel() {
+    ) : DetailsViewModel(), FavoritesManager by favoritesManager {
         override val uiState: MutableStateFlow<DetailsUiState> = MutableStateFlow(DetailsUiState(emptyList()))
         private var favoriteFlights: List<FavoriteFlight> = emptyList()
 
@@ -42,42 +44,16 @@ abstract class DetailsViewModel : ViewModel() {
 
         override fun fetchFlights() {
             viewModelScope.launch {
-                fetchAllFavoriteFlights()
+                favoritesManager.fetchAllFavoriteFlights()
                 flightsRepository.getFlightsForAirport(airport.id).collect { newFlights: List<DatabaseFlight> ->
                     val newFlightsAsUi: List<UiFlight> = newFlights.map { databaseFlight ->
                         val uiFlight: UiFlight = databaseFlight.toUiModel(airportsRepository)
-                        uiFlight.copy(isFavorite = checkIfFlightIsFavorite(uiFlight.id))
+                        uiFlight.copy(isFavorite = favoritesManager.checkIfFlightIsFavorite(uiFlight.id))
                     }
                     uiState.update { it.copy(flights = newFlightsAsUi) }
                 }
             }
         }
-
-        private suspend fun fetchAllFavoriteFlights() {
-            viewModelScope.launch {
-                flightsRepository.getAllFavoriteFlights().collect {
-                    favoriteFlights = it
-                }
-            }
-        }
-
-        private fun checkIfFlightIsFavorite(id: Int): Boolean =
-            favoriteFlights.any { it.id == id }
-
-        override fun saveOrRemoveFlightFromFavorites(flight: UiFlight) {
-            if (flight.isFavorite) {
-                viewModelScope.launch {
-                    flightsRepository.removeFlightFromFavorites(flight.toFavoriteModel())
-                }
-            } else {
-                viewModelScope.launch {
-                    flightsRepository.saveFlightToFavorites(flight.toFavoriteModel())
-                    fetchFlights()
-                }
-            }
-        }
-
-
     }
 
     companion object {
@@ -88,7 +64,8 @@ abstract class DetailsViewModel : ViewModel() {
                 Default(
                     flightsRepository = container.flightsRepository,
                     airportsRepository = container.airportsRepository,
-                    airport = airport
+                    airport = airport,
+                    favoritesManager = FavoritesManager.Default(container.flightsRepository)
                 )
             }
         }
