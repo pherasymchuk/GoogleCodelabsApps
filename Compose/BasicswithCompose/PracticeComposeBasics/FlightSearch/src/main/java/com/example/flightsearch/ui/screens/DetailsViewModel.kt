@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.flightsearch.AppContainerProvider
 import com.example.flightsearch.data.database.model.DatabaseFlight
-import com.example.flightsearch.data.database.model.FavoriteFlight
 import com.example.flightsearch.data.di.AppContainer
 import com.example.flightsearch.data.repository.AirportsRepository
 import com.example.flightsearch.data.repository.FlightsRepository
@@ -21,7 +20,7 @@ import kotlinx.coroutines.launch
 
 abstract class DetailsViewModel : ViewModel() {
     abstract val uiState: StateFlow<DetailsUiState>
-    abstract suspend fun saveOrRemoveFlightFromFavorites(flight: UiFlight)
+    abstract fun saveOrRemoveFlightFromFavorites(flight: UiFlight)
 
     protected abstract fun fetchFlights()
 
@@ -30,21 +29,23 @@ abstract class DetailsViewModel : ViewModel() {
     )
 
     class Default(
-        private val favoritesManager: FavoritesManager,
         private val flightsRepository: FlightsRepository,
+        private val favoritesManager: FavoritesManager,
         private val airportsRepository: AirportsRepository,
         private val airport: UiAirport,
-    ) : DetailsViewModel(), FavoritesManager by favoritesManager {
+    ) : DetailsViewModel() {
         override val uiState: MutableStateFlow<DetailsUiState> = MutableStateFlow(DetailsUiState(emptyList()))
-        private var favoriteFlights: List<FavoriteFlight> = emptyList()
 
         init {
             fetchFlights()
+            viewModelScope.launch {
+                favoritesManager.getAllFavoriteFlights()
+            }
         }
+
 
         override fun fetchFlights() {
             viewModelScope.launch {
-                favoritesManager.fetchAllFavoriteFlights()
                 flightsRepository.getFlightsForAirport(airport.id).collect { newFlights: List<DatabaseFlight> ->
                     val newFlightsAsUi: List<UiFlight> = newFlights.map { databaseFlight ->
                         val uiFlight: UiFlight = databaseFlight.toUiModel(airportsRepository)
@@ -52,6 +53,13 @@ abstract class DetailsViewModel : ViewModel() {
                     }
                     uiState.update { it.copy(flights = newFlightsAsUi) }
                 }
+            }
+        }
+
+        override fun saveOrRemoveFlightFromFavorites(flight: UiFlight) {
+            viewModelScope.launch {
+                favoritesManager.saveOrRemoveFlightFromFavorites(flight)
+                fetchFlights()
             }
         }
     }

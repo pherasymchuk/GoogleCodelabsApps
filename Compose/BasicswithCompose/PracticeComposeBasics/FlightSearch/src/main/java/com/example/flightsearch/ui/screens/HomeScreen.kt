@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +33,7 @@ fun HomeScreen(
     onAirportClick: (UiAirport) -> Unit = {},
     innerPadding: PaddingValues = PaddingValues(0.dp),
 ) {
-    val uiState: HomeViewModel.HomeUiState by androidx.lifecycle.viewmodel.compose.viewModel.uiState.collectAsState()
+    val uiState: HomeViewModel.HomeUiState by viewModel.uiState.collectAsState()
 
     Column(modifier = modifier) {
         SearchTextField(
@@ -53,7 +55,7 @@ fun HomeScreen(
         FlightList(
             heading = "Favorite routes",
             flights = uiState.favoriteFlights,
-            onFavoriteClick = viewModel
+            onFavoriteClick = { TODO("Not yet implemented") }
         )
         SearchResult(
             uiState = uiState,
@@ -72,7 +74,7 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     FlightSearchTheme {
-        val fakeAirports = List(50) {
+        List(50) {
             UiAirport(
                 id = it,
                 name = "Airport ${it + 1}",
