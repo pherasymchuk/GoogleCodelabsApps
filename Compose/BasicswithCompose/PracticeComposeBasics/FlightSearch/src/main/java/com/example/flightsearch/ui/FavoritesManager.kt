@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 interface FavoritesManager {
     suspend fun checkIfFlightIsFavorite(id: Int): Boolean
-    suspend fun saveOrRemoveFlightFromFavorites(flight: UiFlight)
+    suspend fun toggleFlightFavoriteStatus(flight: UiFlight)
     suspend fun getAllFavoriteFlights()
 
     val favoriteFlights: StateFlow<List<FavoriteFlight>>
@@ -42,7 +42,8 @@ interface FavoritesManager {
             return favoriteFlights.value.any { it.id == id }
         }
 
-        override suspend fun saveOrRemoveFlightFromFavorites(flight: UiFlight) {
+        override suspend fun toggleFlightFavoriteStatus(flight: UiFlight) {
+            flightsRepository.isFlightFavorite(flight.id)
             if (flight.isFavorite) {
                 flightsRepository.removeFlightFromFavorites(flight.toFavoriteModel())
             } else {
