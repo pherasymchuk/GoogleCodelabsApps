@@ -52,7 +52,7 @@ fun FlightDetails(
         FlightList(
             heading = stringResource(R.string.flights_from, flights.first().departureAirport.iataCode),
             flights = flights,
-            onFavoriteClick = viewModel::saveOrRemoveFlightFromFavorites,
+            onFavoriteClick = viewModel::toggleFavorite,
             modifier = modifier
         )
     }

@@ -20,9 +20,9 @@ import kotlinx.coroutines.launch
 
 abstract class DetailsViewModel : ViewModel() {
     abstract val uiState: StateFlow<DetailsUiState>
-    abstract fun saveOrRemoveFlightFromFavorites(flight: UiFlight)
 
-    protected abstract fun fetchFlights()
+    abstract fun toggleFavorite(flight: UiFlight)
+    protected abstract fun refreshFlights()
 
     data class DetailsUiState(
         val flights: List<UiFlight>,
@@ -37,14 +37,14 @@ abstract class DetailsViewModel : ViewModel() {
         override val uiState: MutableStateFlow<DetailsUiState> = MutableStateFlow(DetailsUiState(emptyList()))
 
         init {
-            fetchFlights()
+            refreshFlights()
             viewModelScope.launch {
                 favoritesManager.getAllFavoriteFlights()
             }
         }
 
 
-        override fun fetchFlights() {
+        override fun refreshFlights() {
             viewModelScope.launch {
                 flightsRepository.getFlightsForAirport(airport.id).collect { newFlights: List<DatabaseFlight> ->
                     val newFlightsAsUi: List<UiFlight> = newFlights.map { databaseFlight ->
@@ -56,10 +56,10 @@ abstract class DetailsViewModel : ViewModel() {
             }
         }
 
-        override fun saveOrRemoveFlightFromFavorites(flight: UiFlight) {
+        override fun toggleFavorite(flight: UiFlight) {
             viewModelScope.launch {
-                favoritesManager.saveOrRemoveFlightFromFavorites(flight)
-                fetchFlights()
+                favoritesManager.toggleFlightFavoriteStatus(flight)
+                refreshFlights()
             }
         }
     }
