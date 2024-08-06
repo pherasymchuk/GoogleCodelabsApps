@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.bluromagic"
+    namespace = "com.example.bluromatic"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.bluromagic"
+        applicationId = "com.example.bluromatic"
         minSdk = 29
         targetSdk = 34
         versionCode = 1

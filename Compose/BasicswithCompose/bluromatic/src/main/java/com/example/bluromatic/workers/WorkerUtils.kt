@@ -26,11 +26,11 @@ import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.bluromagic.R
 import com.example.bluromatic.CHANNEL_ID
 import com.example.bluromatic.NOTIFICATION_ID
 import com.example.bluromatic.NOTIFICATION_TITLE
 import com.example.bluromatic.OUTPUT_PATH
+import com.example.bluromatic.R
 import com.example.bluromatic.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
 import com.example.bluromatic.VERBOSE_NOTIFICATION_CHANNEL_NAME
 import java.io.File

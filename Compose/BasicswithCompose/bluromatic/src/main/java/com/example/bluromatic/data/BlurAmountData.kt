@@ -16,7 +16,7 @@
 
 package com.example.bluromatic.data
 
-import com.example.bluromagic.R
+import com.example.bluromatic.R
 
 object BlurAmountData {
     val blurAmount = listOf(
