@@ -19,10 +19,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class BlurWorker(
-    private val tag: String = "BlurWorker",
     context: Context,
     params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
+
+    private val tag: String = "BlurWorker"
 
     override suspend fun doWork(): Result {
         val notificationManagerWrapper = NotificationManagerWrapper.Default(

@@ -29,6 +29,7 @@ import com.example.bluromatic.CHANNEL_ID
 import com.example.bluromatic.NOTIFICATION_ID
 import com.example.bluromatic.NOTIFICATION_TITLE
 import com.example.bluromatic.OUTPUT_PATH
+import com.example.bluromatic.R
 import com.example.bluromatic.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
 import com.example.bluromatic.VERBOSE_NOTIFICATION_CHANNEL_NAME
 import com.example.bluromatic.wrappers.NotificationBuilderWrapper
@@ -83,6 +84,7 @@ interface NotificationConfig {
             message: String,
         ): Notification {
             return notificationBuilderWrapper.notificationBuilder()
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(priority)
