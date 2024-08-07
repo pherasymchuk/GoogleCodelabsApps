@@ -46,8 +46,7 @@ interface StatusNotification {
 
     class Default(
         private val message: String,
-        private val context: Context,
-        private val notificationManagerWrapper: NotificationManagerWrapper,
+        notificationManagerWrapper: NotificationManagerWrapper,
         private val notificationBuilderWrapper: NotificationBuilderWrapper,
         private val notificationConfig: NotificationConfig = NotificationConfig.Default(),
         private val channelConfig: ChannelConfig = ChannelConfig.Default(),
@@ -58,7 +57,6 @@ interface StatusNotification {
         override fun make() {
             // Create notification channel
             channelConfig.createChannel(notificationManager)
-
             // Build and show the notification
             val notification = notificationConfig.buildNotification(notificationBuilderWrapper, message)
             notificationManager.notify(notificationConfig.notificationId(), notification)
@@ -131,6 +129,7 @@ interface BlurredBitmap {
 
         /**
          * Blurs the given Bitmap image
+         * @return Blurred bitmap image
          */
         @WorkerThread
         override fun blur(): Bitmap {
@@ -160,7 +159,6 @@ interface BitmapFile {
          */
         @Throws(FileNotFoundException::class)
         override fun write(): Uri {
-            val name = String.format("blur-filter-output-%s.png", UUID.randomUUID().toString())
             val outputDir = File(applicationContext.filesDir, outputPath)
             if (!outputDir.exists()) {
                 outputDir.mkdirs() // should succeed

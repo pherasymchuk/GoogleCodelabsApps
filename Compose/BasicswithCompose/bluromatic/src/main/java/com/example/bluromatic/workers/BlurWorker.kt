@@ -2,7 +2,9 @@ package com.example.bluromatic.workers
 
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
@@ -18,11 +20,11 @@ import kotlinx.coroutines.withContext
 
 class BlurWorker(
     private val tag: String = "BlurWorker",
-    private val context: Context,
+    context: Context,
     params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result {
 
+    override suspend fun doWork(): Result {
         val notificationManagerWrapper = NotificationManagerWrapper.Default(
             notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         )
@@ -32,48 +34,44 @@ class BlurWorker(
                 CHANNEL_ID
             )
         )
-        val default = StatusNotification.Default(
+        StatusNotification.Default(
             message = "Blurring image",
-            context = applicationContext,
             notificationManagerWrapper = notificationManagerWrapper,
             notificationBuilderWrapper = notificationBuilderWrapper
-        )
-        val statusNotification = default
-        statusNotification.make()
+        ).make()
 
         return withContext(Dispatchers.IO) {
-            try {
+
+            return@withContext try {
                 // Simulate delay
                 delay(DELAY_TIME_MILLIS)
-                val picture = BitmapFactory.decodeResource(
+
+                val picture: Bitmap = BitmapFactory.decodeResource(
                     applicationContext.resources,
                     R.drawable.android_cupcake
                 )
 
-                val output = BlurredBitmap.Default(
+                val output: Bitmap = BlurredBitmap.Default(
                     bitmap = picture,
                     blurLevel = 1
                 ).blur()
 
-                val outputUri = BitmapFile.Default(
+                val outputUri: Uri = BitmapFile.Default(
                     applicationContext,
                     output
                 ).write()
 
                 StatusNotification.Default(
                     message = "Output is $outputUri",
-                    context = applicationContext,
                     notificationManagerWrapper = notificationManagerWrapper,
                     notificationBuilderWrapper = notificationBuilderWrapper
-                )
+                ).make()
 
                 Result.success()
+
             } catch (throwable: Throwable) {
-                Log.e(
-                    tag,
-                    applicationContext.resources.getString(R.string.error_applying_blur),
-                    throwable
-                )
+                Log.e(tag, applicationContext.resources.getString(R.string.error_applying_blur), throwable)
+
                 Result.failure()
             }
         }
