@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
@@ -29,13 +30,23 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun Context.getImageUri(): Uri {
-    val resources = this.resources
+interface ImageUri {
+    fun uri(): Uri
 
-    return Uri.Builder()
-        .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-        .authority(resources.getResourcePackageName(R.drawable.android_cupcake))
-        .appendPath(resources.getResourceTypeName(R.drawable.android_cupcake))
-        .appendPath(resources.getResourceEntryName(R.drawable.android_cupcake))
-        .build()
+    class Drawable(
+        context: Context,
+        @DrawableRes private val imgId: Int = R.drawable.android_cupcake,
+    ) : ImageUri {
+        private val resources = context.resources
+
+        override fun uri(): Uri {
+            val uri: Uri = Uri.Builder()
+                .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                .authority(resources.getResourcePackageName(imgId))
+                .appendPath(resources.getResourceTypeName(imgId))
+                .appendPath(resources.getResourceEntryName(imgId))
+                .build()
+            return uri
+        }
+    }
 }
