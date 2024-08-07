@@ -34,6 +34,22 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        packaging {
+            with(resources) {
+                excludes.addAll(
+                    listOf(
+                        "META-INF/AL2.0",
+                        "META-INF/LGPL2.1",
+                        "META-INF/LICENSE.txt",
+                        "META-INF/LICENSE.md",
+                        "META-INF/LICENSE-notice.md"
+                    )
+                )
+
+            }
+        }
+    }
 }
 
 dependencies {
@@ -50,10 +66,12 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
+    testImplementation(libs.jupiter.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.jupiter.junit.jupiter)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
