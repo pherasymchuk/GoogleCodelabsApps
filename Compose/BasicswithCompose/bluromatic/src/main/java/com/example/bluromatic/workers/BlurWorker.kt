@@ -8,15 +8,20 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.example.bluromatic.CHANNEL_ID
 import com.example.bluromatic.DELAY_TIME_MILLIS
+import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.R
 import com.example.bluromatic.wrappers.NotificationBuilderWrapper
 import com.example.bluromatic.wrappers.NotificationManagerWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+
+private const val TAG = "LogTag"
 
 class BlurWorker(
     context: Context,
@@ -38,6 +43,9 @@ class BlurWorker(
     )
 
     override suspend fun doWork(): Result {
+        val resourceUri: String? = inputData.getString(KEY_IMAGE_URI)
+        val blurLevel: Int = inputData.getInt(KEY_IMAGE_URI, 1)
+
         StatusNotification.Default(
             message = "Blurring image",
             notificationManagerWrapper = notificationManagerWrapper,
@@ -46,16 +54,22 @@ class BlurWorker(
 
         return withContext(Dispatchers.IO) {
             try {
+                require(!resourceUri.isNullOrBlank()) {
+                    val errorMessage = applicationContext.resources.getString(R.string.invalid_input_uri)
+                    Log.e(TAG, errorMessage)
+                    errorMessage
+                }
+
                 delay(DELAY_TIME_MILLIS)
 
-                val picture: Bitmap = BitmapFactory.decodeResource(
-                    applicationContext.resources,
-                    R.drawable.android_cupcake
+                val resolver = applicationContext.contentResolver
+                val picture = BitmapFactory.decodeStream(
+                    resolver.openInputStream(Uri.parse(resourceUri))
                 )
 
                 val blurredBitmap: Bitmap = BlurredBitmap.Default(
                     original = picture,
-                    blurRadius = 1
+                    blurRadius = blurLevel
                 ).blur()
 
                 val outputUri: Uri = WriteBitmapFile.Default(
@@ -69,7 +83,8 @@ class BlurWorker(
                     notificationBuilderWrapper = notificationBuilderWrapper
                 ).show()
 
-                Result.success()
+                val outputData: Data = workDataOf(KEY_IMAGE_URI to outputUri.toString())
+                Result.success(outputData)
             } catch (throwable: Throwable) {
                 Log.e(tag, applicationContext.resources.getString(R.string.error_applying_blur), throwable)
                 Result.failure()
