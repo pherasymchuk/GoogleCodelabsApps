@@ -25,26 +25,27 @@ class BlurWorker(
 
     private val tag: String = "BlurWorker"
 
+    private val notificationManagerWrapper = NotificationManagerWrapper.Default(
+        notificationManager = applicationContext.getSystemService(
+            Context.NOTIFICATION_SERVICE
+        ) as NotificationManager
+    )
+    private val notificationBuilderWrapper = NotificationBuilderWrapper.Default(
+        notificationBuilder = NotificationCompat.Builder(
+            applicationContext,
+            CHANNEL_ID
+        )
+    )
+
     override suspend fun doWork(): Result {
-        val notificationManagerWrapper = NotificationManagerWrapper.Default(
-            notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        )
-        val notificationBuilderWrapper = NotificationBuilderWrapper.Default(
-            notificationBuilder = NotificationCompat.Builder(
-                applicationContext,
-                CHANNEL_ID
-            )
-        )
         StatusNotification.Default(
             message = "Blurring image",
             notificationManagerWrapper = notificationManagerWrapper,
             notificationBuilderWrapper = notificationBuilderWrapper
-        ).make()
+        ).show()
 
         return withContext(Dispatchers.IO) {
-
-            return@withContext try {
-                // Simulate delay
+            try {
                 delay(DELAY_TIME_MILLIS)
 
                 val picture: Bitmap = BitmapFactory.decodeResource(
@@ -52,27 +53,25 @@ class BlurWorker(
                     R.drawable.android_cupcake
                 )
 
-                val output: Bitmap = BlurredBitmap.Default(
-                    bitmap = picture,
-                    blurLevel = 1
+                val blurredBitmap: Bitmap = BlurredBitmap.Default(
+                    original = picture,
+                    blurRadius = 1
                 ).blur()
 
-                val outputUri: Uri = BitmapFile.Default(
+                val outputUri: Uri = WriteBitmapFile.Default(
                     applicationContext,
-                    output
+                    blurredBitmap
                 ).write()
 
                 StatusNotification.Default(
                     message = "Output is $outputUri",
                     notificationManagerWrapper = notificationManagerWrapper,
                     notificationBuilderWrapper = notificationBuilderWrapper
-                ).make()
+                ).show()
 
                 Result.success()
-
             } catch (throwable: Throwable) {
                 Log.e(tag, applicationContext.resources.getString(R.string.error_applying_blur), throwable)
-
                 Result.failure()
             }
         }

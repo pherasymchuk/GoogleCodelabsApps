@@ -22,7 +22,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.core.app.NotificationCompat
 import com.example.bluromatic.CHANNEL_ID
@@ -37,13 +36,12 @@ import com.example.bluromatic.wrappers.NotificationManagerWrapper
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 import java.util.UUID
 
 private const val TAG = "WorkerUtils"
 
 interface StatusNotification {
-    fun make()
+    fun show()
 
     class Default(
         private val message: String,
@@ -55,7 +53,7 @@ interface StatusNotification {
 
         private val notificationManager = notificationManagerWrapper.notificationManager()
 
-        override fun make() {
+        override fun show() {
             // Create notification channel
             channelConfig.createChannel(notificationManager)
             // Build and show the notification
@@ -76,6 +74,7 @@ interface NotificationConfig {
         private val notificationId: Int = NOTIFICATION_ID,
         private val title: CharSequence = NOTIFICATION_TITLE,
         private val priority: Int = NotificationCompat.PRIORITY_HIGH,
+        private val smallIcon: Int = R.drawable.ic_launcher_foreground,
     ) : NotificationConfig {
         override fun notificationId() = notificationId
 
@@ -84,11 +83,11 @@ interface NotificationConfig {
             message: String,
         ): Notification {
             return notificationBuilderWrapper.notificationBuilder()
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(smallIcon)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(priority)
-                .setVibrate(LongArray(0))
+                .setDefaults(Notification.DEFAULT_VIBRATE)
                 .build()
         }
     }
@@ -120,65 +119,64 @@ interface BlurredBitmap {
 
     /**
      * Creates an instance of [BlurredBitmap]
-     * @param bitmap Image to blur
-     * @param blurLevel Blur level input
+     * @param original Image to blur
+     * @param blurRadius Blur radius (higher value means more blur)
      * @return Blurred bitmap image
      */
     class Default(
-        private val bitmap: Bitmap,
-        private val blurLevel: Int,
+        private val original: Bitmap,
+        private val blurRadius: Int,
     ) : BlurredBitmap {
 
         /**
-         * Blurs the given Bitmap image
+         * Blurs the given Bitmap image using a
+         * simple scaling technique.
+         *
          * @return Blurred bitmap image
          */
         @WorkerThread
         override fun blur(): Bitmap {
+            val scaleFactor = blurRadius * 5
+            val scaledWidth = original.width / scaleFactor
+            val scaledHeight = original.height / scaleFactor
+
             val input = Bitmap.createScaledBitmap(
-                bitmap,
-                bitmap.width / (blurLevel * 5),
-                bitmap.height / (blurLevel * 5),
+                original,
+                scaledWidth,
+                scaledHeight,
                 true
             )
-            return Bitmap.createScaledBitmap(input, bitmap.width, bitmap.height, true)
+
+            return Bitmap.createScaledBitmap(input, original.width, original.height, true)
         }
     }
 }
 
-interface BitmapFile {
+interface WriteBitmapFile {
     fun write(): Uri
 
     class Default(
-        private val applicationContext: Context,
+        private val context: Context,
         private val bitmap: Bitmap,
         private val name: String = "blur-filter-output-${UUID.randomUUID()}.png",
-        private val outputPath: String = OUTPUT_PATH,
-    ) : BitmapFile {
+        private val outputDir: String = OUTPUT_PATH,
+    ) : WriteBitmapFile {
         /**
          * Writes bitmap to a temporary file and returns the Uri for the file
          *  @return Uri for temp file with bitmap
          */
         @Throws(FileNotFoundException::class)
         override fun write(): Uri {
-            val outputDir = File(applicationContext.filesDir, outputPath)
+            val outputDir = File(context.filesDir, outputDir)
             if (!outputDir.exists()) {
                 outputDir.mkdirs() // should succeed
             }
             val outputFile = File(outputDir, name)
-            var out: FileOutputStream? = null
-            try {
-                out = FileOutputStream(outputFile)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 0 /* ignored for PNG */, out)
-            } finally {
-                out?.let {
-                    try {
-                        it.close()
-                    } catch (e: IOException) {
-                        Log.e(TAG, e.message.toString())
-                    }
-                }
+
+            FileOutputStream(outputFile).use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 0, it)
             }
+
             return Uri.fromFile(outputFile)
         }
     }
