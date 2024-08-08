@@ -33,9 +33,15 @@ import kotlinx.coroutines.flow.StateFlow
  */
 class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : ViewModel() {
 
+    interface UiState {
+        object Default : UiState
+        object Loading : UiState
+        data class Complete(val outputUri: String) : UiState
+    }
+
     internal val blurAmount = BlurAmountData.blurAmount
 
-    val blurUiState: StateFlow<BlurUiState> = MutableStateFlow(BlurUiState.Default)
+    val uiState: StateFlow<UiState> = MutableStateFlow(UiState.Default)
 
     /**
      * Call the method from repository to create the WorkRequest to apply the blur
@@ -60,10 +66,4 @@ class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : Vi
             }
         }
     }
-}
-
-sealed interface BlurUiState {
-    object Default : BlurUiState
-    object Loading : BlurUiState
-    data class Complete(val outputUri: String) : BlurUiState
 }

@@ -69,7 +69,7 @@ import com.example.bluromatic.ui.theme.BluromaticTheme
 
 @Composable
 fun BluromaticScreen(blurViewModel: BlurViewModel = viewModel(factory = BlurViewModel.Factory)) {
-    val uiState by blurViewModel.blurUiState.collectAsStateWithLifecycle()
+    val uiState by blurViewModel.uiState.collectAsStateWithLifecycle()
     val layoutDirection = LocalLayoutDirection.current
     Surface(
         modifier = Modifier
@@ -85,7 +85,7 @@ fun BluromaticScreen(blurViewModel: BlurViewModel = viewModel(factory = BlurView
             )
     ) {
         BluromaticScreenContent(
-            blurUiState = uiState,
+            uiState = uiState,
             blurAmountOptions = blurViewModel.blurAmount,
             applyBlur = blurViewModel::applyBlur,
             cancelWork = {},
@@ -98,7 +98,7 @@ fun BluromaticScreen(blurViewModel: BlurViewModel = viewModel(factory = BlurView
 
 @Composable
 fun BluromaticScreenContent(
-    blurUiState: BlurUiState,
+    uiState: BlurViewModel.UiState,
     blurAmountOptions: List<BlurAmount>,
     applyBlur: (Int) -> Unit,
     cancelWork: () -> Unit,
@@ -122,7 +122,7 @@ fun BluromaticScreenContent(
             onSelectedValueChange = { selectedValue = it }
         )
         BlurActions(
-            blurUiState = blurUiState,
+            uiState = uiState,
             onStartClick = { applyBlur(selectedValue) },
             onSeeFileClick = {},
             onCancelClick = { cancelWork() },
@@ -133,7 +133,7 @@ fun BluromaticScreenContent(
 
 @Composable
 private fun BlurActions(
-    blurUiState: BlurUiState,
+    uiState: BlurViewModel.UiState,
     onStartClick: () -> Unit,
     onSeeFileClick: (String) -> Unit,
     onCancelClick: () -> Unit,
@@ -207,10 +207,10 @@ private fun showBlurredImage(context: Context, currentUri: String) {
 fun BluromaticScreenContentPreview() {
     BluromaticTheme {
         BluromaticScreenContent(
-            blurUiState = BlurUiState.Default,
+            uiState = BlurViewModel.UiState.Default,
             blurAmountOptions = listOf(BlurAmount(R.string.blur_lv_1, 1)),
-            {},
-            {},
+            applyBlur = {},
+            cancelWork = {},
             modifier = Modifier.padding(16.dp)
         )
     }
