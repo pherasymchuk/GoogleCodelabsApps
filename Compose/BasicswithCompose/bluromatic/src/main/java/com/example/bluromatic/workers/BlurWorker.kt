@@ -13,6 +13,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.example.bluromatic.CHANNEL_ID
 import com.example.bluromatic.DELAY_TIME_MILLIS
+import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.R
 import com.example.bluromatic.wrappers.NotificationBuilderWrapper
@@ -20,8 +21,6 @@ import com.example.bluromatic.wrappers.NotificationManagerWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-
-private const val TAG = "LogTag"
 
 class BlurWorker(
     context: Context,
@@ -44,7 +43,7 @@ class BlurWorker(
 
     override suspend fun doWork(): Result {
         val resourceUri: String? = inputData.getString(KEY_IMAGE_URI)
-        val blurLevel: Int = inputData.getInt(KEY_IMAGE_URI, 1)
+        val blurLevel: Int = inputData.getInt(KEY_BLUR_LEVEL, 1)
 
         StatusNotification.Default(
             message = "Blurring image",
@@ -56,7 +55,7 @@ class BlurWorker(
             try {
                 require(!resourceUri.isNullOrBlank()) {
                     val errorMessage = applicationContext.resources.getString(R.string.invalid_input_uri)
-                    Log.e(TAG, errorMessage)
+                    Log.e("Logs", errorMessage)
                     errorMessage
                 }
 
