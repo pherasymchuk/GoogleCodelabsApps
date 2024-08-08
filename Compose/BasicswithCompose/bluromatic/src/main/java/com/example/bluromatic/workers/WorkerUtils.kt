@@ -42,6 +42,7 @@ private const val TAG = "WorkerUtils"
 
 interface StatusNotification {
     fun show()
+    fun cancel()
 
     class Default(
         private val message: String,
@@ -54,11 +55,13 @@ interface StatusNotification {
         private val notificationManager = notificationManagerWrapper.notificationManager()
 
         override fun show() {
-            // Create notification channel
             channelConfig.createChannel(notificationManager)
-            // Build and show the notification
             val notification = notificationConfig.buildNotification(notificationBuilderWrapper, message)
             notificationManager.notify(notificationConfig.notificationId(), notification)
+        }
+
+        override fun cancel() {
+            notificationManager.cancel(notificationConfig.notificationId())
         }
     }
 }
@@ -87,6 +90,7 @@ interface NotificationConfig {
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(priority)
+                .setSilent(true)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .build()
         }
