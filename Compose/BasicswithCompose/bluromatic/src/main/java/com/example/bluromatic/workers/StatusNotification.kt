@@ -19,24 +19,15 @@ package com.example.bluromatic.workers
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
-import androidx.annotation.WorkerThread
 import androidx.core.app.NotificationCompat
 import com.example.bluromatic.CHANNEL_ID
 import com.example.bluromatic.NOTIFICATION_ID
 import com.example.bluromatic.NOTIFICATION_TITLE
-import com.example.bluromatic.OUTPUT_PATH
 import com.example.bluromatic.R
 import com.example.bluromatic.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
 import com.example.bluromatic.VERBOSE_NOTIFICATION_CHANNEL_NAME
 import com.example.bluromatic.wrappers.NotificationBuilderWrapper
 import com.example.bluromatic.wrappers.NotificationManagerWrapper
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.util.UUID
 
 interface StatusNotification {
     fun show()
@@ -108,74 +99,5 @@ interface ChannelConfig {
         }
     }
 
-}
-
-interface BlurredBitmap {
-    @WorkerThread
-    fun blur(): Bitmap
-
-    /**
-     * Creates an instance of [BlurredBitmap]
-     * @param original Image to blur
-     * @param blurRadius Blur radius (higher value means more blur)
-     * @return Blurred bitmap image
-     */
-    class Default(
-        private val original: Bitmap,
-        private val blurRadius: Int,
-    ) : BlurredBitmap {
-
-        /**
-         * Blurs the given Bitmap image using a
-         * simple scaling technique.
-         *
-         * @return Blurred bitmap image
-         */
-        @WorkerThread
-        override fun blur(): Bitmap {
-            val scaleFactor = blurRadius * 5
-            val scaledWidth = original.width / scaleFactor
-            val scaledHeight = original.height / scaleFactor
-
-            val input = Bitmap.createScaledBitmap(
-                original,
-                scaledWidth,
-                scaledHeight,
-                true
-            )
-
-            return Bitmap.createScaledBitmap(input, original.width, original.height, true)
-        }
-    }
-}
-
-interface WriteBitmapFile {
-    fun write(): Uri
-
-    class Default(
-        private val context: Context,
-        private val bitmap: Bitmap,
-        private val name: String = "blur-filter-output-${UUID.randomUUID()}.png",
-        private val outputDir: String = OUTPUT_PATH,
-    ) : WriteBitmapFile {
-        /**
-         * Writes bitmap to a temporary file and returns the Uri for the file
-         *  @return Uri for temp file with bitmap
-         */
-        @Throws(FileNotFoundException::class)
-        override fun write(): Uri {
-            val outputDir = File(context.filesDir, outputDir)
-            if (!outputDir.exists()) {
-                outputDir.mkdirs() // should succeed
-            }
-            val outputFile = File(outputDir, name)
-
-            FileOutputStream(outputFile).use {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 0, it)
-            }
-
-            return Uri.fromFile(outputFile)
-        }
-    }
 }
 
