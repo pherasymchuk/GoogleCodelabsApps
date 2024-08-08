@@ -18,6 +18,7 @@ package com.example.bluromatic.data
 
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.asFlow
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -34,12 +35,15 @@ import com.example.bluromatic.workers.BlurWorker
 import com.example.bluromatic.workers.CleanupWorker
 import com.example.bluromatic.workers.SaveImageToFileWorker
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.mapNotNull
 
 class WorkManagerBluromaticRepository(private val context: Context) : BluromaticRepository {
 
-    override val outputWorkInfo: Flow<WorkInfo?> = MutableStateFlow(null)
     private val workManager = WorkManager.getInstance(context)
+    override val outputWorkInfo: Flow<WorkInfo> =
+        workManager.getWorkInfosByTagLiveData(TAG_OUTPUT).asFlow().mapNotNull {
+            if (it.isNotEmpty()) it.first() else null
+        }
     private val imageUri: Uri = ImageUri.Drawable(context, R.drawable.android_cupcake).uri()
 
     /**
@@ -47,11 +51,11 @@ class WorkManagerBluromaticRepository(private val context: Context) : Bluromatic
      * @param blurLevel The amount to blur the image
      */
     override fun applyBlur(blurLevel: Int) {
-        val cleanupRequest = OneTimeWorkRequest.Companion.from(CleanupWorker::class.java)
-        val blurRequest = OneTimeWorkRequestBuilder<BlurWorker>()
+        val cleanupRequest: OneTimeWorkRequest = OneTimeWorkRequest.Companion.from(CleanupWorker::class.java)
+        val blurRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<BlurWorker>()
             .setInputData(workDataOf(KEY_IMAGE_URI to imageUri.toString(), KEY_BLUR_LEVEL to blurLevel))
             .build()
-        val saveRequest = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
+        val saveRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
             .addTag(TAG_OUTPUT)
             .build()
 
