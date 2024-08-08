@@ -38,8 +38,6 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.UUID
 
-private const val TAG = "WorkerUtils"
-
 interface StatusNotification {
     fun show()
     fun cancel()
@@ -47,8 +45,8 @@ interface StatusNotification {
     class Default(
         private val message: String,
         notificationManagerWrapper: NotificationManagerWrapper,
-        private val notificationBuilderWrapper: NotificationBuilderWrapper,
-        private val notificationConfig: NotificationConfig = NotificationConfig.Default(),
+        notificationBuilderWrapper: NotificationBuilderWrapper,
+        private val notificationConfig: NotificationConfig = NotificationConfig.Default(notificationBuilderWrapper),
         private val channelConfig: ChannelConfig = ChannelConfig.Default(),
     ) : StatusNotification {
 
@@ -56,7 +54,7 @@ interface StatusNotification {
 
         override fun show() {
             channelConfig.createChannel(notificationManager)
-            val notification = notificationConfig.buildNotification(notificationBuilderWrapper, message)
+            val notification = notificationConfig.buildNotification(message)
             notificationManager.notify(notificationConfig.notificationId(), notification)
         }
 
@@ -68,12 +66,10 @@ interface StatusNotification {
 
 interface NotificationConfig {
     fun notificationId(): Int
-    fun buildNotification(
-        notificationBuilderWrapper: NotificationBuilderWrapper,
-        message: String,
-    ): Notification
+    fun buildNotification(message: String): Notification
 
     class Default(
+        private val notificationBuilderWrapper: NotificationBuilderWrapper,
         private val notificationId: Int = NOTIFICATION_ID,
         private val title: CharSequence = NOTIFICATION_TITLE,
         private val priority: Int = NotificationCompat.PRIORITY_HIGH,
@@ -82,18 +78,15 @@ interface NotificationConfig {
         override fun notificationId() = notificationId
 
         override fun buildNotification(
-            notificationBuilderWrapper: NotificationBuilderWrapper,
             message: String,
-        ): Notification {
-            return notificationBuilderWrapper.notificationBuilder()
-                .setSmallIcon(smallIcon)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(priority)
-                .setSilent(true)
-                .setDefaults(Notification.DEFAULT_VIBRATE)
-                .build()
-        }
+        ): Notification = notificationBuilderWrapper.notificationBuilder()
+            .setSmallIcon(smallIcon)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(priority)
+            .setSilent(true)
+            .setDefaults(Notification.DEFAULT_VIBRATE)
+            .build()
     }
 }
 
