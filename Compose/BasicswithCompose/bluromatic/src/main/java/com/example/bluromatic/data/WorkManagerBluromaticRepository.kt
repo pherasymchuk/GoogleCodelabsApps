@@ -29,6 +29,7 @@ import com.example.bluromatic.ImageUri
 import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.R
+import com.example.bluromatic.TAG_OUTPUT
 import com.example.bluromatic.workers.BlurWorker
 import com.example.bluromatic.workers.CleanupWorker
 import com.example.bluromatic.workers.SaveImageToFileWorker
@@ -48,15 +49,17 @@ class WorkManagerBluromaticRepository(private val context: Context) : Bluromatic
     override fun applyBlur(blurLevel: Int) {
         val cleanupRequest = OneTimeWorkRequest.Companion.from(CleanupWorker::class.java)
         val blurRequest = OneTimeWorkRequestBuilder<BlurWorker>()
-            .setInputData(
-                workDataOf(
-                    KEY_IMAGE_URI to imageUri.toString(),
-                    KEY_BLUR_LEVEL to blurLevel
-                )
-            ).build()
-        val saveRequest = OneTimeWorkRequestBuilder<SaveImageToFileWorker>().build()
+            .setInputData(workDataOf(KEY_IMAGE_URI to imageUri.toString(), KEY_BLUR_LEVEL to blurLevel))
+            .build()
+        val saveRequest = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
+            .addTag(TAG_OUTPUT)
+            .build()
 
-        workManager.beginUniqueWork(IMAGE_MANIPULATION_WORK_NAME, ExistingWorkPolicy.REPLACE, cleanupRequest)
+        workManager.beginUniqueWork(
+            IMAGE_MANIPULATION_WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            cleanupRequest
+        )
             .then(blurRequest)
             .then(saveRequest)
             .enqueue()
