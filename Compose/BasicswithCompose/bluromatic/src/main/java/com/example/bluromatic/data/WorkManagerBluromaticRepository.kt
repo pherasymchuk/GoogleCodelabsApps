@@ -18,11 +18,13 @@ package com.example.bluromatic.data
 
 import android.content.Context
 import android.net.Uri
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.example.bluromatic.IMAGE_MANIPULATION_WORK_NAME
 import com.example.bluromatic.ImageUri
 import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
@@ -33,7 +35,7 @@ import com.example.bluromatic.workers.SaveImageToFileWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
+class WorkManagerBluromaticRepository(private val context: Context) : BluromaticRepository {
 
     override val outputWorkInfo: Flow<WorkInfo?> = MutableStateFlow(null)
     private val workManager = WorkManager.getInstance(context)
@@ -54,7 +56,7 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
             ).build()
         val saveRequest = OneTimeWorkRequestBuilder<SaveImageToFileWorker>().build()
 
-        workManager.beginWith(cleanupRequest)
+        workManager.beginUniqueWork(IMAGE_MANIPULATION_WORK_NAME, ExistingWorkPolicy.REPLACE, cleanupRequest)
             .then(blurRequest)
             .then(saveRequest)
             .enqueue()
