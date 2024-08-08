@@ -18,15 +18,17 @@ package com.example.bluromatic.data
 
 import android.content.Context
 import android.net.Uri
-import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.bluromatic.ImageUri
 import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.workers.BlurWorker
+import com.example.bluromatic.workers.CleanupWorker
+import com.example.bluromatic.workers.SaveImageToFileWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -41,25 +43,26 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
      * @param blurLevel The amount to blur the image
      */
     override fun applyBlur(blurLevel: Int) {
-        val blurBuilder: OneTimeWorkRequest.Builder = OneTimeWorkRequestBuilder<BlurWorker>()
-        blurBuilder.setInputData(createInputDataForWorkRequest(blurLevel, imageUri))
-        workManager.enqueue(blurBuilder.build())
+        val cleanupRequest = OneTimeWorkRequest.Companion.from(CleanupWorker::class.java)
+        val blurRequest = OneTimeWorkRequestBuilder<BlurWorker>()
+            .setInputData(
+                workDataOf(
+                    KEY_IMAGE_URI to imageUri.toString(),
+                    KEY_BLUR_LEVEL to blurLevel
+                )
+            ).build()
+        val saveRequest = OneTimeWorkRequestBuilder<SaveImageToFileWorker>().build()
+
+        workManager.beginWith(cleanupRequest)
+            .then(blurRequest)
+            .then(saveRequest)
+            .enqueue()
     }
 
     /**
      * Cancel any ongoing WorkRequests
      * */
     override fun cancelWork() {
-    }
-
-    /**
-     * Creates the input data bundle which includes the blur level to
-     * update the amount of blur to be applied and the Uri to operate on
-     * @return Data which contains the Image Uri as a String and blur level as an Integer
-     */
-    private fun createInputDataForWorkRequest(blurLevel: Int, imageUri: Uri): Data {
-        val builder = Data.Builder()
-        builder.putString(KEY_IMAGE_URI, imageUri.toString()).putInt(KEY_BLUR_LEVEL, blurLevel)
-        return builder.build()
+        TODO("Not yet implemented")
     }
 }
