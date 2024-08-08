@@ -35,7 +35,7 @@ interface ImageUri {
 
     class Drawable(
         context: Context,
-        @DrawableRes private val imgId: Int = R.drawable.android_cupcake,
+        @DrawableRes private val imgId: Int,
     ) : ImageUri {
         private val resources = context.resources
 

@@ -26,6 +26,7 @@ import androidx.work.workDataOf
 import com.example.bluromatic.ImageUri
 import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
+import com.example.bluromatic.R
 import com.example.bluromatic.workers.BlurWorker
 import com.example.bluromatic.workers.CleanupWorker
 import com.example.bluromatic.workers.SaveImageToFileWorker
@@ -36,7 +37,7 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
 
     override val outputWorkInfo: Flow<WorkInfo?> = MutableStateFlow(null)
     private val workManager = WorkManager.getInstance(context)
-    private val imageUri: Uri = ImageUri.Drawable(context).uri()
+    private val imageUri: Uri = ImageUri.Drawable(context, R.drawable.android_cupcake).uri()
 
     /**
      * Create the WorkRequests to apply the blur and save the resulting image
