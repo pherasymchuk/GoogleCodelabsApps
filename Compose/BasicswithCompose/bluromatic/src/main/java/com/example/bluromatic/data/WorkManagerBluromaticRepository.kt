@@ -18,7 +18,6 @@ package com.example.bluromatic.data
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.asFlow
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -37,11 +36,11 @@ import com.example.bluromatic.workers.SaveImageToFileWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 
-class WorkManagerBluromaticRepository(private val context: Context) : BluromaticRepository {
+class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
 
     private val workManager = WorkManager.getInstance(context)
     override val outputWorkInfo: Flow<WorkInfo> =
-        workManager.getWorkInfosByTagLiveData(TAG_OUTPUT).asFlow().mapNotNull {
+        workManager.getWorkInfosByTagFlow(TAG_OUTPUT).mapNotNull {
             if (it.isNotEmpty()) it.first() else null
         }
     private val imageUri: Uri = ImageUri.Drawable(context, R.drawable.android_cupcake).uri()
@@ -63,10 +62,11 @@ class WorkManagerBluromaticRepository(private val context: Context) : Bluromatic
             IMAGE_MANIPULATION_WORK_NAME,
             ExistingWorkPolicy.REPLACE,
             cleanupRequest
-        )
-            .then(blurRequest)
+        ).then(blurRequest)
             .then(saveRequest)
             .enqueue()
+
+
     }
 
     /**
