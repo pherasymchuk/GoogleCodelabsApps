@@ -98,7 +98,7 @@ fun BluromaticScreen(
             uiState = uiState,
             blurAmountOptions = blurViewModel.blurAmount,
             applyBlur = blurViewModel::applyBlur,
-            cancelWork = {},
+            cancelWork = blurViewModel::cancelWork,
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(dimensionResource(R.dimen.padding_medium))
@@ -134,7 +134,7 @@ fun BluromaticScreenContent(
         BlurActions(
             uiState = uiState,
             onStartClick = { applyBlur(selectedValue) },
-            onSeeFileClick = {},
+            onSeeFileClick = { BlurredImage(context, it).show() },
             onCancelClick = { cancelWork() },
             modifier = Modifier.fillMaxWidth()
         )
@@ -244,6 +244,21 @@ private fun showBlurredImage(context: Context, currentUri: String) {
     }
     val actionView = Intent(Intent.ACTION_VIEW, uri)
     context.startActivity(actionView)
+}
+
+class BlurredImage(
+    private val context: Context,
+    private val imageUri: String,
+) {
+    fun show() {
+        val uri = if (imageUri.isNotEmpty()) {
+            Uri.parse(imageUri)
+        } else {
+            null
+        }
+        val actionView = Intent(Intent.ACTION_VIEW, uri)
+        context.startActivity(actionView)
+    }
 }
 
 @Preview(showBackground = true)
