@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.work.WorkInfo
 import com.example.bluromatic.BluromaticApplication
 import com.example.bluromatic.data.BlurAmountData
 import com.example.bluromatic.data.BluromaticRepository
@@ -44,9 +45,9 @@ class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : Vi
     internal val blurAmount = BlurAmountData.blurAmount
 
     val uiState: StateFlow<UiState> = bluromaticRepository.outputWorkInfo
-        .map { info ->
+        .map { info: WorkInfo ->
             when {
-                info.state.isFinished -> UiState.Default
+                info.state == WorkInfo.State.CANCELLED -> UiState.Default
                 info.state.isFinished -> UiState.Complete(
                     outputUri = ""
                 )

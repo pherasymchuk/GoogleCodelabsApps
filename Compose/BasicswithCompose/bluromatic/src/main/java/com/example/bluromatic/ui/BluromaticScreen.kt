@@ -39,6 +39,8 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
@@ -59,6 +61,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -68,7 +72,9 @@ import com.example.bluromatic.ui.theme.BluromaticTheme
 
 
 @Composable
-fun BluromaticScreen(blurViewModel: BlurViewModel = viewModel(factory = BlurViewModel.Factory)) {
+fun BluromaticScreen(
+    blurViewModel: BlurViewModel = viewModel(factory = BlurViewModel.Factory),
+) {
     val uiState by blurViewModel.uiState.collectAsStateWithLifecycle()
     val layoutDirection = LocalLayoutDirection.current
     Surface(
@@ -143,11 +149,36 @@ private fun BlurActions(
         modifier = modifier,
         horizontalArrangement = Arrangement.Center
     ) {
-        Button(
-            onClick = onStartClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.start))
+
+        when (uiState) {
+            is BlurViewModel.UiState.Default -> {
+                Button(
+                    onClick = onStartClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.start))
+                }
+            }
+
+            is BlurViewModel.UiState.Loading -> {
+                FilledTonalButton(
+                    onCancelClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.cancel_work))
+                }
+                CircularProgressIndicator(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
+            }
+
+            is BlurViewModel.UiState.Complete -> {
+                Button(
+                    onClick = onStartClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.start))
+                }
+            }
+
         }
     }
 }
@@ -203,15 +234,26 @@ private fun showBlurredImage(context: Context, currentUri: String) {
 }
 
 @Preview(showBackground = true)
+@PreviewParameter(BluromaticPreviewParameterProvider::class)
 @Composable
-fun BluromaticScreenContentPreview() {
+fun BluromaticScreenContentPreview(
+    @PreviewParameter(BluromaticPreviewParameterProvider::class) uiState: BlurViewModel.UiState,
+) {
     BluromaticTheme {
         BluromaticScreenContent(
-            uiState = BlurViewModel.UiState.Default,
+            uiState = uiState,
             blurAmountOptions = listOf(BlurAmount(R.string.blur_lv_1, 1)),
             applyBlur = {},
             cancelWork = {},
             modifier = Modifier.padding(16.dp)
         )
     }
+}
+
+class BluromaticPreviewParameterProvider : PreviewParameterProvider<BlurViewModel.UiState> {
+    override val values = sequenceOf(
+        BlurViewModel.UiState.Default,
+        BlurViewModel.UiState.Loading,
+        BlurViewModel.UiState.Complete("file:///path/to/file")
+    )
 }
