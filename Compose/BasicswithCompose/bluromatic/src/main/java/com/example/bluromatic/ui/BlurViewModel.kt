@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.work.WorkInfo
 import com.example.bluromatic.BluromaticApplication
+import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.data.BlurAmountData
 import com.example.bluromatic.data.BluromaticRepository
 import kotlinx.coroutines.flow.StateFlow
@@ -46,11 +47,12 @@ class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : Vi
 
     val uiState: StateFlow<UiState> = bluromaticRepository.outputWorkInfo
         .map { info: WorkInfo ->
+            val outputImageUri = info.outputData.getString(KEY_IMAGE_URI)
             when {
+                info.state.isFinished && !outputImageUri.isNullOrEmpty() ->
+                    UiState.Complete(outputUri = outputImageUri)
+
                 info.state == WorkInfo.State.CANCELLED -> UiState.Default
-                info.state.isFinished -> UiState.Complete(
-                    outputUri = ""
-                )
 
                 else -> UiState.Loading
             }

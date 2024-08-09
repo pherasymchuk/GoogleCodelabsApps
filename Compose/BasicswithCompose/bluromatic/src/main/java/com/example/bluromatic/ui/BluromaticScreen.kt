@@ -19,10 +19,13 @@ package com.example.bluromatic.ui
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -34,6 +37,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -139,49 +143,58 @@ fun BluromaticScreenContent(
 
 @Composable
 private fun BlurActions(
+    modifier: Modifier = Modifier.animateContentSize(),
     uiState: BlurViewModel.UiState,
     onStartClick: () -> Unit,
     onSeeFileClick: (String) -> Unit,
     onCancelClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.Center
-    ) {
 
-        when (uiState) {
-            is BlurViewModel.UiState.Default -> {
-                Button(
-                    onClick = onStartClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.start))
+    AnimatedContent(
+        targetState = uiState,
+        label = "Different button animation",
+        modifier = Modifier
+    ) { state ->
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            when (state) {
+                is BlurViewModel.UiState.Default -> {
+                    Button(
+                        onClick = onStartClick,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.start))
+                    }
                 }
-            }
 
-            is BlurViewModel.UiState.Loading -> {
-                FilledTonalButton(
-                    onCancelClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.cancel_work))
+                is BlurViewModel.UiState.Loading -> {
+                    FilledTonalButton(
+                        onCancelClick,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(stringResource(R.string.cancel_work))
+                    }
+                    CircularProgressIndicator(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
                 }
-                CircularProgressIndicator(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-            }
 
-            is BlurViewModel.UiState.Complete -> {
-                Button(
-                    onClick = onStartClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.start))
+                is BlurViewModel.UiState.Complete -> {
+                    Button(
+                        onClick = onStartClick,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(stringResource(R.string.start))
+                    }
+                    Spacer(modifier = Modifier.width(dimensionResource(R.dimen.padding_small)))
+                    FilledTonalButton({ onSeeFileClick(state.outputUri) }) { Text(stringResource(R.string.see_file)) }
                 }
-            }
 
+            }
         }
     }
 }
+
 
 @Composable
 private fun BlurAmountContent(
