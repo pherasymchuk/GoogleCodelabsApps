@@ -24,7 +24,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.example.bluromatic.IMAGE_MANIPULATION_WORK_NAME
 import com.example.bluromatic.ImageUri
 import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
@@ -62,11 +61,7 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
             IMAGE_MANIPULATION_WORK_NAME,
             ExistingWorkPolicy.REPLACE,
             cleanupRequest
-        ).then(blurRequest)
-            .then(saveRequest)
-            .enqueue()
-
-
+        ).then(blurRequest).then(saveRequest).enqueue()
     }
 
     /**
@@ -74,5 +69,9 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
      * */
     override fun cancelWork() {
         workManager.cancelUniqueWork(IMAGE_MANIPULATION_WORK_NAME)
+    }
+
+    companion object {
+        const val IMAGE_MANIPULATION_WORK_NAME = "image_manipulation_work"
     }
 }
