@@ -16,9 +16,11 @@
 
 package com.example.bluromatic.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -236,16 +238,6 @@ private fun BlurAmountContent(
     }
 }
 
-private fun showBlurredImage(context: Context, currentUri: String) {
-    val uri = if (currentUri.isNotEmpty()) {
-        Uri.parse(currentUri)
-    } else {
-        null
-    }
-    val actionView = Intent(Intent.ACTION_VIEW, uri)
-    context.startActivity(actionView)
-}
-
 class BlurredImage(
     private val context: Context,
     private val imageUri: String,
@@ -256,8 +248,12 @@ class BlurredImage(
         } else {
             null
         }
-        val actionView = Intent(Intent.ACTION_VIEW, uri)
-        context.startActivity(actionView)
+        try {
+            val actionView = Intent(Intent.ACTION_VIEW, uri)
+            context.startActivity(actionView)
+        } catch (e: ActivityNotFoundException) {
+            Log.e("Logs", "show: No activity found to handle")
+        }
     }
 }
 
