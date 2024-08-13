@@ -75,7 +75,6 @@ interface NotificationConfig {
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(priority)
-            .setSilent(true)
             .setDefaults(Notification.DEFAULT_VIBRATE)
             .build()
     }
