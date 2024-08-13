@@ -18,6 +18,7 @@ package com.example.bluromatic.data
 
 import android.content.Context
 import android.net.Uri
+import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -49,9 +50,14 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
      * @param blurLevel The amount to blur the image
      */
     override fun applyBlur(blurLevel: Int) {
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .setRequiresStorageNotLow(true)
+            .build()
         val cleanupRequest: OneTimeWorkRequest = OneTimeWorkRequest.Companion.from(CleanupWorker::class.java)
         val blurRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<BlurWorker>()
             .setInputData(workDataOf(KEY_IMAGE_URI to imageUri.toString(), KEY_BLUR_LEVEL to blurLevel))
+            .setConstraints(constraints)
             .build()
         val saveRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
             .addTag(TAG_OUTPUT)
