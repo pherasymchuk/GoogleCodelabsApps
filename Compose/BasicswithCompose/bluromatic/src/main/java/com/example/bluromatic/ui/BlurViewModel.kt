@@ -25,8 +25,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.work.WorkInfo
 import com.example.bluromatic.BluromaticApplication
 import com.example.bluromatic.KEY_IMAGE_URI
-import com.example.bluromatic.data.BlurAmountData
-import com.example.bluromatic.data.BluromaticRepository
+import com.example.bluromatic.data.blur.BlurAmountData
+import com.example.bluromatic.data.repository.BluromaticRepository
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

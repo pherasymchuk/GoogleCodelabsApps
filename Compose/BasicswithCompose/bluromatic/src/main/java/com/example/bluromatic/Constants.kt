@@ -16,7 +16,7 @@
 
 package com.example.bluromatic
 
-// Notification Channel constants
+// Todo: I don't like the idea of having constants at the top level of a file.
 
 // Name of Notification Channel for verbose notifications of background work
 val VERBOSE_NOTIFICATION_CHANNEL_NAME: CharSequence =

@@ -21,9 +21,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,6 +62,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -73,7 +77,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bluromatic.R
-import com.example.bluromatic.data.BlurAmount
+import com.example.bluromatic.data.blur.BlurAmount
 import com.example.bluromatic.ui.theme.BluromaticTheme
 
 
@@ -82,6 +86,11 @@ fun BluromaticScreen(
     blurViewModel: BlurViewModel = viewModel(factory = BlurViewModel.Factory),
 ) {
     val uiState by blurViewModel.uiState.collectAsStateWithLifecycle()
+    val image = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+        if (it != null) {
+            blurViewModel.applyBlur(1)
+        }
+    }
     val layoutDirection = LocalLayoutDirection.current
     Surface(
         modifier = Modifier
@@ -98,6 +107,7 @@ fun BluromaticScreen(
     ) {
         BluromaticScreenContent(
             uiState = uiState,
+            image = painterResource(R.drawable.android_cupcake),
             blurAmountOptions = blurViewModel.blurAmount,
             applyBlur = blurViewModel::applyBlur,
             cancelWork = blurViewModel::cancelWork,
@@ -114,16 +124,19 @@ fun BluromaticScreenContent(
     blurAmountOptions: List<BlurAmount>,
     applyBlur: (Int) -> Unit,
     cancelWork: () -> Unit,
+    image: Painter = painterResource(R.drawable.android_cupcake),
+    onImageClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     var selectedValue by rememberSaveable { mutableStateOf(1) }
     val context = LocalContext.current
     Column(modifier = modifier) {
         Image(
-            painter = painterResource(R.drawable.android_cupcake),
+            painter = image,
             contentDescription = stringResource(R.string.description_image),
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onImageClick)
                 .height(400.dp),
             contentScale = ContentScale.Fit,
         )

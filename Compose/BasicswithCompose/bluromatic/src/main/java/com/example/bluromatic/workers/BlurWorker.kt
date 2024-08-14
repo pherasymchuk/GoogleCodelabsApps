@@ -16,8 +16,8 @@ import com.example.bluromatic.DELAY_TIME_MILLIS
 import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.R
-import com.example.bluromatic.data.BlurredBitmap
 import com.example.bluromatic.data.WriteBitmapFile
+import com.example.bluromatic.data.blur.BlurredBitmap
 import com.example.bluromatic.wrappers.NotificationBuilderWrapper
 import com.example.bluromatic.wrappers.NotificationManagerWrapper
 import kotlinx.coroutines.Dispatchers

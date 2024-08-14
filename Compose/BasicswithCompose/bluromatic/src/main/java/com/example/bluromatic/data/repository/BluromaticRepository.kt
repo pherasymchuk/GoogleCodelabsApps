@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.example.bluromatic.data
+package com.example.bluromatic.data.repository
 
 import androidx.work.WorkInfo
 import kotlinx.coroutines.flow.Flow
 
 interface BluromaticRepository {
     val outputWorkInfo: Flow<WorkInfo>
-    fun applyBlur(blurLevel: Int)
+    fun applyBlur(blurLevel: Int, imgUri: String)
     fun cancelWork()
 }

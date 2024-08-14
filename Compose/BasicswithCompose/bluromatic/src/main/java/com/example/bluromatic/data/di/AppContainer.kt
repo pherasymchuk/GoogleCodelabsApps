@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package com.example.bluromatic.data
+package com.example.bluromatic.data.di
 
-import com.example.bluromatic.R
+import android.content.Context
+import com.example.bluromatic.data.repository.BluromaticRepository
+import com.example.bluromatic.data.repository.WorkManagerBluromaticRepository
 
-object BlurAmountData {
-    val blurAmount = listOf(
-        BlurAmount(
-            blurAmountRes = R.string.blur_lv_1,
-            blurAmount = 1
-        ),
-        BlurAmount(
-            blurAmountRes = R.string.blur_lv_2,
-            blurAmount = 2
-        ),
-        BlurAmount(
-            blurAmountRes = R.string.blur_lv_3,
-            blurAmount = 3
-        )
-    )
+interface AppContainer {
+    val bluromaticRepository: BluromaticRepository
+}
+
+class DefaultAppContainer(context: Context) : AppContainer {
+    override val bluromaticRepository = WorkManagerBluromaticRepository(context)
 }

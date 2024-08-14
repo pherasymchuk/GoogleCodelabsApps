@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.bluromatic.data
+package com.example.bluromatic.data.repository
 
 import android.content.Context
 import android.net.Uri
@@ -49,7 +49,7 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
      * Create the WorkRequests to apply the blur and save the resulting image
      * @param blurLevel The amount to blur the image
      */
-    override fun applyBlur(blurLevel: Int) {
+    override fun applyBlur(blurLevel: Int, imgUri: String) {
         val constraints = Constraints.Builder()
             .setRequiresBatteryNotLow(true)
             .setRequiresStorageNotLow(true)

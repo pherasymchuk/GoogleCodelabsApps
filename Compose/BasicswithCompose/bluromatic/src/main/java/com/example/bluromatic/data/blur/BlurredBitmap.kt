@@ -1,4 +1,4 @@
-package com.example.bluromatic.data
+package com.example.bluromatic.data.blur
 
 import android.graphics.Bitmap
 import androidx.annotation.WorkerThread

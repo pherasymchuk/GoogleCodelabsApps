@@ -17,8 +17,8 @@
 package com.example.bluromatic
 
 import android.app.Application
-import com.example.bluromatic.data.AppContainer
-import com.example.bluromatic.data.DefaultAppContainer
+import com.example.bluromatic.data.di.AppContainer
+import com.example.bluromatic.data.di.DefaultAppContainer
 
 class BluromaticApplication : Application() {
     /** AppContainer instance used by the rest of classes to obtain dependencies */
