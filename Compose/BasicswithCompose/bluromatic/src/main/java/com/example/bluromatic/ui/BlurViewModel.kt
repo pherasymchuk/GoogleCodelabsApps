@@ -24,69 +24,112 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.work.WorkInfo
 import com.example.bluromatic.BluromaticApplication
-import com.example.bluromatic.KEY_IMAGE_URI
+import com.example.bluromatic.data.blur.BlurAmount
 import com.example.bluromatic.data.blur.BlurAmountData
 import com.example.bluromatic.data.repository.BluromaticRepository
+import com.example.bluromatic.data.repository.WorkManagerBluromaticRepository.Companion.KEY_IMAGE_URI
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 /**
  * [BlurViewModel] starts and stops the WorkManger and applies blur to the image. Also updates the
  * visibility states of the buttons depending on the states of the WorkManger.
  */
-class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : ViewModel() {
+abstract class BlurViewModel : ViewModel() {
+    abstract val uiState: StateFlow<UiState>
+    abstract fun applyBlur(blurLevel: Int)
+    abstract fun cancelWork()
+    abstract fun setImageUri(imageUri: String)
 
-    interface UiState {
-        object Default : UiState
-        object Loading : UiState
-        data class Complete(val outputUri: String) : UiState
-    }
+    class Default(
+        private val bluromaticRepository: BluromaticRepository,
+        defaultImageUri: String,
+    ) : BlurViewModel() {
 
-    internal val blurAmount = BlurAmountData.blurAmount
-
-    val uiState: StateFlow<UiState> = bluromaticRepository.outputWorkInfo
-        .map { info: WorkInfo ->
-            val outputImageUri = info.outputData.getString(KEY_IMAGE_URI)
-            when {
-                info.state.isFinished && !outputImageUri.isNullOrEmpty() ->
-                    UiState.Complete(outputUri = outputImageUri)
-
-                info.state == WorkInfo.State.CANCELLED -> UiState.Default
-
-                else -> UiState.Loading
-            }
-        }
-        .stateIn(
-            viewModelScope,
-            kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5_000),
-            UiState.Default
+        override val uiState: MutableStateFlow<UiState.Default> = MutableStateFlow(
+            UiState.Default(
+                loadingStatus = LoadingStatus.Idle,
+                blurAmount = BlurAmountData.blurAmount,
+                selectedImgUri = defaultImageUri
+            )
         )
 
-    /**
-     * Call the method from repository to create the WorkRequest to apply the blur
-     * and save the resulting image
-     * @param blurLevel The amount to blur the image
-     */
-    fun applyBlur(blurLevel: Int) {
-        bluromaticRepository.applyBlur(blurLevel)
+        init {
+            viewModelScope.launch {
+                bluromaticRepository.outputWorkInfo
+                    .map { info: WorkInfo ->
+                        val outputImageUri = info.outputData.getString(KEY_IMAGE_URI)
+                        when {
+                            info.state.isFinished && !outputImageUri.isNullOrEmpty() ->
+                                LoadingStatus.Complete(outputUri = outputImageUri)
+
+                            info.state == WorkInfo.State.CANCELLED -> LoadingStatus.Idle
+
+                            else -> LoadingStatus.Loading
+                        }
+                    }
+                    .stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(5_000),
+                        initialValue = LoadingStatus.Idle
+                    ).collect { newLoadingStatus: LoadingStatus ->
+                        uiState.update { it.copy(loadingStatus = newLoadingStatus) }
+                    }
+            }
+        }
+
+        /**
+         * Call the method from repository to create the WorkRequest to apply the blur
+         * and save the resulting image
+         * @param blurLevel The amount to blur the image
+         */
+        override fun applyBlur(blurLevel: Int) {
+            bluromaticRepository.applyBlur(blurLevel, uiState.value.selectedImgUri)
+        }
+
+        override fun cancelWork() {
+            bluromaticRepository.cancelWork()
+        }
+
+        override fun setImageUri(imageUri: String) {
+            uiState.update { it.copy(selectedImgUri = imageUri) }
+        }
     }
 
-    fun cancelWork() {
-        bluromaticRepository.cancelWork()
+    interface UiState {
+        val loadingStatus: LoadingStatus
+        val blurAmount: List<BlurAmount>
+        val selectedImgUri: String
+
+        data class Default(
+            override val loadingStatus: LoadingStatus,
+            override val blurAmount: List<BlurAmount>,
+            override val selectedImgUri: String,
+        ) : UiState
+    }
+
+    interface LoadingStatus {
+        object Idle : LoadingStatus
+        object Loading : LoadingStatus
+        data class Complete(val outputUri: String) : LoadingStatus
     }
 
     /**
      * Factory for [BlurViewModel] that takes [BluromaticRepository] as a dependency
      */
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
+        fun provideFactory(
+            defaultImageUri: String,
+        ): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val bluromaticRepository =
                     (this[APPLICATION_KEY] as BluromaticApplication).container.bluromaticRepository
-                BlurViewModel(
-                    bluromaticRepository = bluromaticRepository
-                )
+                Default(bluromaticRepository, defaultImageUri)
             }
         }
     }

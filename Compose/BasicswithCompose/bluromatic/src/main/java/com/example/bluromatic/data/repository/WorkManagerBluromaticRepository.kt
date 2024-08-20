@@ -17,7 +17,6 @@
 package com.example.bluromatic.data.repository
 
 import android.content.Context
-import android.net.Uri
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -25,10 +24,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.example.bluromatic.ImageUri
 import com.example.bluromatic.KEY_BLUR_LEVEL
-import com.example.bluromatic.KEY_IMAGE_URI
-import com.example.bluromatic.R
 import com.example.bluromatic.TAG_OUTPUT
 import com.example.bluromatic.workers.BlurWorker
 import com.example.bluromatic.workers.CleanupWorker
@@ -38,25 +34,26 @@ import kotlinx.coroutines.flow.mapNotNull
 
 class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
 
+
     private val workManager = WorkManager.getInstance(context)
     override val outputWorkInfo: Flow<WorkInfo> =
         workManager.getWorkInfosByTagFlow(TAG_OUTPUT).mapNotNull {
             if (it.isNotEmpty()) it.first() else null
         }
-    private val imageUri: Uri = ImageUri.Drawable(context, R.drawable.android_cupcake).uri()
+//    private val imageUri: Uri = ImageUri.Drawable(context, R.drawable.android_cupcake).uri()
 
     /**
      * Create the WorkRequests to apply the blur and save the resulting image
      * @param blurLevel The amount to blur the image
      */
-    override fun applyBlur(blurLevel: Int, imgUri: String) {
+    override fun applyBlur(blurLevel: Int, uri: String) {
         val constraints = Constraints.Builder()
             .setRequiresBatteryNotLow(true)
             .setRequiresStorageNotLow(true)
             .build()
-        val cleanupRequest: OneTimeWorkRequest = OneTimeWorkRequest.Companion.from(CleanupWorker::class.java)
+        val cleanupRequest: OneTimeWorkRequest = OneTimeWorkRequest.from(CleanupWorker::class.java)
         val blurRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<BlurWorker>()
-            .setInputData(workDataOf(KEY_IMAGE_URI to imageUri.toString(), KEY_BLUR_LEVEL to blurLevel))
+            .setInputData(workDataOf(KEY_IMAGE_URI to uri, KEY_BLUR_LEVEL to blurLevel))
             .setConstraints(constraints)
             .build()
         val saveRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
@@ -79,5 +76,6 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
 
     companion object {
         const val IMAGE_MANIPULATION_WORK_NAME = "image_manipulation_work"
+        const val KEY_IMAGE_URI = "KEY_IMAGE_URI"
     }
 }

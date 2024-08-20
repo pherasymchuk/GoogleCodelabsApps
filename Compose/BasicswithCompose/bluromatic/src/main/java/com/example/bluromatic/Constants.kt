@@ -31,7 +31,6 @@ const val NOTIFICATION_ID = 1
 
 // Other keys
 const val OUTPUT_PATH = "blur_filter_outputs"
-const val KEY_IMAGE_URI = "KEY_IMAGE_URI"
 const val TAG_OUTPUT = "OUTPUT"
 const val KEY_BLUR_LEVEL = "KEY_BLUR_LEVEL"
 

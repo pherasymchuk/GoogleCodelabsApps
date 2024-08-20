@@ -21,12 +21,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -62,36 +59,40 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.example.bluromatic.ImageUri
 import com.example.bluromatic.R
 import com.example.bluromatic.data.blur.BlurAmount
+import com.example.bluromatic.ui.core.PhotoPicker
 import com.example.bluromatic.ui.theme.BluromaticTheme
 
 
 @Composable
 fun BluromaticScreen(
-    blurViewModel: BlurViewModel = viewModel(factory = BlurViewModel.Factory),
+    blurViewModel: BlurViewModel = viewModel(
+        factory = BlurViewModel.provideFactory(
+            defaultImageUri = ImageUri.Drawable(
+                LocalContext.current, R.drawable.android_cupcake
+            ).uri().toString()
+        ),
+        modelClass = BlurViewModel.Default::class.java
+    ),
 ) {
-    val uiState by blurViewModel.uiState.collectAsStateWithLifecycle()
-    val image = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        if (it != null) {
-            blurViewModel.applyBlur(1)
-        }
-    }
-    val layoutDirection = LocalLayoutDirection.current
+    val uiState: BlurViewModel.UiState by blurViewModel.uiState.collectAsStateWithLifecycle()
+    val layoutDirection: LayoutDirection = LocalLayoutDirection.current
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -106,11 +107,14 @@ fun BluromaticScreen(
             )
     ) {
         BluromaticScreenContent(
-            uiState = uiState,
-            image = painterResource(R.drawable.android_cupcake),
-            blurAmountOptions = blurViewModel.blurAmount,
+            loadingStatus = uiState.loadingStatus,
+            imageUri = uiState.selectedImgUri,
+            blurAmountOptions = uiState.blurAmount,
             applyBlur = blurViewModel::applyBlur,
             cancelWork = blurViewModel::cancelWork,
+            onImageSelected = { uri ->
+                blurViewModel.setImageUri(uri.toString())
+            },
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(dimensionResource(R.dimen.padding_medium))
@@ -120,26 +124,32 @@ fun BluromaticScreen(
 
 @Composable
 fun BluromaticScreenContent(
-    uiState: BlurViewModel.UiState,
+    modifier: Modifier = Modifier,
+    loadingStatus: BlurViewModel.LoadingStatus,
     blurAmountOptions: List<BlurAmount>,
     applyBlur: (Int) -> Unit,
     cancelWork: () -> Unit,
-    image: Painter = painterResource(R.drawable.android_cupcake),
-    onImageClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
+    imageUri: String = Uri.EMPTY.toString(),
+    onImageSelected: (Uri) -> Unit = {},
 ) {
     var selectedValue by rememberSaveable { mutableStateOf(1) }
     val context = LocalContext.current
-    Column(modifier = modifier) {
-        Image(
-            painter = image,
-            contentDescription = stringResource(R.string.description_image),
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onImageClick)
-                .height(400.dp),
-            contentScale = ContentScale.Fit,
+    Column(
+        modifier = modifier.scrollable(
+            state = rememberScrollState(),
+            orientation = Orientation.Vertical
         )
+    ) {
+        PhotoPicker(onImageSelected = onImageSelected) {
+            AsyncImage(
+                model = imageUri,
+                contentDescription = stringResource(R.string.description_image),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp),
+                contentScale = ContentScale.Fit,
+            )
+        }
         BlurAmountContent(
             selectedValue = selectedValue,
             blurAmounts = blurAmountOptions,
@@ -147,7 +157,7 @@ fun BluromaticScreenContent(
             onSelectedValueChange = { selectedValue = it }
         )
         BlurActions(
-            uiState = uiState,
+            loadingStatus = loadingStatus,
             onStartClick = { applyBlur(selectedValue) },
             onSeeFileClick = { BlurredImage(context, it).show() },
             onCancelClick = { cancelWork() },
@@ -157,25 +167,25 @@ fun BluromaticScreenContent(
 }
 
 @Composable
-private fun BlurActions(
-    modifier: Modifier = Modifier.animateContentSize(),
-    uiState: BlurViewModel.UiState,
+fun BlurActions(
+    modifier: Modifier = Modifier,
+    loadingStatus: BlurViewModel.LoadingStatus,
     onStartClick: () -> Unit,
     onSeeFileClick: (String) -> Unit,
     onCancelClick: () -> Unit,
 ) {
 
     AnimatedContent(
-        targetState = uiState,
+        targetState = loadingStatus,
         label = "Different button animation",
         modifier = Modifier
-    ) { state ->
+    ) { currentStatus: BlurViewModel.LoadingStatus ->
         Row(
             modifier = modifier,
             horizontalArrangement = Arrangement.Center
         ) {
-            when (state) {
-                is BlurViewModel.UiState.Default -> {
+            when (currentStatus) {
+                is BlurViewModel.LoadingStatus.Idle -> {
                     Button(
                         onClick = onStartClick,
                         modifier = Modifier.fillMaxWidth()
@@ -184,7 +194,7 @@ private fun BlurActions(
                     }
                 }
 
-                is BlurViewModel.UiState.Loading -> {
+                is BlurViewModel.LoadingStatus.Loading -> {
                     FilledTonalButton(
                         onCancelClick,
                         modifier = Modifier.weight(1f)
@@ -194,7 +204,7 @@ private fun BlurActions(
                     CircularProgressIndicator(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
                 }
 
-                is BlurViewModel.UiState.Complete -> {
+                is BlurViewModel.LoadingStatus.Complete -> {
                     Button(
                         onClick = onStartClick,
                         modifier = Modifier.weight(1f)
@@ -202,7 +212,11 @@ private fun BlurActions(
                         Text(stringResource(R.string.start))
                     }
                     Spacer(modifier = Modifier.width(dimensionResource(R.dimen.padding_small)))
-                    FilledTonalButton({ onSeeFileClick(state.outputUri) }) { Text(stringResource(R.string.see_file)) }
+                    FilledTonalButton(
+                        onClick = { onSeeFileClick(currentStatus.outputUri) }
+                    ) {
+                        Text(stringResource(R.string.see_file))
+                    }
                 }
 
             }
@@ -212,7 +226,7 @@ private fun BlurActions(
 
 
 @Composable
-private fun BlurAmountContent(
+fun BlurAmountContent(
     selectedValue: Int,
     blurAmounts: List<BlurAmount>,
     modifier: Modifier = Modifier,
@@ -246,6 +260,7 @@ private fun BlurAmountContent(
                     )
                 )
                 Text(stringResource(amount.blurAmountRes))
+
             }
         }
     }
@@ -274,11 +289,11 @@ class BlurredImage(
 @PreviewParameter(BluromaticPreviewParameterProvider::class)
 @Composable
 fun BluromaticScreenContentPreview(
-    @PreviewParameter(BluromaticPreviewParameterProvider::class) uiState: BlurViewModel.UiState,
+    @PreviewParameter(BluromaticPreviewParameterProvider::class) loadingStatus: BlurViewModel.LoadingStatus,
 ) {
     BluromaticTheme {
         BluromaticScreenContent(
-            uiState = uiState,
+            loadingStatus = loadingStatus,
             blurAmountOptions = listOf(BlurAmount(R.string.blur_lv_1, 1)),
             applyBlur = {},
             cancelWork = {},
@@ -287,10 +302,10 @@ fun BluromaticScreenContentPreview(
     }
 }
 
-class BluromaticPreviewParameterProvider : PreviewParameterProvider<BlurViewModel.UiState> {
+class BluromaticPreviewParameterProvider : PreviewParameterProvider<BlurViewModel.LoadingStatus> {
     override val values = sequenceOf(
-        BlurViewModel.UiState.Default,
-        BlurViewModel.UiState.Loading,
-        BlurViewModel.UiState.Complete("file:///path/to/file")
+        BlurViewModel.LoadingStatus.Idle,
+        BlurViewModel.LoadingStatus.Loading,
+        BlurViewModel.LoadingStatus.Complete("file:///path/to/file")
     )
 }

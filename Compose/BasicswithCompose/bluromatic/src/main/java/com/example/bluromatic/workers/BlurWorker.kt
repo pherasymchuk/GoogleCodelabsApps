@@ -14,10 +14,10 @@ import androidx.work.workDataOf
 import com.example.bluromatic.CHANNEL_ID
 import com.example.bluromatic.DELAY_TIME_MILLIS
 import com.example.bluromatic.KEY_BLUR_LEVEL
-import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.R
 import com.example.bluromatic.data.WriteBitmapFile
 import com.example.bluromatic.data.blur.BlurredBitmap
+import com.example.bluromatic.data.repository.WorkManagerBluromaticRepository.Companion.KEY_IMAGE_URI
 import com.example.bluromatic.wrappers.NotificationBuilderWrapper
 import com.example.bluromatic.wrappers.NotificationManagerWrapper
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +56,7 @@ class BlurWorker(
         return withContext(Dispatchers.IO) {
             try {
                 require(!resourceUri.isNullOrBlank()) {
-                    val errorMessage = applicationContext.resources.getString(R.string.invalid_input_uri)
+                    val errorMessage = "Invalid input uri: $resourceUri"
                     Log.e("Logs", errorMessage)
                     errorMessage
                 }
