@@ -36,7 +36,6 @@ kotlinxSerialization = "2.0.0-RC3"
 retrofitKotlinxSerializationConverter = "2.11.0"
 ksp = "2.0.10-1.0.24"
 navigationRuntimeKtx = "2.7.7"
-parcelize = "2.0.0"
 
 composeCompiler = "1.5.14"
 workRuntimeKtx = "2.9.1"
@@ -96,4 +95,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerialization" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "parcelize" }
+parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
