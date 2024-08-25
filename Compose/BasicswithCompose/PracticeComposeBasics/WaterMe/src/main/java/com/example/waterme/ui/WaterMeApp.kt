@@ -16,6 +16,10 @@
 
 package com.example.waterme.ui
 
+import android.os.Build
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -65,6 +69,7 @@ import com.example.waterme.R
 import com.example.waterme.data.DataSource
 import com.example.waterme.data.Reminder
 import com.example.waterme.model.Plant
+import com.example.waterme.ui.core.permission.NotificationPermission
 import com.example.waterme.ui.theme.WaterMeTheme
 import com.github.kotlinutils.plus
 import java.util.concurrent.TimeUnit
@@ -72,9 +77,15 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun WaterMeApp(
     waterViewModel: WaterViewModel = viewModel(factory = WaterViewModel.Factory),
+    notificationPermission: NotificationPermission,
     internalPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val layoutDirection = LocalLayoutDirection.current
+    val notificationPermissionGranted = notificationPermission.isGranted()
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        Log.d("tag", "WaterMeApp: permission granted: $it")
+    }
+
     WaterMeTheme {
         Surface(
             modifier = Modifier
@@ -93,7 +104,12 @@ fun WaterMeApp(
 
                 PlantListContent(
                     plants = waterViewModel.plants,
-                    onScheduleReminder = { waterViewModel.scheduleReminder(it) },
+                    onScheduleReminder = {
+                        if (!notificationPermissionGranted && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            launcher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                        }
+                        waterViewModel.scheduleReminder(reminder = it)
+                    },
                     internalPadding = internalPadding
                 )
                 Box(
@@ -198,7 +214,7 @@ fun ReminderDialogContent(
 ) {
     val reminders = listOf(
         Reminder(R.string.five_seconds, 5, TimeUnit.SECONDS, plantName),
-        Reminder(R.string.one_day, 1, TimeUnit.DAYS, plantName),
+        Reminder(R.string.one_minute, 1, TimeUnit.MINUTES, plantName),
         Reminder(R.string.one_week, 7, TimeUnit.DAYS, plantName),
         Reminder(R.string.one_month, 30, TimeUnit.DAYS, plantName)
     )

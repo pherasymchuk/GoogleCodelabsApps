@@ -1,4 +1,4 @@
-package com.example.waterme.core.permission
+package com.example.waterme.ui.core.permission
 
 import android.Manifest
 import android.annotation.TargetApi
@@ -15,13 +15,7 @@ interface NotificationPermission : Permission {
 
         override fun request(): Boolean {
             return when {
-                ContextCompat.checkSelfPermission(
-                    activity,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    // You can use the API that requires the permission.
-                    true
-                }
+                isGranted() -> true
 
                 else -> {
                     // Directly ask for the permission.
@@ -40,5 +34,10 @@ interface NotificationPermission : Permission {
                 activity, Manifest.permission.POST_NOTIFICATIONS
             )
         }
+
+        override fun isGranted(): Boolean = ContextCompat.checkSelfPermission(
+            activity,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
     }
 }

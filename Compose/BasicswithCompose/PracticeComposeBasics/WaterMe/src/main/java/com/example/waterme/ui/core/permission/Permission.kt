@@ -1,4 +1,4 @@
-package com.example.waterme.core.permission
+package com.example.waterme.ui.core.permission
 
 interface Permission {
     /**
@@ -18,4 +18,11 @@ interface Permission {
      * @return `true` if the rationale dialog should be shown, `false` otherwise.
      */
     fun shouldShowRationale(): Boolean
+
+    /**
+     * Checks if the permission is granted.
+     *
+     * @return `true` if the permission is granted, `false` otherwise.
+     */
+    fun isGranted(): Boolean
 }
