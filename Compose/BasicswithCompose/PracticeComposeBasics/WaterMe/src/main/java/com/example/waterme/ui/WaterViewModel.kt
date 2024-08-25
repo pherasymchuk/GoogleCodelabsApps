@@ -22,27 +22,29 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.waterme.WaterMeApplication
+import com.example.waterme.data.PlantsRepository
 import com.example.waterme.data.Reminder
-import com.example.waterme.data.WaterRepository
 
-class WaterViewModel(private val waterRepository: WaterRepository) : ViewModel() {
-
-    internal val plants = waterRepository.plants
-
+class WaterViewModel(private val plantsRepository: PlantsRepository) : ViewModel() {
+    val plants = plantsRepository.plants
     fun scheduleReminder(reminder: Reminder) {
-        waterRepository.scheduleReminder(reminder.duration, reminder.unit, reminder.plantName)
+        plantsRepository.scheduleReminder(
+            duration = reminder.duration,
+            unit = reminder.unit,
+            plantName = reminder.plantName
+        )
     }
 
     /**
-     * Factory for [WaterViewModel] that takes [WaterRepository] as a dependency
+     * Factory for [WaterViewModel] that takes [PlantsRepository] as a dependency
      */
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val waterRepository =
-                    (this[APPLICATION_KEY] as WaterMeApplication).container.waterRepository
+                    (this[APPLICATION_KEY] as WaterMeApplication).container.plantsRepository
                 WaterViewModel(
-                    waterRepository = waterRepository
+                    plantsRepository = waterRepository
                 )
             }
         }

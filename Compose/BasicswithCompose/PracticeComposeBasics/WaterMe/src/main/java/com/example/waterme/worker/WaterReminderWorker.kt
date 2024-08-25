@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.waterme.R
+import com.example.waterme.ui.Notification
 
 class WaterReminderWorker(
     context: Context,
@@ -28,17 +29,17 @@ class WaterReminderWorker(
 
     override suspend fun doWork(): Result {
 
-        val plantName = inputData.getString(nameKey)
+        val plantName = inputData.getString(PLANT_NAME_KEY)
 
-        makePlantReminderNotification(
+        Notification.WaterReminder(
             applicationContext.resources.getString(R.string.time_to_water, plantName),
             applicationContext
-        )
+        ).show()
 
         return Result.success()
     }
 
     companion object {
-        const val nameKey = "NAME"
+        const val PLANT_NAME_KEY = "PLANT_NAME_KEY"
     }
 }

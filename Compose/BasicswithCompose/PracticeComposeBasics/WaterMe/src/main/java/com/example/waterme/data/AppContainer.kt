@@ -19,9 +19,11 @@ package com.example.waterme.data
 import android.content.Context
 
 interface AppContainer {
-    val waterRepository: WaterRepository
+    val plantsRepository: PlantsRepository
+
+    class Default(context: Context) : AppContainer {
+        override val plantsRepository = PlantsRepository.Default(context)
+    }
 }
 
-class DefaultAppContainer(context: Context) : AppContainer {
-    override val waterRepository = WorkManagerWaterRepository(context)
-}
+
