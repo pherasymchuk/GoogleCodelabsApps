@@ -38,8 +38,6 @@ android {
         compose = true
     }
     composeCompiler {
-//        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
-        enableStrongSkippingMode = true
         includeSourceInformation = true
     }
     packaging {
